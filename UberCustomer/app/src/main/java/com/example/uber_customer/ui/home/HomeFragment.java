@@ -112,7 +112,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, IFireb
     private LocationCallback locationCallback;
 
     //Load Driver
-    private double distance = 1.0; // defauly km
+    private double distance = 1.0; // default km
     private static final double LIMIT_RANGE = 10.0; //km
     private Location previousLocation, currentLocation;
 
@@ -573,7 +573,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, IFireb
             //request api
             compositeDisposable.add(iGoogleAPI.getDirections("driving",
                     "less_driving",
-                    from, to, getString(R.string.google_api_key))
+                    from, to, getString(R.string.google_maps_key))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(returnResult -> {
@@ -584,7 +584,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, IFireb
                     JSONArray jsonArray = jsonObject.getJSONArray("routes");
                     for(int i=0; i<jsonArray.length(); i++) {
                         JSONObject route = jsonArray.getJSONObject(i);
-                        JSONObject poly = route.getJSONObject("overview polyline");
+                        JSONObject poly = route.getJSONObject("overview_polyline");
                         String polyline = poly.getString("points");
 
                         animationModel.setPolylineList(Common.decodePoly(polyline));

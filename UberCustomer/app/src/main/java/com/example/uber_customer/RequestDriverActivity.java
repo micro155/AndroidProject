@@ -157,7 +157,7 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
         //request api
         compositeDisposable.add(iGoogleAPI.getDirections("driving",
                 "less_driving",
-                selectPlaceEvent.getOriginString(), selectPlaceEvent.getDestinationString(), "AIzaSyCfU4U5uUXOBNi5FWIqhjAW4e6vhRuouIw")
+                selectPlaceEvent.getOriginString(), selectPlaceEvent.getDestinationString(), getString(R.string.google_maps_key))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(returnResult -> {
@@ -190,7 +190,7 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
                         blackPolyline = mMap.addPolyline(blackPolylineOptions);
 
                         //Animator
-                        ValueAnimator valueAnimator = ValueAnimator.ofInt(0, 1);
+                        ValueAnimator valueAnimator = ValueAnimator.ofInt(0, 100);
                         valueAnimator.setDuration(1100);
                         valueAnimator.setRepeatCount(ValueAnimator.INFINITE);
                         valueAnimator.setInterpolator(new LinearInterpolator());
