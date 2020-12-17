@@ -157,7 +157,7 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
         //request api
         compositeDisposable.add(iGoogleAPI.getDirections("driving",
                 "less_driving",
-                selectPlaceEvent.getOriginString(), selectPlaceEvent.getDestinationString(), getString(R.string.google_api_key))
+                selectPlaceEvent.getOriginString(), selectPlaceEvent.getDestinationString(), "AIzaSyCfU4U5uUXOBNi5FWIqhjAW4e6vhRuouIw")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(returnResult -> {
@@ -168,7 +168,7 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
                         JSONArray jsonArray = jsonObject.getJSONArray("routes");
                         for(int i=0; i<jsonArray.length(); i++) {
                             JSONObject route = jsonArray.getJSONObject(i);
-                            JSONObject poly = route.getJSONObject("overview polyline");
+                            JSONObject poly = route.getJSONObject("overview_polyline");
                             String polyline = poly.getString("points");
                             polylineList = Common.decodePoly(polyline);
                         }
@@ -182,7 +182,7 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
                         greyPolyline = mMap.addPolyline(polylineOptions);
 
                         blackPolylineOptions = new PolylineOptions();
-                        blackPolylineOptions.color(Color.GRAY);
+                        blackPolylineOptions.color(Color.BLACK);
                         blackPolylineOptions.width(5);
                         blackPolylineOptions.startCap(new SquareCap());
                         blackPolylineOptions.jointType(JointType.ROUND);
@@ -196,7 +196,7 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
                         valueAnimator.setInterpolator(new LinearInterpolator());
                         valueAnimator.addUpdateListener(value -> {
                             List<LatLng> points = greyPolyline.getPoints();
-                            int percentValue = (int)valueAnimator.getAnimatedValue();
+                            int percentValue = (int)value.getAnimatedValue();
                             int size = points.size();
                             int newPoints = (int)(size*(percentValue/100.0f));
                             List<LatLng> p = points.subList(0, newPoints);
