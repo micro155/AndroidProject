@@ -541,13 +541,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, IFireb
                                     String from = new StringBuilder()
                                             .append(oldPosition.getGeoQueryModel().getL().get(0))
                                             .append(",")
-                                            .append(oldPosition.getGeoQueryModel().getL().get(0))
+                                            .append(oldPosition.getGeoQueryModel().getL().get(1))
                                             .toString();
 
                                     String to = new StringBuilder()
                                             .append(animationModel.getGeoQueryModel().getL().get(0))
                                             .append(",")
-                                            .append(animationModel.getGeoQueryModel().getL().get(0))
+                                            .append(animationModel.getGeoQueryModel().getL().get(1))
                                             .toString();
 
                                     moveMarkerAnimation(driverGeoModel.getKey(), animationModel, currentMarker, from, to);

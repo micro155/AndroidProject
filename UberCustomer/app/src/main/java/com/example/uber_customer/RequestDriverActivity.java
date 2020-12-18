@@ -181,6 +181,7 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
                         polylineOptions.addAll(polylineList);
                         greyPolyline = mMap.addPolyline(polylineOptions);
 
+
                         blackPolylineOptions = new PolylineOptions();
                         blackPolylineOptions.color(Color.BLACK);
                         blackPolylineOptions.width(5);

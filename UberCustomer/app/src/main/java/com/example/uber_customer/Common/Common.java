@@ -39,7 +39,7 @@ public class Common {
         return new StringBuilder(firstName).append("").append(lastName).toString();
     }
 
-    public static List<LatLng> decodePoly(String encoded) {
+    public static List<LatLng> decodePoly(String encoded) { //주행 경로 생성 코드
         List poly = new ArrayList();
         int index = 0, len = encoded.length();
         int lat = 0, lng = 0;
@@ -50,7 +50,7 @@ public class Common {
                 result |= (b & 0x1f) << shift;
                 shift += 5;
             } while (b >= 0x20);
-            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result << 1));
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
             lat += dlat;
 
             shift = 0;
