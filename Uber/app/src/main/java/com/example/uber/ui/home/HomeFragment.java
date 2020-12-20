@@ -97,7 +97,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     public void onDestroy() {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-            geoFire.removeLocation(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            //geoFire.removeLocation(FirebaseAuth.getInstance().getCurrentUser().getUid());
             onlineRef.removeEventListener(onlineValueEventListener);
         }
         super.onDestroy();

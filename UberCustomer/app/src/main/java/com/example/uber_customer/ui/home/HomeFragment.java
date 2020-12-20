@@ -538,6 +538,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, IFireb
                                 if(Common.driverLocationSubscribe.get(driverGeoModel.getKey()) != null) {
                                     Marker currentMarker = Common.markerList.get(driverGeoModel.getKey());
                                     AnimationModel oldPosition = Common.driverLocationSubscribe.get(driverGeoModel.getKey());
+
                                     String from = new StringBuilder()
                                             .append(oldPosition.getGeoQueryModel().getL().get(0))
                                             .append(",")
