@@ -32,5 +32,6 @@
     <string name="address_demo">Google building PLY 1</string>
     <string name="meet_driver_here">Meet driver here</string>
     <string name="confirm_pickup">Confirm Pickup</string>
+    <string name="finding_your_ride">Finding your ride</string>
 
 </resources>

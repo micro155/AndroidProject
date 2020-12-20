@@ -1,5 +1,6 @@
 package com.example.uber_customer.Common;
 
+import android.animation.ValueAnimator;
 import android.widget.TextView;
 
 import com.example.uber_customer.Model.AnimationModel;
@@ -109,5 +110,16 @@ public class Common {
     public static String formatAddress(String start_address) {
         int firstIndexOfComma = start_address.indexOf(",");
         return start_address.substring(0, firstIndexOfComma); //get only address
+    }
+
+    public static ValueAnimator valueAnimate(long duration, ValueAnimator.AnimatorUpdateListener listener) {
+        ValueAnimator va = ValueAnimator.ofFloat(0, 100);
+        va.setDuration(duration);
+        va.addUpdateListener(listener);
+        va.setRepeatCount(ValueAnimator.INFINITE);
+        va.setRepeatMode(ValueAnimator.RESTART);
+
+        va.start();
+        return va;
     }
 }
