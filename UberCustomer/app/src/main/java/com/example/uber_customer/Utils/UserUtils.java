@@ -89,6 +89,8 @@ public class UserUtils {
                             Map<String, String> notificationData = new HashMap<>();
                             notificationData.put(Common.NOTI_TITLE, Common.REQUEST_DRIVER_TITLE);
                             notificationData.put(Common.NOTI_CONTENT, "This message respersent for request driver action");
+                            notificationData.put(Common.RIDER_KEY, FirebaseAuth.getInstance().getCurrentUser().getUid());
+
                             notificationData.put(Common.RIDER_PICKUP_LOCATION, new StringBuilder("")
                             .append(target.latitude)
                             .append(target.longitude)

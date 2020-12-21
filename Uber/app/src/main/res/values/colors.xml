@@ -3,4 +3,5 @@
     <color name="colorPrimary">#ffffff</color>
     <color name="colorPrimaryDark">#CCCCCC</color>
     <color name="colorAccent">#000000</color>
+    <color name="progress_bar_color">#151828</color>
 </resources>

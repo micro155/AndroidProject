@@ -36,6 +36,7 @@ public class Common {
     public static final String NOTI_TITLE = "title";
     public static final String REQUEST_DRIVER_TITLE = "RequestDriver";
     public static final String RIDER_PICKUP_LOCATION = "PickupLocation";
+    public static final String RIDER_KEY = "RiderKey";
     public static RiderModel currentRider;
     public static Map<String, DriverGeoModel> driversFound = new HashMap<>();
     public static HashMap<String, Marker> markerList = new HashMap<>();
