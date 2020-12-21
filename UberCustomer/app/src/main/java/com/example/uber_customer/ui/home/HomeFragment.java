@@ -301,7 +301,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, IFireb
                         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
                             @Override
                             public void onKeyEntered(String key, GeoLocation location) {
-                                Common.driversFound.add(new DriverGeoModel(key, location));
+                                //Common.driversFound.add(new DriverGeoModel(key, location));
+                                if(!Common.driversFound.containsKey(key)) {
+                                    Common.driversFound.put(key, new DriverGeoModel(key, location));
+                                }
                             }
 
                             @Override
@@ -384,11 +387,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, IFireb
 
     private void addDriverMarker() {
         if(Common.driversFound.size() > 0) {
-            Observable.fromIterable(Common.driversFound)
+            Observable.fromIterable(Common.driversFound.keySet())
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(driverGeoModel -> {
-                        findDriverByKey(driverGeoModel);
+                    .subscribe(key -> {
+                        findDriverByKey(Common.driversFound.get(key));
                     }, throwable -> {
                         Snackbar.make(getView(), throwable.getMessage(), Snackbar.LENGTH_SHORT).show();
                     }, () -> {
@@ -408,6 +411,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, IFireb
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.hasChildren()) {
                             driverGeoModel.setDriverInfoModel(snapshot.getValue(DriverInfoModel.class));
+                            Common.driversFound.get(driverGeoModel.getKey()).setDriverInfoModel(snapshot.getValue(DriverInfoModel.class));
                             iFirebaseDriverInfoListener.onDriverInfoLoadSuccess(driverGeoModel);
                         } else {
                             iFirebaseFailedListener.onFirebaseLoadFailed(getString(R.string.not_found_key) + driverGeoModel.getKey());

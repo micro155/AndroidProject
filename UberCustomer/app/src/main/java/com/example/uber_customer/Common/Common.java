@@ -1,27 +1,43 @@
 package com.example.uber_customer.Common;
 
 import android.animation.ValueAnimator;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.Build;
 import android.widget.TextView;
+
+import androidx.core.app.NotificationCompat;
 
 import com.example.uber_customer.Model.AnimationModel;
 import com.example.uber_customer.Model.DriverGeoModel;
 import com.example.uber_customer.Model.RiderModel;
+import com.example.uber_customer.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 public class Common {
     public static final String RIDER_INFO_REFERENCE = "RiderInfo";
     public static final String DRIVERS_LOCATION_REFERENCES = "DriversLocation";
     public static final String DRIVER_INFO_REFERENCE = "DriverInfo";
+    public static final String TOKEN_REFERENCE = "Token";
+    public static final String NOTI_CONTENT = "body";
+    public static final String NOTI_TITLE = "title";
+    public static final String REQUEST_DRIVER_TITLE = "RequestDriver";
+    public static final String RIDER_PICKUP_LOCATION = "PickupLocation";
     public static RiderModel currentRider;
-    public static Set<DriverGeoModel> driversFound = new HashSet<DriverGeoModel>();
+    public static Map<String, DriverGeoModel> driversFound = new HashMap<>();
     public static HashMap<String, Marker> markerList = new HashMap<>();
     public static HashMap<String, AnimationModel> driverLocationSubscribe = new HashMap<String, AnimationModel>();
 
@@ -34,6 +50,39 @@ public class Common {
         } else {
             return "";
         }
+    }
+
+    public static void showNotification(Context context, int id, String title, String body, Intent intent) {
+        PendingIntent pendingIntent = null;
+        if (intent != null) {
+            pendingIntent = PendingIntent.getActivity(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+        String NOTIFICATION_CHANNEL_ID = "uber";
+        NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID,
+                    "Uber", NotificationManager.IMPORTANCE_HIGH);
+            notificationChannel.setDescription("Uber");
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+            notificationChannel.enableVibration(true);
+
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID);
+        builder.setContentTitle(title)
+                .setContentText(body)
+                .setAutoCancel(false)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setSmallIcon(R.drawable.ic_baseline_directions_car_24)
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_baseline_directions_car_24));
+        if (pendingIntent != null) {
+            builder.setContentIntent(pendingIntent);
+        }
+        Notification notification = builder.build();
+        notificationManager.notify(id, notification);
     }
 
     public static String buildName(String firstName, String lastName) {

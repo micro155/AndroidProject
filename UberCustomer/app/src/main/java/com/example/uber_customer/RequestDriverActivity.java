@@ -4,11 +4,13 @@ import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,9 +18,11 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.uber_customer.Common.Common;
+import com.example.uber_customer.Model.DriverGeoModel;
 import com.example.uber_customer.Model.EventBus.SelectPlaceEvent;
 import com.example.uber_customer.Remote.IGoogleAPI;
 import com.example.uber_customer.Remote.RetrofitClient;
+import com.example.uber_customer.Utils.UserUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -36,6 +40,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.SquareCap;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.maps.android.ui.IconGenerator;
 
 import org.greenrobot.eventbus.EventBus;
@@ -68,6 +73,9 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
 
 
     //View
+    @BindView(R.id.main_layout)
+    RelativeLayout main_layout;
+
     @BindView(R.id.finding_your_ride_layout)
     CardView finding_your_ride_layout;
 
@@ -154,7 +162,7 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
            }
         });
 
-        startMapCameraSpinningAnimation(mMap.getCameraPosition().target);
+        startMapCameraSpinningAnimation(origin);
 
     }
 
@@ -176,6 +184,40 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
             .build()));
         });
         animator.start();
+        
+        //After start animation, find driver
+        findNearbyDriver(target);
+    }
+
+    private void findNearbyDriver(LatLng target) {
+        if (Common.driversFound.size() > 0) {
+            float min_distance = 0; // default
+            DriverGeoModel foundDriver = Common.driversFound.get(Common.driversFound.keySet().iterator().next());
+            Location currentRiderLocation = new Location("");
+            currentRiderLocation.setLatitude(target.latitude);
+            currentRiderLocation.setLongitude(target.longitude);
+            for(String key:Common.driversFound.keySet()) {
+                Location driverLocation = new Location("");
+                driverLocation.setLatitude(Common.driversFound.get(key).getGeoLocation().latitude);
+                driverLocation.setLongitude(Common.driversFound.get(key).getGeoLocation().longitude);
+
+                // Compare 2 location
+                if (min_distance == 0) {
+                    min_distance = driverLocation.distanceTo(currentRiderLocation); // First default in min_distance
+                    foundDriver = Common.driversFound.get(key);
+                } else if (driverLocation.distanceTo(currentRiderLocation) < min_distance) {
+                    min_distance = driverLocation.distanceTo(currentRiderLocation); // First default in min_distance
+                    foundDriver = Common.driversFound.get(key);
+                }
+//                Snackbar.make(main_layout, new StringBuilder("Found driver : ")
+//                .append(foundDriver.getDriverInfoModel().getPhoneNumber()),
+//                        Snackbar.LENGTH_LONG).show();
+
+                UserUtils.sendRequestToDriver(this, main_layout, foundDriver, target);
+            }
+        } else {
+            Snackbar.make(main_layout, getString(R.string.drivers_not_found), Snackbar.LENGTH_LONG).show();
+        }
     }
 
     @Override

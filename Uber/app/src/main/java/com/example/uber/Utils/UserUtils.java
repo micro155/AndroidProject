@@ -1,11 +1,15 @@
 package com.example.uber.Utils;
 
+import android.content.Context;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.uber.Common;
+import com.example.uber.Model.TokenModel;
+import com.example.uber.Services.MyFirebaseMessagingService;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
@@ -32,4 +36,24 @@ public class UserUtils {
                     }
                 });
         }
+
+    public static void updateToken(Context context, String token) {
+        TokenModel tokenModel = new TokenModel(token);
+
+        FirebaseDatabase.getInstance()
+                .getReference(Common.TOKEN_REFERENCE)
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .setValue(tokenModel)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        });
+    }
 }

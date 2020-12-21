@@ -1,10 +1,5 @@
 package com.example.uber_customer;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,8 +10,14 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.uber_customer.Common.Common;
 import com.example.uber_customer.Model.RiderModel;
+import com.example.uber_customer.Utils.UserUtils;
 import com.firebase.ui.auth.AuthMethodPickerLayout;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
@@ -30,6 +31,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.Arrays;
 import java.util.List;
@@ -105,6 +108,21 @@ public class SplashScreenActivity extends AppCompatActivity {
         listener = myFirebaseAuth -> {
             FirebaseUser user = myFirebaseAuth.getCurrentUser();
             if(user != null) {
+                //Update token
+                FirebaseInstanceId.getInstance()
+                        .getInstanceId()
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(SplashScreenActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                    @Override
+                    public void onSuccess(InstanceIdResult instanceIdResult) {
+                        Log.d("TOKEN", instanceIdResult.getToken());
+                        UserUtils.updateToken(SplashScreenActivity.this, instanceIdResult.getToken());
+                    }
+                });
                 checkUserFromFirebase();
             } else {
                 showLoginLayout();
