@@ -3,10 +3,13 @@ package com.example.uber.Services;
 import androidx.annotation.NonNull;
 
 import com.example.uber.Common;
+import com.example.uber.Model.EventBus.DriverRequestReceived;
 import com.example.uber.Utils.UserUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Map;
 import java.util.Random;
@@ -25,10 +28,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         Map<String, String> dataRecv = remoteMessage.getData();
         if (dataRecv != null) {
-            Common.showNotification(this, new Random().nextInt(),
-                    dataRecv.get(Common.NOTI_TITLE),
-                    dataRecv.get(Common.NOTI_CONTENT),
-                    null);
+            if (dataRecv.get(Common.NOTI_TITLE).equals(Common.REQUEST_DRIVER_TITLE)) {
+                EventBus.getDefault().postSticky(new DriverRequestReceived(
+                        dataRecv.get(Common.RIDER_KEY),
+                        dataRecv.get(Common.RIDER_PICKUP_LOCATION)
+                ));
+            } else {
+                Common.showNotification(this, new Random().nextInt(),
+                        dataRecv.get(Common.NOTI_TITLE),
+                        dataRecv.get(Common.NOTI_CONTENT),
+                        null);
+            }
         }
     }
 }

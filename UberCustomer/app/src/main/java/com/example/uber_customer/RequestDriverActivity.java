@@ -232,7 +232,7 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
 
     private SelectPlaceEvent selectPlaceEvent;
 
-    //routes
+    //Routes
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private IGoogleAPI iGoogleAPI;
     private Polyline blackPolyline, greyPolyline;
