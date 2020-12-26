@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.uber_customer.Common.Common;
 import com.example.uber_customer.Model.DriverGeoModel;
+import com.example.uber_customer.Model.EventBus.DeclineRequestFromDriver;
 import com.example.uber_customer.Model.EventBus.SelectPlaceEvent;
 import com.example.uber_customer.Remote.IGoogleAPI;
 import com.example.uber_customer.Remote.RetrofitClient;
@@ -96,6 +97,8 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
 
     @BindView(R.id.fill_maps)
     View fill_maps;
+
+    private DriverGeoModel lastDriverCall;
 
     @OnClick(R.id.btn_confirm_uber)
     void onConfirmUber() {
@@ -192,10 +195,11 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
     private void findNearbyDriver(LatLng target) {
         if (Common.driversFound.size() > 0) {
             float min_distance = 0; // default
-            DriverGeoModel foundDriver = Common.driversFound.get(Common.driversFound.keySet().iterator().next());
+            DriverGeoModel foundDriver = null;
             Location currentRiderLocation = new Location("");
             currentRiderLocation.setLatitude(target.latitude);
             currentRiderLocation.setLongitude(target.longitude);
+
             for(String key:Common.driversFound.keySet()) {
                 Location driverLocation = new Location("");
                 driverLocation.setLatitude(Common.driversFound.get(key).getGeoLocation().latitude);
@@ -204,19 +208,41 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
                 // Compare 2 location
                 if (min_distance == 0) {
                     min_distance = driverLocation.distanceTo(currentRiderLocation); // First default in min_distance
-                    foundDriver = Common.driversFound.get(key);
+
+                    if (!Common.driversFound.get(key).isDecline()) { // If not decline before
+                        foundDriver = Common.driversFound.get(key);
+                        break; // exit loop, we found driver
+                    } else {
+                        continue; // If already decline before, skip and continue
+                    }
                 } else if (driverLocation.distanceTo(currentRiderLocation) < min_distance) {
-                    min_distance = driverLocation.distanceTo(currentRiderLocation); // First default in min_distance
-                    foundDriver = Common.driversFound.get(key);
+                    min_distance = driverLocation.distanceTo(currentRiderLocation);
+                    if (!Common.driversFound.get(key).isDecline()) { // If not decline before
+                        foundDriver = Common.driversFound.get(key);
+                        break; // exit loop, we found driver
+                    } else {
+                        continue; // If already decline before, skip and continue
+                    }
                 }
 //                Snackbar.make(main_layout, new StringBuilder("Found driver : ")
 //                .append(foundDriver.getDriverInfoModel().getPhoneNumber()),
 //                        Snackbar.LENGTH_LONG).show();
-
-                UserUtils.sendRequestToDriver(this, main_layout, foundDriver, target);
             }
+
+            //After loop
+            if (foundDriver != null) {
+                UserUtils.sendRequestToDriver(this, main_layout, foundDriver, target);
+                lastDriverCall = foundDriver;
+            } else {
+                Toast.makeText(this, getString(R.string.no_driver_accept_request), Toast.LENGTH_SHORT).show();
+                lastDriverCall = null;
+                finish();
+            }
+
         } else {
             Snackbar.make(main_layout, getString(R.string.drivers_not_found), Snackbar.LENGTH_LONG).show();
+            lastDriverCall = null;
+            finish();
         }
     }
 
@@ -267,7 +293,9 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
     @Override
     protected void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override
@@ -277,12 +305,25 @@ public class RequestDriverActivity extends FragmentActivity implements OnMapRead
         if(EventBus.getDefault().hasSubscriberForEvent(SelectPlaceEvent.class)) {
             EventBus.getDefault().removeStickyEvent(SelectPlaceEvent.class);
         }
+        if(EventBus.getDefault().hasSubscriberForEvent(DeclineRequestFromDriver.class)) {
+            EventBus.getDefault().removeStickyEvent(DeclineRequestFromDriver.class);
+        }
         EventBus.getDefault().unregister(this);
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onSelectPlaceEvent(SelectPlaceEvent event) {
         selectPlaceEvent = event;
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onDeclineRequestEvent(DeclineRequestFromDriver event) {
+        if (lastDriverCall != null) {
+            Common.driversFound.get(lastDriverCall.getKey()).setDecline(true);
+
+            //Driver has been decline request, just find new driver
+            findNearbyDriver(selectPlaceEvent.getOrigin());
+        }
     }
 
     @Override

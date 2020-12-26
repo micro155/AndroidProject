@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ import com.example.uber.Model.EventBus.DriverRequestReceived;
 import com.example.uber.R;
 import com.example.uber.Remote.IGoogleAPI;
 import com.example.uber.Remote.RetrofitClient;
+import com.example.uber.Utils.UserUtils;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -85,9 +87,11 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
@@ -102,6 +106,22 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     TextView txt_estimate_time;
     @BindView(R.id.txt_estimate_distance)
     TextView txt_estimate_distance;
+    @BindView(R.id.root_layout)
+    FrameLayout root_layout;
+
+    @OnClick(R.id.chip_decline)
+    void onDeclineClick() {
+        if (driverRequestReceived != null) {
+            if (countDownEvent != null) {
+                countDownEvent.dispose();
+            }
+            chip_decline.setVisibility(View.GONE);
+            layout_accept.setVisibility(View.GONE);
+            mMap.clear();
+            UserUtils.sendDeclineRequest(root_layout, getContext(), driverRequestReceived.getKey());
+            driverRequestReceived = null;
+        }
+    }
 
     //Routes
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -109,6 +129,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private Polyline blackPolyline, greyPolyline;
     private PolylineOptions polylineOptions, blackPolylineOptions;
     private List<LatLng> polylineList;
+
+    private DriverRequestReceived driverRequestReceived;
+    private Disposable countDownEvent;
 
 
     private GoogleMap mMap;
@@ -202,68 +225,85 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Snackbar.make(root_layout, getString(R.string.permission_require), Snackbar.LENGTH_SHORT).show();
             return;
         }
 
 
-        locationRequest = new LocationRequest();
-        locationRequest.setSmallestDisplacement(50f); //50m
-        locationRequest.setInterval(15000); //15s
-        locationRequest.setFastestInterval(10000); //10s
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        locationCallback = new LocationCallback() {
-            //Ctrl+O
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-
-                LatLng newPosition = new LatLng(locationResult.getLastLocation().getLatitude(),
-                        locationResult.getLastLocation().getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newPosition, 18f));
+        buildLocationRequest();
+        buildLocationCallback();
+        updateLocation();
 
 
-                //after get location, get address name
-                Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-                List<Address> addressList;
-                try {
-                    addressList = geocoder.getFromLocation(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude(), 1);
-                    String cityName = addressList.get(0).getLocality();
+    }
 
-                    driversLocationRef = FirebaseDatabase.getInstance().getReference(Common.DRIVERS_LOCATION_REFERENCES)
-                            .child(cityName);
-                    currentUserRef = driversLocationRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                    geoFire = new GeoFire(driversLocationRef);
-
-                    //Update Location
-                    geoFire.setLocation(FirebaseAuth.getInstance().getCurrentUser().getUid(),
-                            new GeoLocation(locationResult.getLastLocation().getLatitude(),
-                                    locationResult.getLastLocation().getLongitude()), new GeoFire.CompletionListener() {
-                                @Override
-                                public void onComplete(String key, DatabaseError error) {
-                                    if (error != null) {
-                                        Snackbar.make(mapFragment.getView(), error.getMessage(), Snackbar.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
-
-                    registerOnlineSystem();
-                } catch (IOException e) {
-                    Snackbar.make(getView(), e.getMessage(), Snackbar.LENGTH_SHORT).show();
-                }
-
+    private void updateLocation() {
+        if (fusedLocationProviderClient == null) {
+            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Snackbar.make(getView(), getString(R.string.permission_require), Snackbar.LENGTH_SHORT).show();
+                return;
             }
-        };
-
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Snackbar.make(getView(), getString(R.string.permission_require), Snackbar.LENGTH_SHORT).show();
-            return;
+            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
         }
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+    }
+
+    private void buildLocationCallback() {
+        if (locationCallback == null) {
+            locationCallback = new LocationCallback() {
+                //Ctrl+O
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    super.onLocationResult(locationResult);
+
+                    LatLng newPosition = new LatLng(locationResult.getLastLocation().getLatitude(),
+                            locationResult.getLastLocation().getLongitude());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newPosition, 18f));
 
 
+                    //after get location, get address name
+                    Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+                    List<Address> addressList;
+                    try {
+                        addressList = geocoder.getFromLocation(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude(), 1);
+                        String cityName = addressList.get(0).getLocality();
+
+                        driversLocationRef = FirebaseDatabase.getInstance().getReference(Common.DRIVERS_LOCATION_REFERENCES)
+                                .child(cityName);
+                        currentUserRef = driversLocationRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                        geoFire = new GeoFire(driversLocationRef);
+
+                        //Update Location
+                        geoFire.setLocation(FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                                new GeoLocation(locationResult.getLastLocation().getLatitude(),
+                                        locationResult.getLastLocation().getLongitude()), new GeoFire.CompletionListener() {
+                                    @Override
+                                    public void onComplete(String key, DatabaseError error) {
+                                        if (error != null) {
+                                            Snackbar.make(mapFragment.getView(), error.getMessage(), Snackbar.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+
+                        registerOnlineSystem();
+                    } catch (IOException e) {
+                        Snackbar.make(getView(), e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                    }
+
+                }
+            };
+        }
+    }
+
+    private void buildLocationRequest() {
+        if (locationRequest == null) {
+            locationRequest = new LocationRequest();
+            locationRequest.setSmallestDisplacement(50f); //50m
+            locationRequest.setInterval(15000); //15s
+            locationRequest.setFastestInterval(10000); //10s
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        }
     }
 
     @Override
@@ -321,6 +361,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                         params.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
                         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
                         params.setMargins(0, 0, 0, 50);
+
+                        //Move location
+                        buildLocationRequest();
+                        buildLocationCallback();
+                        updateLocation();
                     }
 
                     @Override
@@ -350,6 +395,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onDriverRequestReceive(DriverRequestReceived event) {
+
+        driverRequestReceived = event;
+
         //Get current location
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

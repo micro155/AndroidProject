@@ -28,6 +28,8 @@ public class Common {
     public static final String RIDER_PICKUP_LOCATION = "PickupLocation";
     public static final String RIDER_KEY = "RiderKey";
     public static final String REQUEST_DRIVER_TITLE = "RequestDriver";
+    public static final String REQUEST_DRIVER_DECLINE = "Decline";
+    public static final String DRIVER_KEY = "DriverKey";
 
     public static DriverInfoModel currentUser;
 

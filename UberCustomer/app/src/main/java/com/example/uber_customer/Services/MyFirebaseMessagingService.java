@@ -3,10 +3,13 @@ package com.example.uber_customer.Services;
 import androidx.annotation.NonNull;
 
 import com.example.uber_customer.Common.Common;
+import com.example.uber_customer.Model.EventBus.DeclineRequestFromDriver;
 import com.example.uber_customer.Utils.UserUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Map;
 import java.util.Random;
@@ -25,10 +28,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         Map<String, String> dataRecv = remoteMessage.getData();
         if (dataRecv != null) {
-            Common.showNotification(this, new Random().nextInt(),
-                    dataRecv.get(Common.NOTI_TITLE),
-                    dataRecv.get(Common.NOTI_CONTENT),
-                    null);
+            if (dataRecv.get(Common.NOTI_TITLE) != null) {
+
+                if (dataRecv.get(Common.NOTI_TITLE).equals(Common.REQUEST_DRIVER_DECLINE)) {
+
+                    EventBus.getDefault().postSticky(new DeclineRequestFromDriver());
+
+                } else {
+                    Common.showNotification(this, new Random().nextInt(),
+                            dataRecv.get(Common.NOTI_TITLE),
+                            dataRecv.get(Common.NOTI_CONTENT),
+                            null);
+                }
+            }
         }
     }
 }

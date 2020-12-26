@@ -20,4 +20,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="permission_require">Location permission require</string>
     <string name="decline">Decline</string>
+    <string name="token_not_found">Token not found</string>
+    <string name="decline_failed">Decline failed</string>
+    <string name="decline_success">You have decline this request</string>
 </resources>

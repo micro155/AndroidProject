@@ -35,5 +35,6 @@
     <string name="finding_your_ride">Finding your ride</string>
     <string name="token_not_found">Token not found</string>
     <string name="request_driver_failed">Failed to send request to driver</string>
+    <string name="no_driver_accept_request">There are no driver accept your request</string>
 
 </resources>

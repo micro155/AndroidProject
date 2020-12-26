@@ -148,13 +148,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, IFireb
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        init();
-
-        initViews(root);
 
         mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        initViews(root);
+        init();
 
 
         return root;
@@ -206,50 +206,70 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, IFireb
         iFirebaseDriverInfoListener = this;
         iFirebaseFailedListener = this;
 
-        locationRequest = new LocationRequest();
-        locationRequest.setSmallestDisplacement(10f);
-        locationRequest.setInterval(5000);
-        locationRequest.setFastestInterval(3000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        //Check permission
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Snackbar.make(mapFragment.getView(), getString(R.string.permission_require), Snackbar.LENGTH_SHORT).show();
+            return;
+        }
 
-        locationCallback = new LocationCallback() {
 
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                LatLng newPosition = new LatLng(locationResult.getLastLocation().getLatitude(),
-                        locationResult.getLastLocation().getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newPosition, 18f));
+        buildLocationRequest();
+        buildLocationCallback();
+        updateLocation();
 
-                //change location, calculate and load driver again
-                if (firstTime) {
-                    previousLocation = currentLocation = locationResult.getLastLocation();
-                    firstTime = false;
+        loadAvailableDrivers();
+    }
 
-                    setRestrictPlacesInCountry(locationResult.getLastLocation());
-                } else {
-                    previousLocation = currentLocation;
-                    currentLocation = locationResult.getLastLocation();
-                }
-
-                if (previousLocation.distanceTo(currentLocation) / 1000 <= LIMIT_RANGE) { // not over range
-                    loadAvailableDrivers();
-                } else {
-
-                }
-
-            }
-        };
-
+    private void updateLocation() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
             return;
         }
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+    }
 
-        loadAvailableDrivers();
+    private void buildLocationCallback() {
+        if (locationCallback == null) {
+            locationCallback = new LocationCallback() {
+
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    super.onLocationResult(locationResult);
+                    LatLng newPosition = new LatLng(locationResult.getLastLocation().getLatitude(),
+                            locationResult.getLastLocation().getLongitude());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newPosition, 18f));
+
+                    //change location, calculate and load driver again
+                    if (firstTime) {
+                        previousLocation = currentLocation = locationResult.getLastLocation();
+                        firstTime = false;
+
+                        setRestrictPlacesInCountry(locationResult.getLastLocation());
+                    } else {
+                        previousLocation = currentLocation;
+                        currentLocation = locationResult.getLastLocation();
+                    }
+
+                    if (previousLocation.distanceTo(currentLocation) / 1000 <= LIMIT_RANGE) { // not over range
+                        loadAvailableDrivers();
+                    } else {
+
+                    }
+
+                }
+            };
+        }
+    }
+
+    private void buildLocationRequest() {
+        if (locationRequest == null) {
+            locationRequest = new LocationRequest();
+            locationRequest.setSmallestDisplacement(10f);
+            locationRequest.setInterval(5000);
+            locationRequest.setFastestInterval(3000);
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        }
     }
 
     private void setRestrictPlacesInCountry(Location location) {
@@ -438,6 +458,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, IFireb
                     public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
                         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                                 && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            Snackbar.make(mapFragment.getView(), getString(R.string.permission_require), Snackbar.LENGTH_SHORT).show();
                             return;
                         }
                         mMap.setMyLocationEnabled(true);
@@ -475,6 +496,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, IFireb
                         params.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
                         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
                         params.setMargins(0, 0, 0, 250); // Move view to see Zoom control
+
+                        //Update location
+                        buildLocationRequest();
+                        buildLocationCallback();
+                        updateLocation();
+
                     }
 
                     @Override
