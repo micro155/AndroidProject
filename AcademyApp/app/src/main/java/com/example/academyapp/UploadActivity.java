@@ -101,7 +101,7 @@ public class UploadActivity extends AppCompatActivity {
             Date now = new Date();
             String filename = formatter.format(now) + ".png";
             //storage 주소와 폴더 파일명을 지정해 준다.
-            StorageReference storageRef = storage.getReferenceFromUrl("gs://yourStorage.appspot.com").child("images/" + filename);
+            StorageReference storageRef = storage.getReferenceFromUrl("gs://academyapp-d7c41.appspot.com").child("images/" + filename);
             //올라가거라...
             storageRef.putFile(filePath)
                     //성공시

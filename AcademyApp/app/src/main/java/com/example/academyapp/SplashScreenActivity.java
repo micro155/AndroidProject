@@ -2,6 +2,7 @@ package com.example.academyapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -22,6 +23,11 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        delaySplashScreen();
+
+        startActivity(new Intent(SplashScreenActivity.this, UploadActivity.class));
+        finish();
     }
 
 
