@@ -121,9 +121,9 @@ public class SplashScreenActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View itemView = LayoutInflater.from(this).inflate(R.layout.layout_register, null);
 
-        TextInputEditText edt_name = (TextInputEditText)itemView.findViewById(R.id.edt_name);
-        TextInputEditText edt_phone = (TextInputEditText)itemView.findViewById(R.id.edt_phone_number);
-        TextInputEditText edt_nickname = (TextInputEditText)itemView.findViewById(R.id.edt_nick_name);
+        final TextInputEditText edt_name = (TextInputEditText)itemView.findViewById(R.id.edt_name);
+        final TextInputEditText edt_phone = (TextInputEditText)itemView.findViewById(R.id.edt_phone_number);
+        final TextInputEditText edt_nickname = (TextInputEditText)itemView.findViewById(R.id.edt_nick_name);
 
         Button btn_continue = (Button)itemView.findViewById(R.id.btn_register);
 
@@ -132,7 +132,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
 
         builder.setView(itemView);
-        AlertDialog dialog = builder.create();
+        final AlertDialog dialog = builder.create();
         dialog.show();
 
         btn_continue.setOnClickListener(new View.OnClickListener() {
@@ -148,7 +148,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     Toast.makeText(SplashScreenActivity.this, "닉네임을 입력하세요.", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    CustomerInfoModel model = new CustomerInfoModel();
+                    final CustomerInfoModel model = new CustomerInfoModel();
                     model.setName(edt_name.getText().toString());
                     model.setPhoneNumber(edt_phone.getText().toString());
                     model.setNickName(edt_nickname.getText().toString());

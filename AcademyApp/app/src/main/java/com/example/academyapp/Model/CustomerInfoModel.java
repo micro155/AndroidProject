@@ -2,7 +2,7 @@ package com.example.academyapp.Model;
 
 public class CustomerInfoModel {
 
-    private String Name, phoneNumber, nickName, profile;
+    private String Name, phoneNumber, nickName, profile, email;
 
     public CustomerInfoModel() {
     }
@@ -37,5 +37,13 @@ public class CustomerInfoModel {
 
     public void setProfile(String profile) {
         this.profile = profile;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
