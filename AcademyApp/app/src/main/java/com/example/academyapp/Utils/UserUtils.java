@@ -27,7 +27,7 @@ public class UserUtils {
                 }).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Snackbar.make(view, "Update information successfully!", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(view, "정보 업데이트가 완료되었습니다.", Snackbar.LENGTH_SHORT).show();
             }
         });
     }
