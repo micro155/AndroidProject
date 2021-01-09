@@ -10,4 +10,5 @@
 
     <string name="menu_home">Home</string>
     <string name="menu_logout">로그아웃</string>
+    <string name="menu_upload">동영상 업로드</string>
 </resources>

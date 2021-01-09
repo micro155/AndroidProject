@@ -76,7 +76,7 @@ public class CustomerHomeActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_logout)
+                R.id.nav_home, R.id.nav_logout, R.id.nav_upload)
                 .setDrawerLayout(drawer)
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -210,6 +210,10 @@ public class CustomerHomeActivity extends AppCompatActivity {
                         }
                     });
                     dialog.show();
+                } else if (item.getItemId() == R.id.nav_upload) {
+                    Intent intent = new Intent(CustomerHomeActivity.this, UploadActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 return false;
             }
