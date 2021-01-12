@@ -11,6 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="z79q0dob9r" />
+
         <activity
             android:name=".CustomerHomeActivity"
             android:label="@string/title_activity_customer_home"
