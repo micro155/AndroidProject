@@ -16,7 +16,7 @@ import java.util.Map;
 public class UserUtils {
     public static void updateUser(final View view, Map<String, Object> updateData) {
         FirebaseDatabase.getInstance()
-                .getReference(Common.MEMBER_INFO_REFERENCE)
+                .getReference(Common.CUSTOMER_INFO_REFERENCE)
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .updateChildren(updateData)
                 .addOnFailureListener(new OnFailureListener() {

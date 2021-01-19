@@ -12,14 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.example.academyapp.Model.MemberInfoModel;
+import com.example.academyapp.Model.CustomerInfoModel;
 import com.firebase.ui.auth.AuthMethodPickerLayout;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -77,7 +76,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private void init() {
 
         database = FirebaseDatabase.getInstance();
-        UserInfoRef = database.getReference(Common.MEMBER_INFO_REFERENCE);
+        UserInfoRef = database.getReference(Common.CUSTOMER_INFO_REFERENCE);
 
         providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
@@ -104,8 +103,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()) {
-                            MemberInfoModel memberInfoModel = snapshot.getValue(MemberInfoModel.class);
-                            goToHomeActivity(memberInfoModel);
+                            CustomerInfoModel customerInfoModel = snapshot.getValue(CustomerInfoModel.class);
+                            goToHomeActivity(customerInfoModel);
                         } else {
                             showRegisterLayout();
                         }
@@ -122,18 +121,14 @@ public class SplashScreenActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View itemView = LayoutInflater.from(this).inflate(R.layout.layout_register, null);
 
-        final RadioGroup rg = itemView.findViewById(R.id.radioGroup);
-        final RadioButton normalmem = itemView.findViewById(R.id.normalmember);
-        final RadioButton directormem = itemView.findViewById(R.id.directormember);
-
-        final TextInputEditText txt_name = (TextInputEditText)itemView.findViewById(R.id.edt_name);
-        final TextInputEditText txt_phone = (TextInputEditText)itemView.findViewById(R.id.edt_phone_number);
-        final TextInputEditText txt_nickname = (TextInputEditText)itemView.findViewById(R.id.edt_nick_name);
+        final TextInputEditText edt_name = (TextInputEditText)itemView.findViewById(R.id.edt_name);
+        final TextInputEditText edt_phone = (TextInputEditText)itemView.findViewById(R.id.edt_phone_number);
+        final TextInputEditText edt_nickname = (TextInputEditText)itemView.findViewById(R.id.edt_nick_name);
 
         Button btn_continue = (Button)itemView.findViewById(R.id.btn_register);
 
         if (FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() != null && !TextUtils.isEmpty(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
-            txt_phone.setText(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+            edt_phone.setText(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
         }
 
         builder.setView(itemView);
@@ -143,28 +138,20 @@ public class SplashScreenActivity extends AppCompatActivity {
         btn_continue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (TextUtils.isEmpty(txt_name.getText().toString())) {
+                if (TextUtils.isEmpty(edt_name.getText().toString())) {
                     Toast.makeText(SplashScreenActivity.this, "이름을 입력하세요.", Toast.LENGTH_SHORT).show();
                     return;
-                } else if (TextUtils.isEmpty(txt_phone.getText().toString())) {
+                } else if (TextUtils.isEmpty(edt_phone.getText().toString())) {
                     Toast.makeText(SplashScreenActivity.this, "연락처를 입력하세요.", Toast.LENGTH_SHORT).show();
                     return;
-                } else if (TextUtils.isEmpty(txt_nickname.getText().toString())) {
+                } else if (TextUtils.isEmpty(edt_nickname.getText().toString())) {
                     Toast.makeText(SplashScreenActivity.this, "닉네임을 입력하세요.", Toast.LENGTH_SHORT).show();
                     return;
-                } else if (rg.getCheckedRadioButtonId() == -1){
-                    Toast.makeText(SplashScreenActivity.this, "회원 분류를 선택하세요.", Toast.LENGTH_SHORT).show();
-                    return;
                 } else {
-                    final MemberInfoModel model = new MemberInfoModel();
-                    model.setName(txt_name.getText().toString());
-                    model.setPhoneNumber(txt_phone.getText().toString());
-                    model.setNickName(txt_nickname.getText().toString());
-                    if (normalmem.isChecked()) {
-                        model.setType(normalmem.getText().toString());
-                    } else if (directormem.isChecked()) {
-                        model.setType(directormem.getText().toString());
-                    }
+                    final CustomerInfoModel model = new CustomerInfoModel();
+                    model.setName(edt_name.getText().toString());
+                    model.setPhoneNumber(edt_phone.getText().toString());
+                    model.setNickName(edt_nickname.getText().toString());
 
                     UserInfoRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                             .setValue(model)
@@ -188,8 +175,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         });
     }
 
-    private void goToHomeActivity(MemberInfoModel memberInfoModel) {
-        Common.currentMember = memberInfoModel;
+    private void goToHomeActivity(CustomerInfoModel customerInfoModel) {
+        Common.currentCustomer = customerInfoModel;
         startActivity(new Intent(SplashScreenActivity.this, CustomerHomeActivity.class));
         finish();
     }

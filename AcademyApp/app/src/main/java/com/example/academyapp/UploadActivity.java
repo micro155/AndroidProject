@@ -3,7 +3,6 @@ package com.example.academyapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -30,12 +29,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.academyapp.Model.MemberInfoModel;
 import com.example.academyapp.Utils.UserUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -268,7 +267,7 @@ public class UploadActivity extends AppCompatActivity {
         img_profile = (ImageView)headerView.findViewById(R.id.img_profile);
 
         txt_nick_name.setText(Common.buildWelcomeMessage());
-        txt_email.setText(Common.currentCustomer != null ? Common.currentCustomer.getEmail() : "");
+        txt_email.setText(Common.currentMember != null ? Common.currentMember.getEmail() : "");
 
         img_profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -280,9 +279,9 @@ public class UploadActivity extends AppCompatActivity {
             }
         });
 
-        if (Common.currentCustomer != null && Common.currentCustomer.getProfile() != null && !TextUtils.isEmpty(Common.currentCustomer.getProfile())) {
+        if (Common.currentMember != null && Common.currentMember.getProfile() != null && !TextUtils.isEmpty(Common.currentMember.getProfile())) {
             Glide.with(this)
-                    .load(Common.currentCustomer.getProfile())
+                    .load(Common.currentMember.getProfile())
                     .into(img_profile);
         }
     }
@@ -290,6 +289,12 @@ public class UploadActivity extends AppCompatActivity {
 
     //upload the file
     private void uploadFile() {
+
+        String mAuth = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        final MemberInfoModel model = new MemberInfoModel();
+
+
         //업로드할 파일이 있으면 수행
         if (filePath != null) {
             //업로드 진행 Dialog 보이기
@@ -303,7 +308,7 @@ public class UploadActivity extends AppCompatActivity {
             //Unique한 파일명을 만들자.
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");
             Date now = new Date();
-            String filename = formatter.format(now) + ".png";
+            String filename = formatter.format(now);
             //storage 주소와 폴더 파일명을 지정해 준다.
             StorageReference storageRef = storage.getReferenceFromUrl("gs://academyapp-d7c41.appspot.com").child("images/" + filename);
             //올라가거라...

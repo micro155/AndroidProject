@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -23,11 +22,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -63,8 +57,6 @@ public class CustomerHomeActivity extends AppCompatActivity {
     private ImageView img_profile;
     private Uri imageUri;
 
-    private String mType;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,75 +64,31 @@ public class CustomerHomeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
-        String mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        mRef.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mType = snapshot.child("type").getValue(String.class);
-                Log.d("value", "it's type " + mType);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
+        drawer = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_home, R.id.nav_logout, R.id.nav_upload)
+                .setDrawerLayout(drawer)
+                .build();
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
+
+        NaverMapSdk.getInstance(this).setClient(
+                new NaverMapSdk.NaverCloudPlatformClient("z79q0dob9r"));
 
 
-        if (mType == "원장회원") {
-            FloatingActionButton fab = findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            });
-            drawer = findViewById(R.id.drawer_layout);
-            navigationView = findViewById(R.id.nav_view);
-            // Passing each menu ID as a set of Ids because each
-            // menu should be considered as top level destinations.
-            mAppBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.nav_home, R.id.nav_logout, R.id.nav_upload)
-                    .setDrawerLayout(drawer)
-                    .build();
-            navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-            NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-            NavigationUI.setupWithNavController(navigationView, navController);
-
-            NaverMapSdk.getInstance(this).setClient(
-                    new NaverMapSdk.NaverCloudPlatformClient("z79q0dob9r"));
-
-            init();
-
-        } else {
-            FloatingActionButton fab = findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            });
-            drawer = findViewById(R.id.drawer_layout);
-            navigationView = findViewById(R.id.nav_view);
-            // Passing each menu ID as a set of Ids because each
-            // menu should be considered as top level destinations.
-            mAppBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.nav_home, R.id.nav_logout)
-                    .setDrawerLayout(drawer)
-                    .build();
-            navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-            NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-            NavigationUI.setupWithNavController(navigationView, navController);
-
-            NaverMapSdk.getInstance(this).setClient(
-                    new NaverMapSdk.NaverCloudPlatformClient("z79q0dob9r"));
-
-            init();
-        }
-
+        init();
     }
 
     @Override
@@ -282,7 +230,7 @@ public class CustomerHomeActivity extends AppCompatActivity {
         img_profile = (ImageView)headerView.findViewById(R.id.img_profile);
 
         txt_nick_name.setText(Common.buildWelcomeMessage());
-        txt_email.setText(Common.currentMember != null ? Common.currentMember.getEmail() : "");
+        txt_email.setText(Common.currentCustomer != null ? Common.currentCustomer.getEmail() : "");
 
         img_profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -294,9 +242,9 @@ public class CustomerHomeActivity extends AppCompatActivity {
             }
         });
 
-        if (Common.currentMember != null && Common.currentMember.getProfile() != null && !TextUtils.isEmpty(Common.currentMember.getProfile())) {
+        if (Common.currentCustomer != null && Common.currentCustomer.getProfile() != null && !TextUtils.isEmpty(Common.currentCustomer.getProfile())) {
             Glide.with(this)
-                    .load(Common.currentMember.getProfile())
+                    .load(Common.currentCustomer.getProfile())
                     .into(img_profile);
         }
     }
