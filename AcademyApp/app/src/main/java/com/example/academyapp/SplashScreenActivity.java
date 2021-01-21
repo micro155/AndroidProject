@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -190,8 +191,30 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private void goToHomeActivity(MemberInfoModel memberInfoModel) {
         Common.currentMember = memberInfoModel;
-        startActivity(new Intent(SplashScreenActivity.this, CustomerHomeActivity.class));
-        finish();
+
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        String mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        mRef.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String mType = snapshot.child("type").getValue(String.class);
+                Log.d("value1", "it's type " + mType);
+
+                if (mType.equals("일반회원")) {
+                    startActivity(new Intent(SplashScreenActivity.this, NormalMemberHomeActivity.class));
+                    Log.d("route", "normalMember route");
+                } else {
+                    startActivity(new Intent(SplashScreenActivity.this, DirectorHomeActivity.class));
+                    Log.d("route", "director route");
+                }
+                finish();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 
     private void showLoginLayout() {

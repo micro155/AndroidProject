@@ -1,15 +1,26 @@
 package com.example.academyapp;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,38 +31,21 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.naver.maps.map.NaverMapSdk;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class CustomerHomeActivity extends AppCompatActivity {
+public class NormalMemberHomeActivity extends AppCompatActivity {
 
-    private static final int PICK_IMAGE_REQUEST = 100;
+    private static final int PICK_IMAGE_REQUEST = 101;
 
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout drawer;
@@ -63,85 +57,40 @@ public class CustomerHomeActivity extends AppCompatActivity {
     private ImageView img_profile;
     private Uri imageUri;
 
-    private String mType;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customer_home);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        setContentView(R.layout.activity_normal_member_home);
+
+        Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
 
-        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
-        String mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        mRef.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
+        FloatingActionButton fab = findViewById(R.id.fab2);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mType = snapshot.child("type").getValue(String.class);
-                Log.d("value", "it's type " + mType);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
+        drawer = findViewById(R.id.drawer_normalmember_layout);
+        navigationView = findViewById(R.id.nav_normalmember_view);
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_normalmember_home, R.id.nav_normalmember_logout, R.id.nav_download)
+                .setDrawerLayout(drawer)
+                .build();
+        navController = Navigation.findNavController(this, R.id.nav_normalmember_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
 
+        NaverMapSdk.getInstance(this).setClient(
+                new NaverMapSdk.NaverCloudPlatformClient("z79q0dob9r"));
 
-        if (mType == "원장회원") {
-            FloatingActionButton fab = findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            });
-            drawer = findViewById(R.id.drawer_layout);
-            navigationView = findViewById(R.id.nav_view);
-            // Passing each menu ID as a set of Ids because each
-            // menu should be considered as top level destinations.
-            mAppBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.nav_home, R.id.nav_logout, R.id.nav_upload)
-                    .setDrawerLayout(drawer)
-                    .build();
-            navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-            NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-            NavigationUI.setupWithNavController(navigationView, navController);
-
-            NaverMapSdk.getInstance(this).setClient(
-                    new NaverMapSdk.NaverCloudPlatformClient("z79q0dob9r"));
-
-            init();
-
-        } else {
-            FloatingActionButton fab = findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            });
-            drawer = findViewById(R.id.drawer_layout);
-            navigationView = findViewById(R.id.nav_view);
-            // Passing each menu ID as a set of Ids because each
-            // menu should be considered as top level destinations.
-            mAppBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.nav_home, R.id.nav_logout)
-                    .setDrawerLayout(drawer)
-                    .build();
-            navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-            NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-            NavigationUI.setupWithNavController(navigationView, navController);
-
-            NaverMapSdk.getInstance(this).setClient(
-                    new NaverMapSdk.NaverCloudPlatformClient("z79q0dob9r"));
-
-            init();
-        }
-
+        init();
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -157,7 +106,7 @@ public class CustomerHomeActivity extends AppCompatActivity {
     }
 
     private void showDialogUpload() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(CustomerHomeActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(NormalMemberHomeActivity.this);
         builder.setTitle("프로필 변경")
                 .setMessage("정말로 프로필을 변경하시겠습니까?")
                 .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -235,8 +184,8 @@ public class CustomerHomeActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.nav_logout) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(CustomerHomeActivity.this);
+                if (item.getItemId() == R.id.nav_normalmember_logout) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(NormalMemberHomeActivity.this);
                     builder.setTitle("로그아웃")
                             .setMessage("정말 로그아웃 하시겠습니까?")
                             .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -249,7 +198,7 @@ public class CustomerHomeActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     FirebaseAuth.getInstance().signOut();
-                                    Intent intent = new Intent(CustomerHomeActivity.this, SplashScreenActivity.class);
+                                    Intent intent = new Intent(NormalMemberHomeActivity.this, SplashScreenActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
                                     finish();
@@ -261,14 +210,14 @@ public class CustomerHomeActivity extends AppCompatActivity {
                         @Override
                         public void onShow(DialogInterface dialogInterface) {
                             dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                                    .setTextColor(ContextCompat.getColor(CustomerHomeActivity.this, android.R.color.holo_red_dark));
+                                    .setTextColor(ContextCompat.getColor(NormalMemberHomeActivity.this, android.R.color.holo_red_dark));
                             dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-                                    .setTextColor(ContextCompat.getColor(CustomerHomeActivity.this, R.color.colorAccent));
+                                    .setTextColor(ContextCompat.getColor(NormalMemberHomeActivity.this, R.color.colorAccent));
                         }
                     });
                     dialog.show();
                 } else if (item.getItemId() == R.id.nav_upload) {
-                    Intent intent = new Intent(CustomerHomeActivity.this, UploadActivity.class);
+                    Intent intent = new Intent(NormalMemberHomeActivity.this, UploadActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -310,7 +259,7 @@ public class CustomerHomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavController navController = Navigation.findNavController(this, R.id.nav_normalmember_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
