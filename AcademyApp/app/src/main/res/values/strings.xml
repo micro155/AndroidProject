@@ -12,4 +12,5 @@
     <string name="menu_logout">로그아웃</string>
     <string name="menu_upload">강의 영상 업로드</string>
     <string name="menu_download">강의 영상 다운로드</string>
+    <string name="menu_academy_management">학원 정보 관리</string>
 </resources>

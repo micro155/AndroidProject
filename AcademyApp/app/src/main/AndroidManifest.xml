@@ -11,8 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NormalMemberHomeActivity"
-            android:theme="@style/AppTheme.NoActionBar" ></activity>
+        <activity android:name=".AcademyManagementActivity"></activity>
+        <activity
+            android:name=".NormalMemberHomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".DownloadContentsActivity" />
 
         <meta-data
@@ -23,7 +25,9 @@
             android:name=".DirectorHomeActivity"
             android:label="@string/title_activity_customer_home"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".UploadActivity" />
+        <activity
+            android:name=".UploadActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/SplashTheme">

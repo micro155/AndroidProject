@@ -3,6 +3,7 @@ package com.example.academyapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -74,6 +75,9 @@ public class UploadActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload);
+
+        Toolbar toolbar = findViewById(R.id.toolbar_upload);
+        setSupportActionBar(toolbar);
 
         drawer = findViewById(R.id.drawer_upload_layout);
         navigationView = findViewById(R.id.nav_upload_view);

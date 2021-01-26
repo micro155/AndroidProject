@@ -56,4 +56,8 @@ dependencies {
     // 네이버 지도 SDK
     implementation 'com.naver.maps:map-sdk:3.10.0'
 
+    //Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
+
 }
