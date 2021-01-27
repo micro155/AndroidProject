@@ -4,7 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -19,6 +25,7 @@ import com.example.academyapp.RestAPI.RequestAddress;
 import com.example.academyapp.RestAPI.RetrofitConnection;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +34,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.CameraAnimation;
 import com.naver.maps.map.CameraUpdate;
+import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 
@@ -42,6 +51,11 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
     double ResultAddressX;
     double ResultAddressY;
 
+    private DrawerLayout drawer;
+    private NavigationView navigationView;
+    private AppBarConfiguration mAppBarConfiguration;
+    private NavController navController;
+
 
 
     @Override
@@ -50,12 +64,38 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
         setContentView(R.layout.activity_academy_management);
 
         confirmAcademyInfo();
+        showAcademyManagement();
+
+        Toolbar toolbar = findViewById(R.id.toolbar_management);
+        setSupportActionBar(toolbar);
+
+        drawer = findViewById(R.id.drawer_director_academy_management);
+
+        navigationView = findViewById(R.id.nav_management_view);
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_director_home, R.id.nav_director_logout, R.id.nav_upload, R.id.nav_academy_management)
+                .setDrawerLayout(drawer)
+                .build();
+        navController = Navigation.findNavController(this, R.id.map_management);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
+
+        FragmentManager fm = getSupportFragmentManager();
+        MapFragment mapFragment = (MapFragment)fm.findFragmentById(R.id.map_management);
+        if (mapFragment == null) {
+            mapFragment = MapFragment.newInstance();
+            fm.beginTransaction().add(R.id.map_management, mapFragment).commit();
+        }
+
+        mapFragment.getMapAsync(this);
     }
 
     @UiThread
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
-        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(ResultAddressX, ResultAddressY));
+        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(ResultAddressX, ResultAddressY)).animate(CameraAnimation.Fly);
         naverMap.moveCamera(cameraUpdate);
     }
 
@@ -71,8 +111,6 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
 
                 if (location == null) {
                     showRegisterAcademy();
-                } else {
-                    showAcademyManagement();
                 }
             }
 

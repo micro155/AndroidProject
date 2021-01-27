@@ -22,4 +22,10 @@
         android:label="@string/menu_upload"
         tools:layout="@layout/fragment_upload" />
 
+    <fragment
+        android:id="@+id/nav_academy_management"
+        android:name="com.example.academyapp.ui.gallery.GalleryFragment"
+        android:label="@string/menu_academy_management"
+        tools:layout="@layout/fragment_management" />
+
 </navigation>
