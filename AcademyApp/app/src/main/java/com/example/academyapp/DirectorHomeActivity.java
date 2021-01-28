@@ -220,6 +220,10 @@ public class DirectorHomeActivity extends AppCompatActivity {
                     Intent intent = new Intent(DirectorHomeActivity.this, UploadActivity.class);
                     startActivity(intent);
                     finish();
+                } else if (item.getItemId() == R.id.nav_academy_management) {
+                    Intent intent = new Intent(DirectorHomeActivity.this, AcademyManagementActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 return false;
             }
@@ -250,6 +254,7 @@ public class DirectorHomeActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -263,4 +268,7 @@ public class DirectorHomeActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+
+
 }

@@ -260,6 +260,10 @@ public class UploadActivity extends AppCompatActivity {
                     Intent intent = new Intent(UploadActivity.this, UploadActivity.class);
                     startActivity(intent);
                     finish();
+                } else if (item.getItemId() == R.id.nav_academy_management) {
+                    Intent intent = new Intent(UploadActivity.this, AcademyManagementActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 return false;
             }
@@ -348,6 +352,7 @@ public class UploadActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -355,11 +360,13 @@ public class UploadActivity extends AppCompatActivity {
         return true;
     }
 
+
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_upload_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
 
 }
