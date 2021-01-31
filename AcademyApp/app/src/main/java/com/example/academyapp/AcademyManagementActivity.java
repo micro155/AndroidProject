@@ -1,10 +1,12 @@
 package com.example.academyapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
@@ -12,21 +14,34 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.example.academyapp.Model.AcademyInfo;
 import com.example.academyapp.Model.MemberInfoModel;
 import com.example.academyapp.RestAPI.RequestAddress;
 import com.example.academyapp.RestAPI.RetrofitConnection;
+import com.example.academyapp.Utils.UserUtils;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +49,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraAnimation;
 import com.naver.maps.map.CameraUpdate;
@@ -41,21 +60,47 @@ import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 
+import org.json.simple.JSONArray;
+import org.json.JSONException;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AcademyManagementActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    DatabaseReference UserInfoRef;
+    DatabaseReference AcademyInfoRef;
     String address;
-    double ResultAddressX;
-    double ResultAddressY;
+    String ResultAddressX;
+    String ResultAddressY;
+    String mUid;
 
     private DrawerLayout drawer;
     private NavigationView navigationView;
     private AppBarConfiguration mAppBarConfiguration;
     private NavController navController;
+
+    private AlertDialog waitingDialog;
+    private StorageReference storageReference;
+    private ImageView img_profile;
+    private Uri imageUri;
+
+    private static final int PICK_IMAGE_REQUEST = 100;
 
 
 
@@ -65,7 +110,11 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
         setContentView(R.layout.activity_academy_management);
 
         confirmAcademyInfo();
-        showAcademyManagement();
+        try {
+            showAcademyManagement();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar_management);
         setSupportActionBar(toolbar);
@@ -96,19 +145,19 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
     @UiThread
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
-        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(ResultAddressX, ResultAddressY)).animate(CameraAnimation.Fly);
+        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(37.5666102, 126.9783881)).animate(CameraAnimation.Fly);
         naverMap.moveCamera(cameraUpdate);
     }
 
     private void confirmAcademyInfo() {
 
-        UserInfoRef = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
-        String mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        AcademyInfoRef = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+        mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        UserInfoRef.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
+        AcademyInfoRef.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String location = snapshot.child("location").getValue(String.class);
+                String location = snapshot.child("academy_address").getValue(String.class);
 
                 if (location == null) {
                     showRegisterAcademy();
@@ -122,27 +171,90 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
         });
     }
 
-    private void showAcademyManagement() {
+    private void showAcademyManagement() throws UnsupportedEncodingException {
 
-        RetrofitConnection retrofitConnection = new RetrofitConnection();
-        Call<RequestAddress> requestAddress = retrofitConnection.mapAPI.getCoordinate(address);
+        final String[] academy_addr = new String[1];
 
-        requestAddress.enqueue(new Callback<RequestAddress>() {
+        AcademyInfoRef.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onResponse(Call<RequestAddress> call, Response<RequestAddress> response) {
-                if (response.isSuccessful()) {
-                    ResultAddressX = response.body().getX();
-                    ResultAddressY = response.body().getY();
-                }
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String location = snapshot.child("academy_address").getValue(String.class);
+                academy_addr[0] = location;
             }
 
             @Override
-            public void onFailure(Call<RequestAddress> call, Throwable t) {
-                Log.d("ERROR", "Failure Log :" + t.toString());
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
 
-        LatLng coord = new LatLng(ResultAddressX, ResultAddressY);
+        String addr = URLEncoder.encode(academy_addr[0], "utf-8");
+        String api = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=" + addr;
+        StringBuffer sb = new StringBuffer();
+
+        try {
+            URL url = new URL(api);
+            HttpsURLConnection http = (HttpsURLConnection)url.openConnection();
+            http.setRequestProperty("Content-Type", "application/json");
+            http.setRequestProperty("X-NCP-APIGW-API-KEY-ID", "z79q0dob9r");
+            http.setRequestProperty("X-NCP-APIGW-API-KEY", "l7JKaTHv8v4CE3wV5xc7G8exQs3HQ61y8n0ajNr3");
+            http.setRequestMethod("GET");
+            http.connect();
+
+            InputStreamReader in = new InputStreamReader(http.getInputStream(), "utf-8");
+            BufferedReader br = new BufferedReader(in);
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObject;
+            JSONObject jsonObject2 = null;
+            JSONArray jsonArray;
+            ResultAddressX = "";
+            ResultAddressY = "";
+
+            jsonObject = (JSONObject)parser.parse(sb.toString());
+            jsonArray = (JSONArray)jsonObject.get("addresses");
+            for (int i=0; i<jsonArray.size(); i++) {
+                if (jsonObject2.get("x") != null) {
+                    ResultAddressX = (String) jsonObject2.get("x").toString();
+                }
+                if (jsonObject2.get("y") != null) {
+                    ResultAddressY = (String) jsonObject2.get("y").toString();
+                }
+            }
+            br.close();
+            in.close();
+            http.disconnect();
+            Log.d("Lat & Long", ResultAddressX + ResultAddressY);
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+
+
+//        RetrofitConnection retrofitConnection = new RetrofitConnection();
+//        Call<RequestAddress> requestAddress = retrofitConnection.mapAPI.getCoordinate(address);
+//
+//
+//
+//        requestAddress.enqueue(new Callback<RequestAddress>() {
+//            @Override
+//            public void onResponse(Call<RequestAddress> call, Response<RequestAddress> response) {
+//                if (response.isSuccessful()) {
+//                    ResultAddressX = response.body().getX();
+//                    ResultAddressY = response.body().getY();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<RequestAddress> call, Throwable t) {
+//                Log.d("ERROR", "Failure Log :" + t.toString());
+//            }
+//        });
+//
+//        LatLng coord = new LatLng(ResultAddressX, ResultAddressY);
 
     }
 
@@ -174,12 +286,12 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                     Toast.makeText(AcademyManagementActivity.this, "전화번호를 입력하세요.", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    final MemberInfoModel model = new MemberInfoModel();
+                    final AcademyInfo model = new AcademyInfo();
                     model.setAcademy_name(academy_name.getText().toString());
                     model.setAcademy_address(academy_address.getText().toString());
                     model.setAcademy_tel(academy_tel.getText().toString());
 
-                    UserInfoRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    AcademyInfoRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                             .setValue(model)
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -201,6 +313,169 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+            if(data != null && data.getData() != null) {
+                imageUri = data.getData();
+                img_profile.setImageURI(imageUri);
+
+                showDialogUpload();
+            }
+        }
+    }
+
+    private void showDialogUpload() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(AcademyManagementActivity.this);
+        builder.setTitle("프로필 변경")
+                .setMessage("정말로 프로필을 변경하시겠습니까?")
+                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setPositiveButton("업로드", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        if (imageUri != null) {
+                            waitingDialog.setMessage("업로드중...");
+                            waitingDialog.show();
+
+                            String unique_name = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            final StorageReference profileFolder = storageReference.child("profiles/" + unique_name);
+
+                            profileFolder.putFile(imageUri)
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            waitingDialog.dismiss();
+                                            Snackbar.make(drawer, e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                profileFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                    @Override
+                                                    public void onSuccess(Uri uri) {
+                                                        Map<String, Object> updateData = new HashMap<>();
+                                                        updateData.put("profile", uri.toString());
+
+                                                        UserUtils.updateUser(drawer, updateData);
+                                                    }
+                                                });
+                                            }
+                                            waitingDialog.dismiss();
+                                        }
+                                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                                    double progress = (100.0 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
+                                    waitingDialog.setMessage(new StringBuilder("업로드 : ").append(progress).append("%"));
+                                }
+                            });
+                        }
+                    }
+                })
+                .setCancelable(false);
+        final AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                        .setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                        .setTextColor(getResources().getColor(R.color.colorAccent));
+            }
+        });
+        dialog.show();
+    }
+
+    private void init() {
+        waitingDialog = new AlertDialog.Builder(this)
+                .setCancelable(false)
+                .setMessage("잠시만 기다려주세요.")
+                .create();
+
+        storageReference = FirebaseStorage.getInstance().getReference();
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.nav_director_logout) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(AcademyManagementActivity.this);
+                    builder.setTitle("로그아웃")
+                            .setMessage("정말 로그아웃 하시겠습니까?")
+                            .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int which) {
+                                    dialogInterface.dismiss();
+                                }
+                            })
+                            .setPositiveButton("로그아웃", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    FirebaseAuth.getInstance().signOut();
+                                    Intent intent = new Intent(AcademyManagementActivity.this, SplashScreenActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            })
+                            .setCancelable(false);
+                    final AlertDialog dialog = builder.create();
+                    dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                        @Override
+                        public void onShow(DialogInterface dialogInterface) {
+                            dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                                    .setTextColor(ContextCompat.getColor(AcademyManagementActivity.this, android.R.color.holo_red_dark));
+                            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                                    .setTextColor(ContextCompat.getColor(AcademyManagementActivity.this, R.color.colorAccent));
+                        }
+                    });
+                    dialog.show();
+                } else if (item.getItemId() == R.id.nav_upload) {
+                    Intent intent = new Intent(AcademyManagementActivity.this, UploadActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else if (item.getItemId() == R.id.nav_academy_management) {
+                    Intent intent = new Intent(AcademyManagementActivity.this, AcademyManagementActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                return false;
+            }
+        });
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView txt_nick_name = (TextView)headerView.findViewById(R.id.txt_nick_name);
+        TextView txt_email = (TextView)headerView.findViewById(R.id.txt_email);
+        img_profile = (ImageView)headerView.findViewById(R.id.img_profile);
+
+        txt_nick_name.setText(Common.buildWelcomeMessage());
+        txt_email.setText(Common.currentMember != null ? Common.currentMember.getEmail() : "");
+
+        img_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent, PICK_IMAGE_REQUEST);
+            }
+        });
+
+        if (Common.currentMember != null && Common.currentMember.getProfile() != null && !TextUtils.isEmpty(Common.currentMember.getProfile())) {
+            Glide.with(this)
+                    .load(Common.currentMember.getProfile())
+                    .into(img_profile);
+        }
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -212,7 +487,7 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.map_management);
+        NavController navController = Navigation.findNavController(this, R.id.nav_management_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }

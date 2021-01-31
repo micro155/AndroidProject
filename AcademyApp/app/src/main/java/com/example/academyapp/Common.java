@@ -5,6 +5,7 @@ import com.example.academyapp.Model.MemberInfoModel;
 public class Common {
 
     public static final String MEMBER_INFO_REFERENCE = "MemberInfo";
+    public static final String ACADEMY_INFO_REFERENCE = "AcademyInfo";
 
     public static MemberInfoModel currentMember;
 

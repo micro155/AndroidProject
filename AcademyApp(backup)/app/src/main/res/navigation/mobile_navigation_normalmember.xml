@@ -2,24 +2,24 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    android:id="@+id/mobile_navigation_normalmember"
+    app:startDestination="@+id/nav_normalmember_home">
 
     <fragment
-        android:id="@+id/nav_home"
+        android:id="@+id/nav_normalmember_home"
         android:name="com.example.academyapp.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_logout"
+        android:id="@+id/nav_normalmember_logout"
         android:name="com.example.academyapp.ui.gallery.GalleryFragment"
         android:label="@string/menu_logout" />
 
     <fragment
-        android:id="@+id/nav_upload"
+        android:id="@+id/nav_download"
         android:name="com.example.academyapp.ui.gallery.GalleryFragment"
-        android:label="@string/menu_upload"
-        tools:layout="@layout/fragment_upload" />
+        android:label="@string/menu_download"
+        tools:layout="@layout/fragment_download" />
 
 </navigation>
