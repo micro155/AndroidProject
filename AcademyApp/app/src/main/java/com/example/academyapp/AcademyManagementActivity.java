@@ -59,6 +59,7 @@ import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.overlay.Marker;
 
 import org.json.simple.JSONArray;
 import org.json.JSONException;
@@ -85,7 +86,6 @@ import retrofit2.Response;
 public class AcademyManagementActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     DatabaseReference AcademyInfoRef;
-    String address;
     String ResultAddressX;
     String ResultAddressY;
     String mUid;
@@ -110,11 +110,7 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
         setContentView(R.layout.activity_academy_management);
 
         confirmAcademyInfo();
-        try {
-            showAcademyManagement();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        showAcademyManagement();
 
         Toolbar toolbar = findViewById(R.id.toolbar_management);
         setSupportActionBar(toolbar);
@@ -132,21 +128,27 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        FragmentManager fm = getSupportFragmentManager();
-        MapFragment mapFragment = (MapFragment)fm.findFragmentById(R.id.map_management);
+
+        MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.map_management);
         if (mapFragment == null) {
             mapFragment = MapFragment.newInstance();
-            fm.beginTransaction().add(R.id.map_management, mapFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.map_management, mapFragment).commit();
         }
 
         mapFragment.getMapAsync(this);
+
+        init();
     }
 
     @UiThread
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
-        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(37.5666102, 126.9783881)).animate(CameraAnimation.Fly);
+        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(36.763695, 127.281796)).animate(CameraAnimation.Fly);
         naverMap.moveCamera(cameraUpdate);
+
+        Marker marker = new Marker();
+        marker.setPosition(new LatLng(36.763695, 127.281796));
+        marker.setMap(naverMap);
     }
 
     private void confirmAcademyInfo() {
@@ -171,15 +173,38 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
         });
     }
 
-    private void showAcademyManagement() throws UnsupportedEncodingException {
+    private void showAcademyManagement() {
 
-        final String[] academy_addr = new String[1];
+//        final String[] academy_addr = new String[1];
 
         AcademyInfoRef.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String location = snapshot.child("academy_address").getValue(String.class);
-                academy_addr[0] = location;
+
+                RetrofitConnection retrofitConnection = new RetrofitConnection();
+                Call<RequestAddress> requestAddress = retrofitConnection.mapAPI.getCoordinate(location);
+                Log.d("location", location);
+
+                requestAddress.enqueue(new Callback<RequestAddress>() {
+                    @Override
+                    public void onResponse(Call<RequestAddress> call, Response<RequestAddress> response) {
+                        if (response.isSuccessful()) {
+                            ResultAddressX = response.body().getX();
+                            ResultAddressY = response.body().getY();
+
+                            Log.d("x", "x = " + ResultAddressX);
+                            Log.d("y", "y = " + ResultAddressY);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<RequestAddress> call, Throwable t) {
+                        Log.d("ERROR", "Failure Log :" + t.toString());
+                    }
+                });
+
+
             }
 
             @Override
@@ -188,72 +213,8 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
             }
         });
 
-        String addr = URLEncoder.encode(academy_addr[0], "utf-8");
-        String api = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=" + addr;
-        StringBuffer sb = new StringBuffer();
-
-        try {
-            URL url = new URL(api);
-            HttpsURLConnection http = (HttpsURLConnection)url.openConnection();
-            http.setRequestProperty("Content-Type", "application/json");
-            http.setRequestProperty("X-NCP-APIGW-API-KEY-ID", "z79q0dob9r");
-            http.setRequestProperty("X-NCP-APIGW-API-KEY", "l7JKaTHv8v4CE3wV5xc7G8exQs3HQ61y8n0ajNr3");
-            http.setRequestMethod("GET");
-            http.connect();
-
-            InputStreamReader in = new InputStreamReader(http.getInputStream(), "utf-8");
-            BufferedReader br = new BufferedReader(in);
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-
-            JSONParser parser = new JSONParser();
-            JSONObject jsonObject;
-            JSONObject jsonObject2 = null;
-            JSONArray jsonArray;
-            ResultAddressX = "";
-            ResultAddressY = "";
-
-            jsonObject = (JSONObject)parser.parse(sb.toString());
-            jsonArray = (JSONArray)jsonObject.get("addresses");
-            for (int i=0; i<jsonArray.size(); i++) {
-                if (jsonObject2.get("x") != null) {
-                    ResultAddressX = (String) jsonObject2.get("x").toString();
-                }
-                if (jsonObject2.get("y") != null) {
-                    ResultAddressY = (String) jsonObject2.get("y").toString();
-                }
-            }
-            br.close();
-            in.close();
-            http.disconnect();
-            Log.d("Lat & Long", ResultAddressX + ResultAddressY);
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
-
-
-//        RetrofitConnection retrofitConnection = new RetrofitConnection();
-//        Call<RequestAddress> requestAddress = retrofitConnection.mapAPI.getCoordinate(address);
-//
-//
-//
-//        requestAddress.enqueue(new Callback<RequestAddress>() {
-//            @Override
-//            public void onResponse(Call<RequestAddress> call, Response<RequestAddress> response) {
-//                if (response.isSuccessful()) {
-//                    ResultAddressX = response.body().getX();
-//                    ResultAddressY = response.body().getY();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<RequestAddress> call, Throwable t) {
-//                Log.d("ERROR", "Failure Log :" + t.toString());
-//            }
-//        });
-//
+//        Log.d("x out", "x : " + ResultAddressX);
+//        Log.d("y out", "y : " + ResultAddressY);
 //        LatLng coord = new LatLng(ResultAddressX, ResultAddressY);
 
     }
@@ -443,6 +404,10 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                     finish();
                 } else if (item.getItemId() == R.id.nav_academy_management) {
                     Intent intent = new Intent(AcademyManagementActivity.this, AcademyManagementActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else if (item.getItemId() == R.id.nav_director_home) {
+                    Intent intent = new Intent(AcademyManagementActivity.this, DirectorHomeActivity.class);
                     startActivity(intent);
                     finish();
                 }

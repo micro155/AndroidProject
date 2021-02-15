@@ -39,6 +39,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -70,6 +75,7 @@ public class UploadActivity extends AppCompatActivity {
     private ImageView ivPreview;
 
     private Uri filePath;
+    DatabaseReference FileDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -264,6 +270,10 @@ public class UploadActivity extends AppCompatActivity {
                     Intent intent = new Intent(UploadActivity.this, AcademyManagementActivity.class);
                     startActivity(intent);
                     finish();
+                } else if (item.getItemId() == R.id.nav_director_home) {
+                    Intent intent = new Intent(UploadActivity.this, DirectorHomeActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 return false;
             }
@@ -298,7 +308,8 @@ public class UploadActivity extends AppCompatActivity {
     //upload the file
     private void uploadFile() {
 
-        String mAuth = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FileDatabase = FirebaseDatabase.getInstance().getReference("FileList");
+        final String mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         final MemberInfoModel model = new MemberInfoModel();
 
@@ -316,15 +327,16 @@ public class UploadActivity extends AppCompatActivity {
             //Unique한 파일명을 만들자.
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");
             Date now = new Date();
-            String filename = formatter.format(now);
+            final String filename = formatter.format(now);
             //storage 주소와 폴더 파일명을 지정해 준다.
-            StorageReference storageRef = storage.getReferenceFromUrl("gs://academyapp-d7c41.appspot.com").child("images/" + filename);
+            StorageReference storageRef = storage.getReferenceFromUrl("gs://academyapp-d7c41.appspot.com").child("video/" + filename);
             //올라가거라...
             storageRef.putFile(filePath)
                     //성공시
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            FileDatabase.child(mUid).setValue(filename);
                             progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
                         }
@@ -341,7 +353,7 @@ public class UploadActivity extends AppCompatActivity {
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            @SuppressWarnings("VisibleForTests") //이걸 넣어 줘야 아랫줄에 에러가 사라진다. 넌 누구냐?
+                            @SuppressWarnings("VisibleForTests") //이걸 넣어 줘야 아랫줄에 에러가 사라진다.
                                     double progress = (100 * taskSnapshot.getBytesTransferred()) /  taskSnapshot.getTotalByteCount();
                             //dialog에 진행률을 퍼센트로 출력해 준다
                             progressDialog.setMessage("Uploaded " + ((int) progress) + "% ...");
