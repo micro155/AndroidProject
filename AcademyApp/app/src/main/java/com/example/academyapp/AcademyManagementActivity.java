@@ -180,33 +180,30 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
         AcademyInfoRef.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String location = snapshot.child("academy_address").getValue(String.class);
+                    String location = snapshot.child("academy_address").getValue(String.class);
 
-                RetrofitConnection retrofitConnection = new RetrofitConnection();
-                Call<RequestAddress> requestAddress = retrofitConnection.mapAPI.getCoordinate(location);
-                Log.d("location", location);
+                    RetrofitConnection retrofitConnection = new RetrofitConnection();
+                    Call<RequestAddress> requestAddress = retrofitConnection.mapAPI.getCoordinate(location);
+                    Log.d("location", location);
 
-                requestAddress.enqueue(new Callback<RequestAddress>() {
-                    @Override
-                    public void onResponse(Call<RequestAddress> call, Response<RequestAddress> response) {
-                        if (response.isSuccessful()) {
-                            ResultAddressX = response.body().getX();
-                            ResultAddressY = response.body().getY();
+                    requestAddress.enqueue(new Callback<RequestAddress>() {
+                        @Override
+                        public void onResponse(Call<RequestAddress> call, Response<RequestAddress> response) {
+                            if (response.isSuccessful()) {
+                                ResultAddressX = response.body().getX();
+                                ResultAddressY = response.body().getY();
 
-                            Log.d("x", "x = " + ResultAddressX);
-                            Log.d("y", "y = " + ResultAddressY);
+                                Log.d("x", "x = " + ResultAddressX);
+                                Log.d("y", "y = " + ResultAddressY);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<RequestAddress> call, Throwable t) {
-                        Log.d("ERROR", "Failure Log :" + t.toString());
-                    }
-                });
-
-
-            }
-
+                        @Override
+                        public void onFailure(Call<RequestAddress> call, Throwable t) {
+                            Log.d("ERROR", "Failure Log :" + t.toString());
+                        }
+                    });
+                }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

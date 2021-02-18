@@ -1,6 +1,10 @@
 package com.example.academyapp.RestAPI;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
