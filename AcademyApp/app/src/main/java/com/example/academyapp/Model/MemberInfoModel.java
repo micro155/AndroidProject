@@ -5,6 +5,7 @@ public class MemberInfoModel {
     private String Name, phoneNumber, nickName, profile, email, type, uploadfile;
 
     public MemberInfoModel() {
+
     }
 
     public String getName() {

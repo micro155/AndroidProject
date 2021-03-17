@@ -16,7 +16,9 @@
         <activity
             android:name=".NormalMemberHomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".DownloadContentsActivity" />
+
+        <activity android:name=".DownloadContentsActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"

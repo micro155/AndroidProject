@@ -216,8 +216,12 @@ public class NormalMemberHomeActivity extends AppCompatActivity {
                         }
                     });
                     dialog.show();
-                } else if (item.getItemId() == R.id.nav_upload) {
-                    Intent intent = new Intent(NormalMemberHomeActivity.this, UploadActivity.class);
+                } else if (item.getItemId() == R.id.nav_download) {
+                    Intent intent = new Intent(NormalMemberHomeActivity.this, DownloadContentsActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else if (item.getItemId() == R.id.nav_normalmember_home) {
+                    Intent intent = new Intent(NormalMemberHomeActivity.this, NormalMemberHomeActivity.class);
                     startActivity(intent);
                     finish();
                 }

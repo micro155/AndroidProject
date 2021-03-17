@@ -73,6 +73,7 @@ public class UploadActivity extends AppCompatActivity {
     private Button btChoose;
     private Button btUpload;
     private ImageView ivPreview;
+    private String mUid;
 
     private Uri filePath;
     DatabaseReference FileDatabase;
@@ -309,7 +310,7 @@ public class UploadActivity extends AppCompatActivity {
     private void uploadFile() {
 
         FileDatabase = FirebaseDatabase.getInstance().getReference("FileList");
-        final String mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         final MemberInfoModel model = new MemberInfoModel();
 
@@ -336,7 +337,27 @@ public class UploadActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            FileDatabase.child(mUid).setValue(filename);
+
+//                            DatabaseReference name_reference = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+//
+//                            name_reference.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                    String academy_name = snapshot.child("academy_name").getValue(String.class);
+//                                    academy[0] = academy_name;
+//
+////                                    FileDatabase.child("academy_name").setValue(academy_name);
+////                                    FileDatabase.child("file_name").setValue(filename);
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(@NonNull DatabaseError error) {
+//                                    Log.d("Error", "error message: " + error);
+//                                }
+//                            });
+
+                            FileDatabase.child(mUid).child("file_name").setValue(filename);
+
                             progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
                         }

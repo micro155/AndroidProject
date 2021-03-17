@@ -3,6 +3,7 @@ package com.example.academyapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -114,6 +115,7 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
 
         Toolbar toolbar = findViewById(R.id.toolbar_management);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("학원 정보 관리");
 
         drawer = findViewById(R.id.drawer_director_academy_management);
 
@@ -184,7 +186,7 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
 
                     RetrofitConnection retrofitConnection = new RetrofitConnection();
                     Call<RequestAddress> requestAddress = retrofitConnection.mapAPI.getCoordinate(location);
-                    Log.d("location", location);
+                    Log.d("location", "location" + location);
 
                     requestAddress.enqueue(new Callback<RequestAddress>() {
                         @Override

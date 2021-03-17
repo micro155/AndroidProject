@@ -13,12 +13,12 @@
 
     <fragment
         android:id="@+id/nav_normalmember_logout"
-        android:name="com.example.academyapp.ui.gallery.GalleryFragment"
+        android:name="com.example.academyapp.ui.gallery.FunctionFragment"
         android:label="@string/menu_logout" />
 
     <fragment
         android:id="@+id/nav_download"
-        android:name="com.example.academyapp.ui.gallery.GalleryFragment"
+        android:name="com.example.academyapp.ui.gallery.FunctionFragment"
         android:label="@string/menu_download"
         tools:layout="@layout/fragment_download" />
 
