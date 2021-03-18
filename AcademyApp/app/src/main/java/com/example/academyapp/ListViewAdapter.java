@@ -17,12 +17,19 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.academyapp.Model.FileListInfo;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ListViewAdapter extends BaseAdapter {
@@ -95,13 +102,40 @@ public class ListViewAdapter extends BaseAdapter {
 //        Intent intent = ((Activity) context).getIntent();
 //        academy_name = intent.getStringExtra()
 
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference();
+
+        final StorageReference pathReference = storageReference.child("video/" + fileName);
+
+        Log.d("fileName", "filename : " + fileName);
+
+        File localFile = null;
+        try {
+            localFile = File.createTempFile("videos", "jpg");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        final File finalLocalFile = localFile;
         builder.setTitle("강의 다운로드")
                 .setMessage(fileName + "를 다운로드하시겠습니까?")
                 .setPositiveButton("예", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                pathReference.getFile(finalLocalFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        int fileSize = (int) taskSnapshot.getTotalByteCount();
+                        Toast.makeText(context, "다운로드 성공", Toast.LENGTH_SHORT).show();
+                        Log.d("download task", "fileSize : " + fileSize);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, e + "로 인한 다운로드 실패", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         })
         .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
