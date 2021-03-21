@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.academyapp.R;
 
-public class GalleryFragment extends Fragment {
+public class FunctionFragment extends Fragment {
 
     private GalleryViewModel galleryViewModel;
 

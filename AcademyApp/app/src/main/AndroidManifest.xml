@@ -11,14 +11,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AcademyManagementActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".AcademyManagementActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".NormalMemberHomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".DownloadContentsActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".DownloadContentsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ChattingRoomActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"

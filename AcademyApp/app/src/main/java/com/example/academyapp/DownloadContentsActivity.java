@@ -119,7 +119,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_normalmember_home, R.id.nav_normalmember_logout, R.id.nav_download)
+                R.id.nav_normalmember_home, R.id.nav_normalmember_logout, R.id.nav_download, R.id.nav_chatting)
                 .setDrawerLayout(drawer)
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_download_fragment);
@@ -340,6 +340,10 @@ public class DownloadContentsActivity extends AppCompatActivity {
                     finish();
                 } else if (item.getItemId() == R.id.nav_normalmember_home) {
                     Intent intent = new Intent(DownloadContentsActivity.this, NormalMemberHomeActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else if (item.getItemId() == R.id.nav_chatting) {
+                    Intent intent = new Intent(DownloadContentsActivity.this, ChattingRoomActivity.class);
                     startActivity(intent);
                     finish();
                 }

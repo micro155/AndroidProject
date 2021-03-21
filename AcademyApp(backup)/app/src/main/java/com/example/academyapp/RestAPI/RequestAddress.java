@@ -1,21 +1,21 @@
 package com.example.academyapp.RestAPI;
 
 public class RequestAddress {
-    double x, y;
+    String x, y;
 
-    public double getX() {
+    public String getX() {
         return x;
     }
 
-    public void setX(double x) {
+    public void setX(String x) {
         this.x = x;
     }
 
-    public double getY() {
+    public String getY() {
         return y;
     }
 
-    public void setY(double y) {
+    public void setY(String y) {
         this.y = y;
     }
 }

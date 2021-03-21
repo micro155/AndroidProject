@@ -7,10 +7,12 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="menu_create_chatting_room">채팅 문의하기</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_logout">로그아웃</string>
     <string name="menu_upload">강의 영상 업로드</string>
     <string name="menu_download">강의 영상 다운로드</string>
+    <string name="menu_chatting">학원 문의 채팅</string>
     <string name="menu_academy_management">학원 정보 관리</string>
 </resources>

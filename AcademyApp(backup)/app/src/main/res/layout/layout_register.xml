@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
@@ -35,6 +39,7 @@
                         android:id="@+id/edt_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="textPersonName"
                         android:hint="이름" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -50,6 +55,7 @@
                     android:id="@+id/edt_phone_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="phone"
                     android:hint="연락처" />
 
 
@@ -64,6 +70,7 @@
                     android:id="@+id/edt_nick_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
                     android:hint="닉네임" />
 
 
@@ -96,20 +103,19 @@
 
         </LinearLayout>
 
-
+        <Button
+            android:layout_margin="16dp"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_register"
+            style="@style/Widget.MaterialComponents.Button"
+            android:text="회원가입"
+            android:textSize="15dp"
+            android:textColor="@android:color/white"/>
 
     </LinearLayout>
 
-    <Button
-        android:layout_margin="16dp"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_register"
-        style="@style/Widget.MaterialComponents.Button"
-        android:text="회원가입"
-        android:textSize="15dp"
-        android:textColor="@android:color/white"/>
-
-
 </RelativeLayout>
+
+</ScrollView>

@@ -22,4 +22,10 @@
         android:label="@string/menu_download"
         tools:layout="@layout/fragment_download" />
 
+    <fragment
+        android:id="@+id/nav_chatting"
+        android:name="com.example.academyapp.ui.gallery.FunctionFragment"
+        android:label="@string/menu_chatting"
+        tools:layout="@layout/fragment_chatting_room" />
+
 </navigation>

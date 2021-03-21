@@ -224,6 +224,10 @@ public class DirectorHomeActivity extends AppCompatActivity {
                     Intent intent = new Intent(DirectorHomeActivity.this, AcademyManagementActivity.class);
                     startActivity(intent);
                     finish();
+                } else if (item.getItemId() == R.id.nav_director_home) {
+                    Intent intent = new Intent(DirectorHomeActivity.this, DirectorHomeActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 return false;
             }
