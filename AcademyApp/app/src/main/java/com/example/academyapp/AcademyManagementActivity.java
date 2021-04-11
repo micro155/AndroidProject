@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
+import androidx.loader.content.AsyncTaskLoader;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -19,8 +20,10 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -54,6 +57,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraAnimation;
 import com.naver.maps.map.CameraUpdate;
@@ -70,6 +74,7 @@ import org.json.simple.parser.ParseException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -184,19 +189,63 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                     String location = snapshot.child("academy_address").getValue(String.class);
 
+//                    AsyncTask.execute(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            try {
+//                                URL requestURL = new URL("https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode");
+//                                HttpsURLConnection connection = (HttpsURLConnection) requestURL.openConnection();
+//                                connection.setRequestMethod("GET");
+//                                connection.setRequestProperty("X-NCP-APIGW-API-KEY-ID", "z79q0dob9r");
+//                                connection.setRequestProperty("X-NCP-APIGW-API-KEY", "l7JKaTHv8v4CE3wV5xc7G8exQs3HQ61y8n0ajNr3");
+//                                if (connection.getResponseCode() == 200) {
+//                                    String data = "query=서초대로29길 22-20";
+//                                    connection.getOutputStream().write(data.getBytes());
+//                                    InputStream responseBody = connection.getInputStream();
+//                                    InputStreamReader responseBodyReader = new InputStreamReader(responseBody, "UTF-8");
+//                                    JsonReader jsonReader = new JsonReader(responseBodyReader);
+//                                    jsonReader.beginObject();
+//                                    while(jsonReader.hasNext()) {
+//                                        String key = jsonReader.nextName();
+//                                        if (key.equals("x")) {
+//                                            String x = jsonReader.nextString();
+//                                            Log.d("x", "x value : " + x);
+//                                        } else {
+//                                            jsonReader.skipValue();
+//                                        }
+//                                        if (key.equals("y")) {
+//                                            String y = jsonReader.nextString();
+//                                            Log.d("y", "y value : " + y);
+//                                        } else {
+//                                            jsonReader.skipValue();
+//                                        }
+//                                    }
+//                                } else {
+//                                    Log.d("error", "error");
+//                                }
+//                            } catch (MalformedURLException e) {
+//                                e.printStackTrace();
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    });
+
+//                try {
+//                    String encodeAddress = URLEncoder.encode(location, "UTF-8");
                     RetrofitConnection retrofitConnection = new RetrofitConnection();
                     Call<RequestAddress> requestAddress = retrofitConnection.mapAPI.getCoordinate(location);
+
                     Log.d("location", "location" + location);
 
                     requestAddress.enqueue(new Callback<RequestAddress>() {
                         @Override
                         public void onResponse(Call<RequestAddress> call, Response<RequestAddress> response) {
                             if (response.isSuccessful()) {
-                                ResultAddressX = response.body().getX();
-                                ResultAddressY = response.body().getY();
-
-                                Log.d("x", "x = " + ResultAddressX);
-                                Log.d("y", "y = " + ResultAddressY);
+                                String x = response.body().getX();
+                                String y = response.body().getY();
+                                Log.d("x", "x = " + call.request().body());
+                                Log.d("y", "y = " + y);
                             }
                         }
 
@@ -205,6 +254,9 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                             Log.d("ERROR", "Failure Log :" + t.toString());
                         }
                     });
+//                } catch (UnsupportedEncodingException e) {
+//                    e.printStackTrace();
+//                }
                 }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

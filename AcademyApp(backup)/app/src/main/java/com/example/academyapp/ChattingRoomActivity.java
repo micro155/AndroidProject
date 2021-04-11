@@ -250,7 +250,7 @@ public class ChattingRoomActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.customer_home, menu);
+        getMenuInflater().inflate(R.menu.chatting_room_menu, menu);
         return true;
     }
 

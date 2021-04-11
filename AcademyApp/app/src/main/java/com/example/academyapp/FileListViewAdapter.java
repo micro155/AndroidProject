@@ -32,7 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ListViewAdapter extends BaseAdapter {
+public class FileListViewAdapter extends BaseAdapter {
 
     private Context context;
     private ArrayList<String> academy_list;
@@ -45,7 +45,7 @@ public class ListViewAdapter extends BaseAdapter {
         void onDownload (String fileName);
     }
 
-    public ListViewAdapter(Context context, ArrayList<String> file_list, ArrayList<String> academy_list, OnDownloadClickListener listener) {
+    public FileListViewAdapter(Context context, ArrayList<String> file_list, ArrayList<String> academy_list, OnDownloadClickListener listener) {
         this.context = context;
         this.academy_list = academy_list;
         this.file_list = file_list;

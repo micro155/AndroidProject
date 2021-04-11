@@ -2,7 +2,6 @@ package com.example.academyapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -70,11 +69,6 @@ public class ChattingActivity extends AppCompatActivity {
         mMessageEditText = findViewById(R.id.message_edit);
         mMessageRecyclerView = findViewById(R.id.chat_message);
 
-        Toolbar chattingToolbar = (Toolbar) findViewById(R.id.chatting_toolbar);
-//        setSupportActionBar(chattingToolbar);
-
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         findViewById(R.id.send_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,12 +134,10 @@ public class ChattingActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId())
         {
-            case R.id.chatting_exit: {
-                Intent intent = new Intent (this, ChattingRoomActivity.class);
-                startActivity(intent);
+            case R.id.chatting_exit:
+                startActivity(new Intent(this, ChattingRoomActivity.class));
                 finish();
                 return true;
-            }
             default:
                 return super.onOptionsItemSelected(item);
         }

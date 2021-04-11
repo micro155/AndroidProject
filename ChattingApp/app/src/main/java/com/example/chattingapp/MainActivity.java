@@ -138,7 +138,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 } else {
                     Glide.with(MainActivity.this).load(model.getPhotoUrl()).into(holder.photoImageView);
                 }
-
             }
 
             @NonNull

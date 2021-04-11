@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
-        android:id="@+id/add_chatting"
-        android:orderInCategory="100"
-        android:title="@string/menu_create_chatting_room"
-        app:showAsAction="never" />
+        android:id="@+id/chatting_exit"
+        android:title="채팅 목록으로"
+        app:showAsAction="ifRoom" />
+
 </menu>

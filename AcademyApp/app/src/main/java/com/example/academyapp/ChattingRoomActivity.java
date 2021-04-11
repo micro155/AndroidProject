@@ -255,6 +255,19 @@ public class ChattingRoomActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.add_chatting: {
+                Intent intent = new Intent(this, AddChattingActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_chatting_room_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)

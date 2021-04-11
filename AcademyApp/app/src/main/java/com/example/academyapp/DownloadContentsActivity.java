@@ -11,8 +11,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -21,25 +19,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.academyapp.Model.FileListInfo;
 import com.example.academyapp.Utils.UserUtils;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -51,16 +38,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,7 +67,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
     private Uri imageUri;
 
     private ListView listView;
-    private ListViewAdapter adapter;
+    private FileListViewAdapter adapter;
 //    private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 //    private ArrayAdapter<HashMap<String, String>> dataAdapter;
 
@@ -162,7 +145,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
                             file_list.add(value);
 
                             Log.d("dataAdapter", "adapter : " + snapshot.getChildren());
-                            adapter = new ListViewAdapter(DownloadContentsActivity.this, file_list, academy_list, new ListViewAdapter.OnDownloadClickListener() {
+                            adapter = new FileListViewAdapter(DownloadContentsActivity.this, file_list, academy_list, new FileListViewAdapter.OnDownloadClickListener() {
                                 @Override
                                 public void onDownload(String fileName) {
                                     adapter.download_File(fileName);
