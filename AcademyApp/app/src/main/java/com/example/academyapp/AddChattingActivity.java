@@ -9,7 +9,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.academyapp.Model.ChatMessage;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -59,6 +64,24 @@ public class AddChattingActivity extends AppCompatActivity {
                             Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
                             intent.putExtra("academy_name", name_list.get(position));
                             intent.putExtra("academy_address", address_list.get(position));
+                            DatabaseReference chatList = FirebaseDatabase.getInstance().getReference("ChatRoom");
+
+                            chatList.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .child("Director")
+                                    .setValue(name_list.get(position))
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(AddChattingActivity.this, "채팅방 생성 실패", Toast.LENGTH_SHORT);
+                                        }
+                                    }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(AddChattingActivity.this, "채팅방 생성 완료", Toast.LENGTH_SHORT);
+                                    Intent intent = new Intent(AddChattingActivity.this, ChattingActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
                             startActivity(intent);
                         }
                     });
@@ -67,11 +90,10 @@ public class AddChattingActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(AddChattingActivity.this, error.getCode(), Toast.LENGTH_SHORT);
             }
         });
 
     }
-
 
 }

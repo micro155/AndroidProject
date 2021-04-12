@@ -22,5 +22,11 @@
             android:id="@+id/nav_academy_management"
             android:icon="@drawable/ic_baseline_edit_24"
             android:title="@string/menu_academy_management" />
+
+        <item
+            android:id="@+id/nav_chatting_director"
+            android:icon="@drawable/ic_baseline_chat_24"
+            android:title="채팅 문의 관리" />
+
     </group>
 </menu>

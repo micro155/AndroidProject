@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +34,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -77,6 +83,42 @@ public class ChattingRoomActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         init();
+
+        ConfirmMemberType();
+
+    }
+
+    private void ConfirmMemberType() {
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        String mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        mRef.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String mType = snapshot.child("type").getValue(String.class);
+                Log.d("value1", "it's type " + mType);
+
+                if (mType.equals("일반회원")) {
+                    showNormalChattingRoomList();
+                } else {
+                    showDirectorChattingRoomList();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+
+
+    }
+
+    private void showDirectorChattingRoomList() {
+
+    }
+
+    private void showNormalChattingRoomList() {
 
     }
 

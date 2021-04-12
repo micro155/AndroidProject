@@ -70,7 +70,7 @@ public class ChattingActivity extends AppCompatActivity {
         mMessageEditText = findViewById(R.id.message_edit);
         mMessageRecyclerView = findViewById(R.id.chat_message);
 
-        Toolbar chattingToolbar = (Toolbar) findViewById(R.id.chatting_toolbar);
+//        Toolbar chattingToolbar = (Toolbar) findViewById(R.id.chatting_toolbar);
 //        setSupportActionBar(chattingToolbar);
 
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);

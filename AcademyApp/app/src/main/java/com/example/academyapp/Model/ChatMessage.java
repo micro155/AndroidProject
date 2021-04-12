@@ -1,7 +1,7 @@
 package com.example.academyapp.Model;
 
 public class ChatMessage {
-    String id,text,name,photoURL;
+    String id, text, name, photoURL;
 
     public ChatMessage(String id, String text, String name, String photoURL) {
         this.id = id;
