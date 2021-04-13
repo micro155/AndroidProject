@@ -43,6 +43,7 @@ public class ChattingActivity extends AppCompatActivity {
     private RecyclerView mMessageRecyclerView;
     private String mUsername;
     private String mPhotoUrl;
+    private String chatUser;
 
     private FirebaseUser mFirebaseUser;
 
@@ -70,6 +71,8 @@ public class ChattingActivity extends AppCompatActivity {
         mMessageEditText = findViewById(R.id.message_edit);
         mMessageRecyclerView = findViewById(R.id.chat_message);
 
+        chatUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
 //        Toolbar chattingToolbar = (Toolbar) findViewById(R.id.chatting_toolbar);
 //        setSupportActionBar(chattingToolbar);
 
@@ -79,7 +82,7 @@ public class ChattingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ChatMessage chatMessage = new ChatMessage(mMessageEditText.getText().toString(), mUsername, mPhotoUrl, null);
-                mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(chatMessage);
+                mFirebaseDatabaseReference.child("ChatRoom").child(chatUser).child(MESSAGES_CHILD).push().setValue(chatMessage);
                 mMessageEditText.setText("");
             }
         });
