@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.academyapp.Model.ChatMessage;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,9 +20,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AddChattingActivity extends AppCompatActivity {
+
+    public static final String MESSAGES_CHILD = "chat_messages";
 
     private ListView academy_listView;
     private DatabaseReference mFirebaseDatabase;
@@ -40,12 +43,17 @@ public class AddChattingActivity extends AppCompatActivity {
         final ArrayList<String> name_list = new ArrayList<String>();
         final ArrayList<String> address_list = new ArrayList<String>();
 
+        long now = System.currentTimeMillis();
+        Date nowDate = new Date(now);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        final String getTime = simpleDateFormat.format(nowDate);
+
         mFirebaseDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    String key = dataSnapshot.getKey();
+//                    String key = dataSnapshot.getKey();
                     String address = dataSnapshot.child("academy_address").getValue(String.class);
                     String academy = dataSnapshot.child("academy_name").getValue(String.class);
 
@@ -60,29 +68,78 @@ public class AddChattingActivity extends AppCompatActivity {
 
                     academy_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
+                        public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                            final Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
                             intent.putExtra("academy_name", name_list.get(position));
                             intent.putExtra("academy_address", address_list.get(position));
-                            DatabaseReference chatList = FirebaseDatabase.getInstance().getReference("ChatRoom");
+                            final DatabaseReference chatList = FirebaseDatabase.getInstance().getReference("ChatRoom");
 
-                            chatList.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .child("Director")
-                                    .setValue(name_list.get(position))
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(AddChattingActivity.this, "채팅방 생성 실패", Toast.LENGTH_SHORT);
-                                        }
-                                    }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            DatabaseReference normal_info = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+                            String normal_user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                            normal_info.child(normal_user).child("nickName").addValueEventListener(new ValueEventListener() {
                                 @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(AddChattingActivity.this, "채팅방 생성 완료", Toast.LENGTH_SHORT);
-                                    Intent intent = new Intent(AddChattingActivity.this, ChattingActivity.class);
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    String nickName = snapshot.getValue(String.class);
+
+//                                    chatList.child("director")
+//                                            .setValue(name_list.get(position));
+//                                            .addOnFailureListener(new OnFailureListener() {
+//                                                @Override
+//                                                public void onFailure(@NonNull Exception e) {
+//                                                    Toast.makeText(AddChattingActivity.this, "채팅방 생성 실패", Toast.LENGTH_SHORT);
+//                                                    Log.d("make room Fail Log", "reason : " + e.getMessage());
+//                                                }
+//                                            }).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                        @Override
+//                                        public void onSuccess(Void aVoid) {
+//                                            Toast.makeText(AddChattingActivity.this, "채팅방 생성", Toast.LENGTH_SHORT);
+//                                        }
+//                                    });
+
+                                    chatList.child(name_list.get(position)).child(nickName).child(MESSAGES_CHILD).setValue(getTime);
+//                                            .setValue(nickName);
+
+//                                    chatList.child("normal_member")
+//                                            .setValue(nickName);
+//                                            .addOnFailureListener(new OnFailureListener() {
+//                                                @Override
+//                                                public void onFailure(@NonNull Exception e) {
+//                                                    Toast.makeText(AddChattingActivity.this, "채팅방 생성 실패", Toast.LENGTH_SHORT);
+//                                                    Log.d("make room Fail Log", "reason : " + e.getMessage());
+//                                                }
+//                                            }).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                        @Override
+//                                        public void onSuccess(Void aVoid) {
+//                                            Toast.makeText(AddChattingActivity.this, "채팅방 생성", Toast.LENGTH_SHORT);
+//                                        }
+//                                    });
+
+                                    chatList.child(nickName).child(name_list.get(position)).child(MESSAGES_CHILD).setValue(getTime);
+//                                            .setValue(name_list.get(position));
                                     startActivity(intent);
+//                                            .addOnFailureListener(new OnFailureListener() {
+//                                                @Override
+//                                                public void onFailure(@NonNull Exception e) {
+//                                                    Toast.makeText(AddChattingActivity.this, "채팅방 생성 실패", Toast.LENGTH_SHORT);
+//                                                    Log.d("make room Fail Log", "reason : " + e.getMessage());
+//                                                }
+//                                            }).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                        @Override
+//                                        public void onSuccess(Void aVoid) {
+//                                            Toast.makeText(AddChattingActivity.this, "채팅방 생성", Toast.LENGTH_SHORT);
+//                                            startActivity(intent);
+//                                        }
+//                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
                                 }
                             });
-                            startActivity(intent);
+
+//                            startActivity(intent);
                         }
                     });
                 }

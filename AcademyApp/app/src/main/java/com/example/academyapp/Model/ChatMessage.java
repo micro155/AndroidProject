@@ -1,21 +1,12 @@
 package com.example.academyapp.Model;
 
 public class ChatMessage {
-    String id, text, name, photoURL;
+    String text, name, photoURL;
 
-    public ChatMessage(String id, String text, String name, String photoURL) {
-        this.id = id;
+    public ChatMessage(String text, String name, String photoURL) {
         this.text = text;
         this.name = name;
         this.photoURL = photoURL;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getText() {

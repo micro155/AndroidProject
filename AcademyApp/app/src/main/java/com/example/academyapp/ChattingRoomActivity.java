@@ -17,12 +17,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -44,6 +47,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,6 +64,11 @@ public class ChattingRoomActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private ImageView img_profile;
     private Uri imageUri;
+    private ChatRoomListViewAdapter adapter;
+    private ArrayList<String> name_list;
+    private ArrayList<String> messages_array;
+    private ArrayList<String> profile;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +91,8 @@ public class ChattingRoomActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        listView = (ListView) findViewById(R.id.chatting_room_list_view);
+
         init();
 
         ConfirmMemberType();
@@ -89,19 +100,42 @@ public class ChattingRoomActivity extends AppCompatActivity {
     }
 
     private void ConfirmMemberType() {
-        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
-        String mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        final String mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        mRef.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
+        mRef.child(mUid).child("type").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String mType = snapshot.child("type").getValue(String.class);
+                String mType = snapshot.getValue(String.class);
                 Log.d("value1", "it's type " + mType);
 
                 if (mType.equals("일반회원")) {
-                    showNormalChattingRoomList();
+                    mRef.child(mUid).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String normal_nickName = snapshot.child("nickName").getValue(String.class);
+                            showNormalChattingRoomList(normal_nickName);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 } else {
-                    showDirectorChattingRoomList();
+                    DatabaseReference academy_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE).child(mUid);
+                    academy_ref.child("academy_name").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String academy = snapshot.getValue(String.class);
+                            showDirectorChattingRoomList(academy);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
             }
 
@@ -110,16 +144,108 @@ public class ChattingRoomActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void showDirectorChattingRoomList(String academy_name) {
+        name_list = new ArrayList<String>();
+        messages_array = new ArrayList<String>();
+        profile = new ArrayList<String>();
+
+        DatabaseReference director_chat_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(academy_name);
+
+        director_chat_ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot list_data : snapshot.getChildren()) {
+                        String normal_list = list_data.getValue(String.class);
+                        String normal_profile = null;
+                        String chat_text = null;
+
+                        for (DataSnapshot member_data : snapshot.getChildren()) {
+
+                            chat_text = member_data.child(normal_list).child("chat_messages").child("text").getValue(String.class);
+                            String name = member_data.child(normal_list).child("chat_messages").child("text").child("name").getValue(String.class);
+
+                            if (normal_list == name) {
+                                normal_profile = member_data.child(normal_list).child("chat_messages").child("text").child("photoURL").getValue(String.class);
+                                break;
+                            }
+
+                        }
+
+                        name_list.add(normal_list);
+                        profile.add(normal_profile);
+                        messages_array.add(chat_text);
+
+                        adapter = new ChatRoomListViewAdapter(ChattingRoomActivity.this, name_list, messages_array, profile);
+                        adapter.notifyDataSetChanged();
+
+                        listView.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
 
     }
 
-    private void showDirectorChattingRoomList() {
+    private void showNormalChattingRoomList(String normal_nickName) {
+        name_list = new ArrayList<String>();
+        messages_array = new ArrayList<String>();
+        profile = new ArrayList<String>();
 
-    }
+        DatabaseReference normal_chat_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(normal_nickName);
 
-    private void showNormalChattingRoomList() {
+        normal_chat_ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                for (DataSnapshot list_data : snapshot.getChildren()) {
+                        String director_list = list_data.getKey();
+                        String director_profile = null;
+                        String chat_text = null;
+
+                        for (DataSnapshot member_data : snapshot.getChildren()) {
+
+                            chat_text = member_data.child(director_list).child("chat_messages").child("text").getValue(String.class);
+                            String name = member_data.child(director_list).child("chat_messages").child("text").child("name").getValue(String.class);
+
+                            if (director_list == name) {
+                                director_profile = member_data.child(director_list).child("chat_messages").child("text").child("photoURL").getValue(String.class);
+                                break;
+                            }
+
+                        }
+
+                        name_list.add(director_list);
+                        profile.add(director_profile);
+                        messages_array.add(chat_text);
+
+//                        Log.d("photo url", "url : " + director_profile);
+
+                        adapter = new ChatRoomListViewAdapter(ChattingRoomActivity.this, name_list, messages_array, profile);
+                        adapter.notifyDataSetChanged();
+
+                        listView.setAdapter(adapter);
+
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                            }
+                        });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 

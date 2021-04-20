@@ -79,8 +79,8 @@ public class FileListViewAdapter extends BaseAdapter {
         final TextView file_view = (TextView) convertView.findViewById(R.id.file_name);
         Button btn_download = (Button) convertView.findViewById(R.id.file_download);
 
-        String file_name = file_list.get(position);
-        String academy_name = academy_list.get(position);
+        file_name = file_list.get(position);
+        academy_name = academy_list.get(position);
 
         academy_view.setText(academy_name);
         file_view.setText(file_name);
