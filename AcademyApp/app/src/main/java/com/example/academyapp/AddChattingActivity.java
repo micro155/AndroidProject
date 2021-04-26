@@ -71,7 +71,6 @@ public class AddChattingActivity extends AppCompatActivity {
                         public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                             final Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
                             intent.putExtra("academy_name", name_list.get(position));
-                            intent.putExtra("academy_address", address_list.get(position));
                             final DatabaseReference chatList = FirebaseDatabase.getInstance().getReference("ChatRoom");
 
                             DatabaseReference normal_info = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
@@ -81,6 +80,7 @@ public class AddChattingActivity extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     String nickName = snapshot.getValue(String.class);
+                                    intent.putExtra("normal_name", nickName);
 
 //                                    chatList.child("director")
 //                                            .setValue(name_list.get(position));

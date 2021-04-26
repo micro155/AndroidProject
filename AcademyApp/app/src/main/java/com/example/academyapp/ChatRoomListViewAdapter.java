@@ -9,6 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -19,6 +21,7 @@ public class ChatRoomListViewAdapter extends BaseAdapter {
     private ArrayList<String> name_list;
     private ArrayList<String> messages;
     private ArrayList<String> profile;
+    private ChattingRoomActivity chattingRoomActivity;
 
     public ChatRoomListViewAdapter(Context context, ArrayList<String> name_list, ArrayList<String> messages, ArrayList<String> profile) {
         this.context = context;
@@ -61,6 +64,7 @@ public class ChatRoomListViewAdapter extends BaseAdapter {
         name_list_view.setText(name);
         message_view.setText(message);
         if (photoUrl != null) {
+            Glide.with(chattingRoomActivity).load(photoUrl).into(profile_view);
             profile_view.setImageURI(Uri.parse(photoUrl));
         }
 

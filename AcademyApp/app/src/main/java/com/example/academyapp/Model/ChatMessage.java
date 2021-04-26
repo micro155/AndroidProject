@@ -3,6 +3,10 @@ package com.example.academyapp.Model;
 public class ChatMessage {
     String text, name, photoURL;
 
+    public ChatMessage() {
+
+    }
+
     public ChatMessage(String text, String name, String photoURL) {
         this.text = text;
         this.name = name;

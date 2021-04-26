@@ -78,7 +78,7 @@ public class DirectorHomeActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_director_home, R.id.nav_director_logout, R.id.nav_upload, R.id.nav_academy_management)
+                R.id.nav_director_home, R.id.nav_director_logout, R.id.nav_upload, R.id.nav_academy_management, R.id.nav_chatting_director)
                 .setDrawerLayout(drawer)
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_director_host_fragment);
@@ -226,6 +226,10 @@ public class DirectorHomeActivity extends AppCompatActivity {
                     finish();
                 } else if (item.getItemId() == R.id.nav_director_home) {
                     Intent intent = new Intent(DirectorHomeActivity.this, DirectorHomeActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else if (item.getItemId() == R.id.nav_chatting_director) {
+                    Intent intent = new Intent(DirectorHomeActivity.this, ChattingRoomActivity.class);
                     startActivity(intent);
                     finish();
                 }
