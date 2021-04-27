@@ -1,7 +1,12 @@
 package com.example.academyapp;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +16,22 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.logging.LogRecord;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatRoomListViewAdapter extends BaseAdapter {
+
+    Handler handler = new Handler();
 
     private Context context;
     private ArrayList<String> name_list;
@@ -55,19 +71,41 @@ public class ChatRoomListViewAdapter extends BaseAdapter {
 
         final TextView name_list_view = (TextView) convertView.findViewById(R.id.name_view);
         final TextView message_view = (TextView) convertView.findViewById(R.id.last_chatting_view);
-        CircleImageView profile_view = (CircleImageView) convertView.findViewById(R.id.profile_view);
+        final CircleImageView profile_view = (CircleImageView) convertView.findViewById(R.id.profile_view);
 
         String name = name_list.get(position);
         String message = messages.get(position);
-        String photoUrl = profile.get(position);
+        final String photoUrl = profile.get(position);
 
         name_list_view.setText(name);
         message_view.setText(message);
         if (photoUrl != null) {
-            Glide.with(chattingRoomActivity).load(photoUrl).into(profile_view);
-            profile_view.setImageURI(Uri.parse(photoUrl));
-        }
 
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        URL url = new URL(photoUrl);
+                        Log.d("url", "link : " + photoUrl);
+                        InputStream is = url.openStream();
+                        final Bitmap bm = BitmapFactory.decodeStream(is);
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                profile_view.setImageBitmap(bm);
+                            }
+                        });
+//                        profile_view.setImageBitmap(bm);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                        Log.d("error log", "log : " + e.getMessage());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            thread.start();
+        }
         return convertView;
     }
 

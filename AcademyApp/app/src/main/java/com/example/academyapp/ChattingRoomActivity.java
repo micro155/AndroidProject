@@ -158,51 +158,65 @@ public class ChattingRoomActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for (DataSnapshot list_data : snapshot.getChildren()) {
-                    String normal_list = list_data.getKey();
-                    String normal_profile = null;
-                    String chat_text = null;
-                    String name = null;
+                    final String normal_list = list_data.getKey();
+                    final String[] normal_profile = {null};
+                    final String[] chat_text = {null};
+                    final String[] name = {null};
 
-                    for (DataSnapshot member_data : snapshot.getChildren()) {
+                    Log.d("normal list", "list : " + normal_list);
 
-                        String token = member_data.child(normal_list).child("chat_messages").getKey();
-                        chat_text = member_data.child(normal_list).child("chat_messages").child(token).child("text").getValue(String.class);
-                        name = member_data.child(normal_list).child("chat_messages").child(token).child("name").getValue(String.class);
+                        DatabaseReference token_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(academy_name).child(normal_list).child("chat_messages");
 
-                        if (normal_list == name) {
-                            normal_profile = member_data.child(normal_list).child("chat_messages").child("text").child("photoURL").getValue(String.class);
-                        }
+                        token_ref.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot chat_list : snapshot.getChildren()) {
 
-                        Log.d("size", "children size : " + snapshot.getChildren());
+                                        chat_text[0] = chat_list.child("text").getValue(String.class);
+                                        name[0] = chat_list.child("name").getValue(String.class);
 
+                                        Log.d("chat list", "list : " + chat_text[0]);
+                                        Log.d("name list", "list : " + name[0]);
+
+                                        if (normal_list.equals(name[0])) {
+                                            normal_profile[0] = chat_list.child("photoURL").getValue(String.class);
+                                            Log.d("normal_profile list", "list : " + normal_profile[0]);
+                                        }
+                                }
+
+                                name_list.add(normal_list);
+                                profile.add(normal_profile[0]);
+                                messages_array.add(chat_text[0]);
+
+                                adapter = new ChatRoomListViewAdapter(ChattingRoomActivity.this, name_list, messages_array, profile);
+                                adapter.notifyDataSetChanged();
+
+                                listView.setAdapter(adapter);
+                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
+                                        intent.putExtra("normal_name", name_list.get(position));
+                                        intent.putExtra("normal_profile", profile.get(position));
+                                        intent.putExtra("academy_name", academy_name);
+                                        startActivity(intent);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
-
-                    name_list.add(normal_list);
-                    profile.add(normal_profile);
-                    messages_array.add(chat_text);
-
-                    adapter = new ChatRoomListViewAdapter(ChattingRoomActivity.this, name_list, messages_array, profile);
-                    adapter.notifyDataSetChanged();
-
-                    listView.setAdapter(adapter);
-                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
-                            intent.putExtra("normal_name", name_list.get(position));
-                            intent.putExtra("normal_profile", profile.get(position));
-                            intent.putExtra("academy_name", academy_name);
-                            startActivity(intent);
-                        }
-                    });
                 }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+        });
     }
 
 
