@@ -19,8 +19,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -48,7 +50,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DownloadContentsActivity extends AppCompatActivity {
+public class ChattingRoom_Director_Activity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 100;
 
@@ -57,132 +59,56 @@ public class DownloadContentsActivity extends AppCompatActivity {
     private NavController navController;
     private NavigationView navigationView;
 
-//    private FirebaseRecyclerAdapter<FileListInfo, FileListViewHolder> mFirebaseAdapter;
-//    private RecyclerView mFileListRecyclerView;
-    private DatabaseReference mFirebaseDatabase;
-
     private AlertDialog waitingDialog;
     private StorageReference storageReference;
     private ImageView img_profile;
     private Uri imageUri;
-
+    private ChatRoomListViewAdapter adapter;
+    private ArrayList<String> name_list;
+    private ArrayList<String> messages_array;
+    private ArrayList<String> profile;
     private ListView listView;
-    private FileListViewAdapter adapter;
-//    private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-//    private ArrayAdapter<HashMap<String, String>> dataAdapter;
-
-    private FirebaseStorage storage;
-
-//    public static class FileListViewHolder extends RecyclerView.ViewHolder {
-//
-//        TextView academyNameView;
-//        TextView fileNameView;
-//
-//        public FileListViewHolder(View itemView) {
-//            super(itemView);
-//            academyNameView = itemView.findViewById(R.id.AcademyNameView);
-//            fileNameView = itemView.findViewById(R.id.FileNameView);
-//        }
-//    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_download_contents);
+        setContentView(R.layout.activity_chatting_room_director);
 
-//        mFileListRecyclerView = findViewById(R.id.download_list_recycler_view);
-
-        Toolbar toolbar = findViewById(R.id.toolbar_download);
+        Toolbar toolbar = findViewById(R.id.toolbar_chatting_room_director);
         setSupportActionBar(toolbar);
 
-        drawer = findViewById(R.id.drawer_download_layout);
+        drawer = findViewById(R.id.drawer_chatting_room_director_layout);
 
-        navigationView = findViewById(R.id.nav_download_view);
+        navigationView = findViewById(R.id.nav_chatting_room_director_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
+
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_normalmember_home, R.id.nav_normalmember_logout, R.id.nav_download, R.id.nav_chatting)
+                R.id.nav_director_home, R.id.nav_director_logout, R.id.nav_upload, R.id.nav_academy_management, R.id.nav_chatting_director)
                 .setDrawerLayout(drawer)
                 .build();
-        navController = Navigation.findNavController(this, R.id.nav_download_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+
+        navController = Navigation.findNavController(this, R.id.nav_chatting_room_director_fragment);
         NavigationUI.setupWithNavController(navigationView, navController);
+        NavigationUI.setupActionBarWithNavController(ChattingRoom_Director_Activity.this, navController, mAppBarConfiguration);
 
-//        final TextView academy_view = (TextView) findViewById(R.id.file_academy);
-//        final TextView file_view = (TextView) findViewById(R.id.file_name);
+        listView = (ListView) findViewById(R.id.chatting_room_list_view);
 
-        listView = (ListView) findViewById(R.id.file_list_view);
+        init();
 
-        final ArrayList<String> academy_list = new ArrayList<String>();
-        final ArrayList<String> file_list = new ArrayList<String>();
+//        mAppBarConfiguration = new AppBarConfiguration.Builder(
+//                R.id.nav_normalmember_home, R.id.nav_normalmember_logout, R.id.nav_download, R.id.nav_chatting)
+//                .setDrawerLayout(drawer)
+//                .build();
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance().getReference("FileList");
-//        Query query = mFirebaseDatabase.child("FileList");
 
-//        listView = findViewById(R.id.file_list_view);
-//        dataAdapter = new ArrayAdapter<HashMap<String, String>>(this, android.R.layout.simple_dropdown_item_1line, list);
-
-        mFirebaseDatabase.addValueEventListener(new ValueEventListener() {
+        String director_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference academy_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE).child(director_uid);
+        academy_ref.child("academy_name").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                dataAdapter.clear();
-                for (DataSnapshot fileData : snapshot.getChildren()) {
-                    String key = fileData.getKey();
-                    final String value = fileData.child("file_name").getValue(String.class);
-
-//                    final FileListInfo fileListInfo = new FileListInfo(value);
-
-                    DatabaseReference mUid = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
-
-                    mUid.child(key).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String academy = snapshot.child("academy_name").getValue(String.class);
-
-
-                            academy_list.add(academy);
-                            file_list.add(value);
-
-                            Log.d("dataAdapter", "adapter : " + snapshot.getChildren());
-                            adapter = new FileListViewAdapter(DownloadContentsActivity.this, file_list, academy_list, new FileListViewAdapter.OnDownloadClickListener() {
-                                @Override
-                                public void onDownload(String fileName) {
-                                    adapter.download_File(fileName);
-                                }
-                            });
-                            adapter.notifyDataSetChanged();
-                            listView.setAdapter(adapter);
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-//                dataAdapter.notifyDataSetChanged();
-//
-//                listView.setAdapter(dataAdapter);
-//
-//                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                        String data = (String) parent.getItemAtPosition(position);
-//                        Toast.makeText(DownloadContentsActivity.this, data, Toast.LENGTH_SHORT).show();
-//
-//                        download_file(data);
-//                    }
-//                });
-
-//                adapter = new ListViewAdapter(DownloadContentsActivity.this, file_list, new ListViewAdapter.OnDownloadClickListener() {
-//                    @Override
-//                    public void onDownload(View v) {
-//                        adapter.download_File(v);
-//                    }
-//                });
-//                adapter.notifyDataSetChanged();
-//                listView.setAdapter(adapter);
+                String academy = snapshot.getValue(String.class);
+                showDirectorChattingRoomList(academy);
             }
 
             @Override
@@ -191,88 +117,127 @@ public class DownloadContentsActivity extends AppCompatActivity {
             }
         });
 
-//        adapter = new ListViewAdapter(this, file_list, new ListViewAdapter.OnDownloadClickListener() {
-//            @Override
-//            public void onDownload(View v) {
-//                adapter.download_File(v);
-//            }
-//        });
-//        listView.setAdapter(adapter);
-
-        init();
-
-
-//        FirebaseRecyclerOptions<FileListInfo> options = new FirebaseRecyclerOptions.Builder<FileListInfo>().setQuery(query, FileListInfo.class).build();
-//        mFirebaseAdapter = new FirebaseRecyclerAdapter<FileListInfo, FileListViewHolder>(options) {
-//            @Override
-//            protected void onBindViewHolder(FileListViewHolder viewHolder, int i, final FileListInfo listInfo) {
-//                viewHolder.academyNameView.setText(listInfo.getAcademy_name());
-//                viewHolder.fileNameView.setText(listInfo.getFile_name());
-//                Button download_btn = findViewById(R.id.download_button);
-//
-//                download_btn.setOnClickListener(new Button.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        AlertDialog.Builder builder = new AlertDialog.Builder(DownloadContentsActivity.this);
-//                        builder.setTitle("다운로드 하시겠습니까?");
-//                        builder.setMessage(listInfo.getFile_name());
-//                        builder.setPositiveButton("예", null);
-//                        builder.setNegativeButton("아니오", null);
-//                        builder.create().show();
-//                    }
-//                });
-//            }
-//
-//            @NonNull
-//            @Override
-//            public FileListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.download_list_base, parent, false);
-//                return new FileListViewHolder(view);
-//            }
-//        };
-
-//        mFileListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        mFileListRecyclerView.setAdapter(mFirebaseAdapter);
-
     }
 
-//    private void download_file(final String file_name) { //alertdialog 형식 파일 다운로드 메소드
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//    private void ConfirmMemberType() {
+//        final DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+//        final String Uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 //
-//        builder.setTitle("파일 다운로드").setMessage(file_name + "를 다운로드 하시겠습니까?");
-//
-//        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+//        mRef.child(Uid).child("type").addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                StorageReference fileRef = storage.getReference().child("video/"+ file_name);
-//                try {
-//                    File localFile = File.createTempFile(file_name, "mp4");
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                String mType = snapshot.getValue(String.class);
+//                Log.d("value1", "it's type " + mType);
 //
-//                    fileRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+//                if (mType.equals("일반회원")) {
+//                    mRef.child(Uid).addValueEventListener(new ValueEventListener() {
 //                        @Override
-//                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-//
+//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                            String normal_nickName = snapshot.child("nickName").getValue(String.class);
+//                            showNormalChattingRoomList(normal_nickName);
 //                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
+//
 //                        @Override
-//                        public void onFailure(@NonNull Exception e) {
+//                        public void onCancelled(@NonNull DatabaseError error) {
 //
 //                        }
 //                    });
-//                } catch (IOException e) {
-//                    e.printStackTrace();
+//                } else {
+//                    DatabaseReference academy_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE).child(Uid);
+//                    academy_ref.child("academy_name").addValueEventListener(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                            String academy = snapshot.getValue(String.class);
+//                            showDirectorChattingRoomList(academy);
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError error) {
+//
+//                        }
+//                    });
 //                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
 //            }
 //        });
 //
-//        builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                Toast.makeText(DownloadContentsActivity.this, "파일 다운로드 취소", Toast.LENGTH_SHORT).show();
-//            }
-//        });
 //    }
 
+    private void showDirectorChattingRoomList(final String academy_name) {
+        name_list = new ArrayList<String>();
+        messages_array = new ArrayList<String>();
+        profile = new ArrayList<String>();
+
+        DatabaseReference director_chat_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(academy_name);
+
+        director_chat_ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot list_data : snapshot.getChildren()) {
+                    final String normal_list = list_data.getKey();
+                    final String[] normal_profile = {null};
+                    final String[] chat_text = {null};
+                    final String[] name = {null};
+
+                    Log.d("normal list", "list : " + normal_list);
+
+                        DatabaseReference token_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(academy_name).child(normal_list).child("chat_messages");
+
+                        token_ref.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot chat_list : snapshot.getChildren()) {
+
+                                        chat_text[0] = chat_list.child("text").getValue(String.class);
+                                        name[0] = chat_list.child("name").getValue(String.class);
+
+                                        Log.d("chat list", "list : " + chat_text[0]);
+                                        Log.d("name list", "list : " + name[0]);
+
+                                        if (normal_list.equals(name[0])) {
+                                            normal_profile[0] = chat_list.child("photoURL").getValue(String.class);
+                                            Log.d("normal_profile list", "list : " + normal_profile[0]);
+                                        }
+                                }
+
+                                name_list.add(normal_list);
+                                profile.add(normal_profile[0]);
+                                messages_array.add(chat_text[0]);
+
+                                adapter = new ChatRoomListViewAdapter(ChattingRoom_Director_Activity.this, name_list, messages_array, profile);
+                                adapter.notifyDataSetChanged();
+
+                                listView.setAdapter(adapter);
+                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
+                                        intent.putExtra("normal_name", name_list.get(position));
+                                        intent.putExtra("normal_profile", profile.get(position));
+                                        intent.putExtra("academy_name", academy_name);
+                                        startActivity(intent);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
     private void init() {
         waitingDialog = new AlertDialog.Builder(this)
@@ -286,7 +251,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.nav_director_logout) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(DownloadContentsActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ChattingRoom_Director_Activity.this);
                     builder.setTitle("로그아웃")
                             .setMessage("정말 로그아웃 하시겠습니까?")
                             .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -299,7 +264,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     FirebaseAuth.getInstance().signOut();
-                                    Intent intent = new Intent(DownloadContentsActivity.this, SplashScreenActivity.class);
+                                    Intent intent = new Intent(ChattingRoom_Director_Activity.this, SplashScreenActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
                                     finish();
@@ -311,22 +276,26 @@ public class DownloadContentsActivity extends AppCompatActivity {
                         @Override
                         public void onShow(DialogInterface dialogInterface) {
                             dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                                    .setTextColor(ContextCompat.getColor(DownloadContentsActivity.this, android.R.color.holo_red_dark));
+                                    .setTextColor(ContextCompat.getColor(ChattingRoom_Director_Activity.this, android.R.color.holo_red_dark));
                             dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-                                    .setTextColor(ContextCompat.getColor(DownloadContentsActivity.this, R.color.colorAccent));
+                                    .setTextColor(ContextCompat.getColor(ChattingRoom_Director_Activity.this, R.color.colorAccent));
                         }
                     });
                     dialog.show();
-                } else if (item.getItemId() == R.id.nav_download) {
-                    Intent intent = new Intent(DownloadContentsActivity.this, DownloadContentsActivity.class);
+                } else if (item.getItemId() == R.id.nav_upload) {
+                    Intent intent = new Intent(ChattingRoom_Director_Activity.this, UploadActivity.class);
                     startActivity(intent);
                     finish();
-                } else if (item.getItemId() == R.id.nav_normalmember_home) {
-                    Intent intent = new Intent(DownloadContentsActivity.this, NormalMemberHomeActivity.class);
+                } else if (item.getItemId() == R.id.nav_academy_management) {
+                    Intent intent = new Intent(ChattingRoom_Director_Activity.this, AcademyManagementActivity.class);
                     startActivity(intent);
                     finish();
-                } else if (item.getItemId() == R.id.nav_chatting) {
-                    Intent intent = new Intent(DownloadContentsActivity.this, ChattingRoom_Normal_Activity.class);
+                } else if (item.getItemId() == R.id.nav_director_home) {
+                    Intent intent = new Intent(ChattingRoom_Director_Activity.this, DirectorHomeActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else if (item.getItemId() == R.id.nav_chatting_director) {
+                    Intent intent = new Intent(ChattingRoom_Director_Activity.this, ChattingRoom_Director_Activity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -360,7 +329,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
     }
 
     private void showDialogUpload() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(DownloadContentsActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ChattingRoom_Director_Activity.this);
         builder.setTitle("프로필 변경")
                 .setMessage("정말로 프로필을 변경하시겠습니까?")
                 .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -443,13 +412,26 @@ public class DownloadContentsActivity extends AppCompatActivity {
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.customer_home, menu);
+//        getMenuInflater().inflate(R.menu.chatting_room_normal_menu, menu);
 //        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.add_chatting: {
+//                Intent intent = new Intent(this, AddChattingActivity.class);
+//                startActivity(intent);
+//                return true;
+//            }
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
 //    }
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_download_fragment);
+        NavController navController = Navigation.findNavController(this, R.id.nav_chatting_room_director_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }

@@ -12,7 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddChattingActivity"></activity>
+        <activity android:name=".ChattingRoom_Normal_Activity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".AddChattingActivity" />
         <activity android:name=".ChattingActivity" />
         <activity
             android:name=".AcademyManagementActivity"
@@ -24,7 +26,7 @@
             android:name=".DownloadContentsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ChattingRoomActivity"
+            android:name=".ChattingRoom_Director_Activity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data

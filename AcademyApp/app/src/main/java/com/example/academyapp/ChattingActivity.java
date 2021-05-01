@@ -2,14 +2,12 @@ package com.example.academyapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,7 +22,6 @@ import com.bumptech.glide.Glide;
 import com.example.academyapp.Model.ChatMessage;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -50,6 +47,7 @@ public class ChattingActivity extends AppCompatActivity {
     private String director_username;
     private String mPhotoUrl;
     private String chatUser;
+    private String User_type;
 
     private FirebaseUser mFirebaseUser;
     private DatabaseReference user_name;
@@ -105,6 +103,8 @@ public class ChattingActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String type = snapshot.child("type").getValue(String.class);
                 normal_username = snapshot.child("nickName").getValue(String.class);
+
+                ConfirmUserType(type);
 
                 if (type.equals("일반회원")) {
 
@@ -221,6 +221,14 @@ public class ChattingActivity extends AppCompatActivity {
 
     }
 
+    private void ConfirmUserType(String type) {
+        if (type.equals("원장회원")) {
+            User_type = "원장회원";
+        } else {
+            User_type = "일반회원";
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -240,20 +248,33 @@ public class ChattingActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId())
-        {
-            case R.id.chatting_exit: {
-                Intent intent = new Intent (this, ChattingRoomActivity.class);
-                startActivity(intent);
-                finish();
-                return true;
+    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
+
+        if (User_type.equals("원장회원")) {
+            switch(item.getItemId())
+            {
+                case R.id.chatting_exit: {
+                    Intent intent = new Intent (this, ChattingRoom_Director_Activity.class);
+                    startActivity(intent);
+                    finish();
+                    return true;
+                }
+                default:
+                    return super.onOptionsItemSelected(item);
             }
-            default:
-                return super.onOptionsItemSelected(item);
+        } else {
+            switch(item.getItemId())
+            {
+                case R.id.chatting_exit: {
+                    Intent intent = new Intent (this, ChattingRoom_Normal_Activity.class);
+                    startActivity(intent);
+                    finish();
+                    return true;
+                }
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
         }
     }
-
-
 
 }

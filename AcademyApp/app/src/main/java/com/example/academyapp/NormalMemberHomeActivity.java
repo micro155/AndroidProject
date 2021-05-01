@@ -212,7 +212,7 @@ public class NormalMemberHomeActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else if (item.getItemId() == R.id.nav_chatting) {
-                    Intent intent = new Intent(NormalMemberHomeActivity.this, ChattingRoomActivity.class);
+                    Intent intent = new Intent(NormalMemberHomeActivity.this, ChattingRoom_Normal_Activity.class);
                     startActivity(intent);
                     finish();
                 }

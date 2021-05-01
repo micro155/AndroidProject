@@ -3,6 +3,7 @@
     package="com.example.academyapp">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -11,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ChattingActivity"></activity>
+        <activity android:name=".AddChattingActivity"></activity>
+        <activity android:name=".ChattingActivity" />
         <activity
             android:name=".AcademyManagementActivity"
             android:theme="@style/AppTheme.NoActionBar" />

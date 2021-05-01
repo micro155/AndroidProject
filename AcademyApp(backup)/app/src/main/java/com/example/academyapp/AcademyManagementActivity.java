@@ -244,7 +244,6 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                             if (response.isSuccessful()) {
                                 String x = response.body().getX();
                                 String y = response.body().getY();
-
                                 Log.d("x", "x = " + call.request().body());
                                 Log.d("y", "y = " + y);
                             }

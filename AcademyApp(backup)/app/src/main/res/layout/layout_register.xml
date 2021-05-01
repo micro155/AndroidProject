@@ -73,8 +73,8 @@
                     android:inputType="textPersonName"
                     android:hint="닉네임" />
 
-
             </com.google.android.material.textfield.TextInputLayout>
+
 
             <TextView
                 android:layout_width="match_parent"

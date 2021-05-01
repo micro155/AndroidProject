@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/chatting_exit"
-        android:title="채팅방 나가기"
+        android:title="채팅 목록으로"
         app:showAsAction="ifRoom" />
 
 </menu>

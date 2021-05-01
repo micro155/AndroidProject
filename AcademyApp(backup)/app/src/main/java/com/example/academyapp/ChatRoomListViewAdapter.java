@@ -3,19 +3,29 @@ package com.example.academyapp;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.logging.LogRecord;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -27,7 +37,7 @@ public class ChatRoomListViewAdapter extends BaseAdapter {
     private ArrayList<String> name_list;
     private ArrayList<String> messages;
     private ArrayList<String> profile;
-    private ChattingRoom_Director_Activity chattingRoomDirectorActivity;
+    private ChattingRoomActivity chattingRoomActivity;
 
     public ChatRoomListViewAdapter(Context context, ArrayList<String> name_list, ArrayList<String> messages, ArrayList<String> profile) {
         this.context = context;

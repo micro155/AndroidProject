@@ -17,11 +17,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -33,11 +37,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,6 +64,11 @@ public class ChattingRoomActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private ImageView img_profile;
     private Uri imageUri;
+    private ChatRoomListViewAdapter adapter;
+    private ArrayList<String> name_list;
+    private ArrayList<String> messages_array;
+    private ArrayList<String> profile;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +91,194 @@ public class ChattingRoomActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        listView = (ListView) findViewById(R.id.chatting_room_list_view);
+
         init();
 
+        ConfirmMemberType();
+
     }
+
+    private void ConfirmMemberType() {
+        final DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        final String Uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        mRef.child(Uid).child("type").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String mType = snapshot.getValue(String.class);
+                Log.d("value1", "it's type " + mType);
+
+                if (mType.equals("일반회원")) {
+                    mRef.child(Uid).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String normal_nickName = snapshot.child("nickName").getValue(String.class);
+                            showNormalChattingRoomList(normal_nickName);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                } else {
+                    DatabaseReference academy_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE).child(Uid);
+                    academy_ref.child("academy_name").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String academy = snapshot.getValue(String.class);
+                            showDirectorChattingRoomList(academy);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+    }
+
+    private void showDirectorChattingRoomList(final String academy_name) {
+        name_list = new ArrayList<String>();
+        messages_array = new ArrayList<String>();
+        profile = new ArrayList<String>();
+
+        DatabaseReference director_chat_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(academy_name);
+
+        director_chat_ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot list_data : snapshot.getChildren()) {
+                    final String normal_list = list_data.getKey();
+                    final String[] normal_profile = {null};
+                    final String[] chat_text = {null};
+                    final String[] name = {null};
+
+                    Log.d("normal list", "list : " + normal_list);
+
+                        DatabaseReference token_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(academy_name).child(normal_list).child("chat_messages");
+
+                        token_ref.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot chat_list : snapshot.getChildren()) {
+
+                                        chat_text[0] = chat_list.child("text").getValue(String.class);
+                                        name[0] = chat_list.child("name").getValue(String.class);
+
+                                        Log.d("chat list", "list : " + chat_text[0]);
+                                        Log.d("name list", "list : " + name[0]);
+
+                                        if (normal_list.equals(name[0])) {
+                                            normal_profile[0] = chat_list.child("photoURL").getValue(String.class);
+                                            Log.d("normal_profile list", "list : " + normal_profile[0]);
+                                        }
+                                }
+
+                                name_list.add(normal_list);
+                                profile.add(normal_profile[0]);
+                                messages_array.add(chat_text[0]);
+
+                                adapter = new ChatRoomListViewAdapter(ChattingRoomActivity.this, name_list, messages_array, profile);
+                                adapter.notifyDataSetChanged();
+
+                                listView.setAdapter(adapter);
+                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
+                                        intent.putExtra("normal_name", name_list.get(position));
+                                        intent.putExtra("normal_profile", profile.get(position));
+                                        intent.putExtra("academy_name", academy_name);
+                                        startActivity(intent);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+    private void showNormalChattingRoomList(final String normal_nickName) {
+        name_list = new ArrayList<String>();
+        messages_array = new ArrayList<String>();
+        profile = new ArrayList<String>();
+
+
+        DatabaseReference normal_chat_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(normal_nickName);
+
+        normal_chat_ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot list_data : snapshot.getChildren()) {
+                    String director_list = list_data.getKey();
+                    String director_profile = null;
+                    String chat_text = null;
+                    String name = null;
+
+                    for (DataSnapshot member_data : snapshot.getChildren()) {
+
+                        chat_text = member_data.child(director_list).child("chat_messages").child("text").getValue(String.class);
+                        name = member_data.child(director_list).child("chat_messages").child("text").child("name").getValue(String.class);
+
+                        if (director_list == name) {
+                            director_profile = member_data.child(director_list).child("chat_messages").child("text").child("photoURL").getValue(String.class);
+                        }
+
+                    }
+
+                    name_list.add(director_list);
+                    profile.add(director_profile);
+                    messages_array.add(chat_text);
+
+
+                    adapter = new ChatRoomListViewAdapter(ChattingRoomActivity.this, name_list, messages_array, profile);
+                    adapter.notifyDataSetChanged();
+
+                    listView.setAdapter(adapter);
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
+                            intent.putExtra("academy_name", name_list.get(position));
+                            intent.putExtra("director_profile", profile.get(position));
+                            intent.putExtra("normal_name", normal_nickName);
+                            startActivity(intent);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
 
 
     private void init() {
@@ -252,6 +452,19 @@ public class ChattingRoomActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.chatting_room_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.add_chatting: {
+                Intent intent = new Intent(this, AddChattingActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

@@ -2,9 +2,11 @@ package com.example.academyapp;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +33,8 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 public class FileListViewAdapter extends BaseAdapter {
 
@@ -89,7 +93,7 @@ public class FileListViewAdapter extends BaseAdapter {
         btn_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String fileName = file_list.get(position).toString();
+                String fileName = file_list.get(position);
                 mlistener.onDownload(fileName);
             }
         });
@@ -97,15 +101,15 @@ public class FileListViewAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void download_File(String fileName) {
+    public void download_File(final String fileName) {
 
 //        Intent intent = ((Activity) context).getIntent();
 //        academy_name = intent.getStringExtra()
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageReference = storage.getReference();
+        final StorageReference storageReference = storage.getReference();
 
-        final StorageReference pathReference = storageReference.child("video/" + fileName);
+//        final StorageReference pathReference = storageReference.child("video/" + fileName);
 
         Log.d("fileName", "filename : " + fileName);
 
@@ -118,34 +122,77 @@ public class FileListViewAdapter extends BaseAdapter {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         final File finalLocalFile = localFile;
+
         builder.setTitle("강의 다운로드")
                 .setMessage(fileName + "를 다운로드하시겠습니까?")
                 .setPositiveButton("예", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                pathReference.getFile(finalLocalFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        int fileSize = (int) taskSnapshot.getTotalByteCount();
-                        Toast.makeText(context, "다운로드 성공", Toast.LENGTH_SHORT).show();
-                        Log.d("download task", "fileSize : " + fileSize);
+                    public void onClick(DialogInterface dialog, int which) {
+                        storageReference.child("video/" + fileName).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String url = uri.toString();
+                                download_func(context, fileName, "jpg", DIRECTORY_DOWNLOADS, url);
+                                Toast.makeText(context, "다운로드 성공", Toast.LENGTH_SHORT).show();
+                                Log.d("url address", "url : " + url);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(context, e + "로 인한 다운로드 실패", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
-                }).addOnFailureListener(new OnFailureListener() {
+                })
+                .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, e + "로 인한 다운로드 실패", Toast.LENGTH_SHORT).show();
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(context, "다운로드 취소", Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
-        })
-        .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(context, "다운로드 취소", Toast.LENGTH_SHORT).show();
-            }
-        });
+
+
+//        builder.setTitle("강의 다운로드")
+//                .setMessage(fileName + "를 다운로드하시겠습니까?")
+//                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                pathReference.getFile(finalLocalFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+//                        int fileSize = (int) taskSnapshot.getTotalByteCount();
+//                        Toast.makeText(context, "다운로드 성공", Toast.LENGTH_SHORT).show();
+//                        Log.d("download task", "fileSize : " + fileSize);
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(context, e + "로 인한 다운로드 실패", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        })
+//        .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                Toast.makeText(context, "다운로드 취소", Toast.LENGTH_SHORT).show();
+//            }
+//        });
         AlertDialog alertDialog = builder.create();
 
         alertDialog.show();
+    }
+
+    private void download_func(Context context, String fileName, String fileExtension, String destinationDirectory, String url) {
+
+        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+
+        Uri uri = Uri.parse(url);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalFilesDir(context, destinationDirectory, fileName + fileExtension);
+
+        downloadManager.enqueue(request);
     }
 }

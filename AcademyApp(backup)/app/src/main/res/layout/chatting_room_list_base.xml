@@ -10,24 +10,33 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <ImageView
-            android:id="@+id/AcademyProfile"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/ic_baseline_account_circle_24" />
 
-        <TextView
-            android:id="@+id/AcademyNameView"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Material.Large"
-            tools:text="학원 이름" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/LastChattingView"
-            tools:text="최근 메시지 내용"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/name_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Material.Large"
+                tools:text="이름" />
+
+            <TextView
+                android:id="@+id/last_chatting_view"
+                tools:text="최근 메시지 내용"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 

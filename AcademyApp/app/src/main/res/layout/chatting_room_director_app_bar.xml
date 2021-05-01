@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChattingRoomActivity">
+    tools:context=".ChattingRoom_Director_Activity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_chatting_room"
+            android:id="@+id/toolbar_chatting_room_director"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -21,6 +21,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/chatting_room_main"/>
+    <include layout="@layout/chatting_room_director_main"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

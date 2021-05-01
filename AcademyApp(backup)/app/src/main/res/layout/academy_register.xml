@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -69,18 +74,18 @@
 
     </LinearLayout>
 
+        <Button
+            android:layout_margin="16dp"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_academy_register"
+            style="@style/Widget.MaterialComponents.Button"
+            android:text="학원 정보 등록"
+            android:textSize="15dp"
+            android:textColor="@android:color/white"/>
+
     </LinearLayout>
 
-    <Button
-        android:layout_margin="16dp"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_academy_register"
-        style="@style/Widget.MaterialComponents.Button"
-        android:text="학원 정보 등록"
-        android:textSize="15dp"
-        android:textColor="@android:color/white"/>
-
-
 </RelativeLayout>
+</ScrollView>
