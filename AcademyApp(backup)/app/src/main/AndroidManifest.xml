@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.academyapp">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".ChattingRoom_Normal_Activity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".AddChattingActivity" />
+        <activity android:name=".ChattingActivity" />
+        <activity
+            android:name=".AcademyManagementActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NormalMemberHomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DownloadContentsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ChattingRoom_Director_Activity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="z79q0dob9r" />
+
+        <activity
+            android:name=".DirectorHomeActivity"
+            android:label="@string/title_activity_customer_home"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".UploadActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SplashScreenActivity"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

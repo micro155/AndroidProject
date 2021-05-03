@@ -138,7 +138,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 } else {
                     Glide.with(MainActivity.this).load(model.getPhotoUrl()).into(holder.photoImageView);
                 }
-
             }
 
             @NonNull
@@ -148,8 +147,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 return new MessageViewHolder(view);
             }
         };
+
         mMessageRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
+
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         FirebaseRemoteConfigSettings firebaseRemoteConfigSettings = new FirebaseRemoteConfigSettings.Builder().setDeveloperModeEnabled(true).build();
 
