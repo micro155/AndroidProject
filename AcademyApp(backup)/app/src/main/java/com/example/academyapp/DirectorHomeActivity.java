@@ -229,7 +229,7 @@ public class DirectorHomeActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else if (item.getItemId() == R.id.nav_chatting_director) {
-                    Intent intent = new Intent(DirectorHomeActivity.this, ChattingRoomActivity.class);
+                    Intent intent = new Intent(DirectorHomeActivity.this, ChattingRoom_Director_Activity.class);
                     startActivity(intent);
                     finish();
                 }

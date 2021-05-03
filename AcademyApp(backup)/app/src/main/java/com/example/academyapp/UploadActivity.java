@@ -16,6 +16,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -30,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.stream.MediaStoreVideoThumbLoader;
 import com.example.academyapp.Model.MemberInfoModel;
 import com.example.academyapp.Utils.UserUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -110,9 +113,9 @@ public class UploadActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //이미지를 선택s
                 Intent intent = new Intent();
-                intent.setType("image/*");
+                intent.setType("video/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
+                startActivityForResult(Intent.createChooser(intent, "동영상을 선택하세요."), 0);
             }
         });
 
@@ -133,13 +136,11 @@ public class UploadActivity extends AppCompatActivity {
         if(requestCode == 0 && resultCode == RESULT_OK){
             filePath = data.getData();
             Log.d(TAG, "uri:" + String.valueOf(filePath));
-            try {
-                //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                ivPreview.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+            Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(String.valueOf(filePath), MediaStore.Video.Thumbnails.MICRO_KIND);
+            Bitmap thumbnail = ThumbnailUtils.extractThumbnail(bitmap, 360, 480);
+            ivPreview.setImageBitmap(thumbnail);
         }
 
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
@@ -330,7 +331,7 @@ public class UploadActivity extends AppCompatActivity {
             Date now = new Date();
             final String filename = formatter.format(now);
             //storage 주소와 폴더 파일명을 지정해 준다.
-            StorageReference storageRef = storage.getReferenceFromUrl("gs://academyapp-d7c41.appspot.com").child("video/" + filename);
+            StorageReference storageRef = storage.getReferenceFromUrl("gs://academyapp-d7c41.appspot.com").child("videos/" + filename);
             //올라가거라...
             storageRef.putFile(filePath)
                     //성공시

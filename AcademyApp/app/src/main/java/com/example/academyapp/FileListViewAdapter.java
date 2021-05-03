@@ -3,10 +3,14 @@ package com.example.academyapp;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +23,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.academyapp.Model.FileListInfo;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
@@ -44,6 +51,7 @@ public class FileListViewAdapter extends BaseAdapter {
     private OnDownloadClickListener mlistener;
     private String academy_name;
     private String file_name;
+    private AlertDialog progressDialog;
 
     public interface OnDownloadClickListener {
         void onDownload (String fileName);
@@ -103,13 +111,10 @@ public class FileListViewAdapter extends BaseAdapter {
 
     public void download_File(final String fileName) {
 
-//        Intent intent = ((Activity) context).getIntent();
-//        academy_name = intent.getStringExtra()
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         final StorageReference storageReference = storage.getReference();
 
-//        final StorageReference pathReference = storageReference.child("video/" + fileName);
 
         Log.d("fileName", "filename : " + fileName);
 
@@ -128,12 +133,12 @@ public class FileListViewAdapter extends BaseAdapter {
                 .setPositiveButton("예", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        storageReference.child("video/" + fileName).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        storageReference.child("videos/" + fileName).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
                                 String url = uri.toString();
-                                download_func(context, fileName, "jpg", DIRECTORY_DOWNLOADS, url);
-                                Toast.makeText(context, "다운로드 성공", Toast.LENGTH_SHORT).show();
+                                download_func(context, fileName, DIRECTORY_DOWNLOADS, url);
+                                Toast.makeText(context, "다운로드 진행중", Toast.LENGTH_SHORT).show();
                                 Log.d("url address", "url : " + url);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -150,49 +155,63 @@ public class FileListViewAdapter extends BaseAdapter {
                         Toast.makeText(context, "다운로드 취소", Toast.LENGTH_SHORT).show();
                     }
                 });
-
-
-//        builder.setTitle("강의 다운로드")
-//                .setMessage(fileName + "를 다운로드하시겠습니까?")
-//                .setPositiveButton("예", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                pathReference.getFile(finalLocalFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-//                        int fileSize = (int) taskSnapshot.getTotalByteCount();
-//                        Toast.makeText(context, "다운로드 성공", Toast.LENGTH_SHORT).show();
-//                        Log.d("download task", "fileSize : " + fileSize);
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(context, e + "로 인한 다운로드 실패", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            }
-//        })
-//        .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                Toast.makeText(context, "다운로드 취소", Toast.LENGTH_SHORT).show();
-//            }
-//        });
         AlertDialog alertDialog = builder.create();
 
         alertDialog.show();
     }
 
-    private void download_func(Context context, String fileName, String fileExtension, String destinationDirectory, String url) {
+    private void download_func(final Context context, String fileName, String destinationDirectory, String url) {
 
-        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        final DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 
         Uri uri = Uri.parse(url);
         DownloadManager.Request request = new DownloadManager.Request(uri);
 
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setDestinationInExternalFilesDir(context, destinationDirectory, fileName + fileExtension);
+        request.setDestinationInExternalFilesDir(context, destinationDirectory, fileName);
 
-        downloadManager.enqueue(request);
+        final long download_managerId = downloadManager.enqueue(request);
+
+        final ProgressDialog progressBarDialog = new ProgressDialog(context);
+        progressBarDialog.setTitle("다운로드 중");
+
+        progressBarDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressBarDialog.setProgress(0);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean downloading = true;
+
+                while (downloading) {
+                    DownloadManager.Query q = new DownloadManager.Query();
+                    q.setFilterById(download_managerId);
+                    Cursor cursor = downloadManager.query(q);
+                    cursor.moveToFirst();
+                    int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                    int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+
+                    if (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)) == DownloadManager.STATUS_SUCCESSFUL) {
+                        downloading = false;
+                    }
+                    final int dl_progress = (int) ((bytes_downloaded * 100l) / bytes_total);
+
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBarDialog.setProgress((int) dl_progress);
+                            if (dl_progress == 100) {
+                                progressBarDialog.dismiss();
+                            }
+                        }
+                    });
+
+                    cursor.close();
+                }
+            }
+        }).start();
+
+        progressBarDialog.show();
+
     }
 }

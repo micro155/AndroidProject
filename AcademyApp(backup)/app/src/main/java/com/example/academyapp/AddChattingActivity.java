@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -39,6 +41,7 @@ public class AddChattingActivity extends AppCompatActivity {
 
         academy_listView = (ListView) findViewById(R.id.academy_list_view);
         mFirebaseDatabase = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+        final AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.autoSearch_academy);
 
         final ArrayList<String> name_list = new ArrayList<String>();
         final ArrayList<String> address_list = new ArrayList<String>();
@@ -63,8 +66,10 @@ public class AddChattingActivity extends AppCompatActivity {
                     Log.d("dataAdapter", "adapter : " + snapshot.getChildren());
 
                     adapter = new AcademyListViewAdapter(AddChattingActivity.this, name_list, address_list);
+
                     adapter.notifyDataSetChanged();
                     academy_listView.setAdapter(adapter);
+                    autoCompleteTextView.setAdapter(new ArrayAdapter<String>(AddChattingActivity.this, android.R.layout.simple_dropdown_item_1line, name_list));
 
                     academy_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -82,55 +87,11 @@ public class AddChattingActivity extends AppCompatActivity {
                                     String nickName = snapshot.getValue(String.class);
                                     intent.putExtra("normal_name", nickName);
 
-//                                    chatList.child("director")
-//                                            .setValue(name_list.get(position));
-//                                            .addOnFailureListener(new OnFailureListener() {
-//                                                @Override
-//                                                public void onFailure(@NonNull Exception e) {
-//                                                    Toast.makeText(AddChattingActivity.this, "채팅방 생성 실패", Toast.LENGTH_SHORT);
-//                                                    Log.d("make room Fail Log", "reason : " + e.getMessage());
-//                                                }
-//                                            }).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                        @Override
-//                                        public void onSuccess(Void aVoid) {
-//                                            Toast.makeText(AddChattingActivity.this, "채팅방 생성", Toast.LENGTH_SHORT);
-//                                        }
-//                                    });
-
                                     chatList.child(name_list.get(position)).child(nickName).child(MESSAGES_CHILD).setValue(getTime);
-//                                            .setValue(nickName);
-
-//                                    chatList.child("normal_member")
-//                                            .setValue(nickName);
-//                                            .addOnFailureListener(new OnFailureListener() {
-//                                                @Override
-//                                                public void onFailure(@NonNull Exception e) {
-//                                                    Toast.makeText(AddChattingActivity.this, "채팅방 생성 실패", Toast.LENGTH_SHORT);
-//                                                    Log.d("make room Fail Log", "reason : " + e.getMessage());
-//                                                }
-//                                            }).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                        @Override
-//                                        public void onSuccess(Void aVoid) {
-//                                            Toast.makeText(AddChattingActivity.this, "채팅방 생성", Toast.LENGTH_SHORT);
-//                                        }
-//                                    });
 
                                     chatList.child(nickName).child(name_list.get(position)).child(MESSAGES_CHILD).setValue(getTime);
-//                                            .setValue(name_list.get(position));
+
                                     startActivity(intent);
-//                                            .addOnFailureListener(new OnFailureListener() {
-//                                                @Override
-//                                                public void onFailure(@NonNull Exception e) {
-//                                                    Toast.makeText(AddChattingActivity.this, "채팅방 생성 실패", Toast.LENGTH_SHORT);
-//                                                    Log.d("make room Fail Log", "reason : " + e.getMessage());
-//                                                }
-//                                            }).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                        @Override
-//                                        public void onSuccess(Void aVoid) {
-//                                            Toast.makeText(AddChattingActivity.this, "채팅방 생성", Toast.LENGTH_SHORT);
-//                                            startActivity(intent);
-//                                        }
-//                                    });
                                 }
 
                                 @Override
@@ -139,7 +100,38 @@ public class AddChattingActivity extends AppCompatActivity {
                                 }
                             });
 
-//                            startActivity(intent);
+                        }
+                    });
+
+                    autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                            final Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
+                            intent.putExtra("academy_name", name_list.get(position));
+                            final DatabaseReference chatList = FirebaseDatabase.getInstance().getReference("ChatRoom");
+
+                            DatabaseReference normal_info = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+                            String normal_user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                            normal_info.child(normal_user).child("nickName").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    String nickName = snapshot.getValue(String.class);
+                                    intent.putExtra("normal_name", nickName);
+
+                                    chatList.child(name_list.get(position)).child(nickName).child(MESSAGES_CHILD).setValue(getTime);
+
+                                    chatList.child(nickName).child(name_list.get(position)).child(MESSAGES_CHILD).setValue(getTime);
+
+                                    startActivity(intent);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
                         }
                     });
                 }
