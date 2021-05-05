@@ -339,24 +339,6 @@ public class UploadActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-//                            DatabaseReference name_reference = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
-//
-//                            name_reference.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                    String academy_name = snapshot.child("academy_name").getValue(String.class);
-//                                    academy[0] = academy_name;
-//
-////                                    FileDatabase.child("academy_name").setValue(academy_name);
-////                                    FileDatabase.child("file_name").setValue(filename);
-//                                }
-//
-//                                @Override
-//                                public void onCancelled(@NonNull DatabaseError error) {
-//                                    Log.d("Error", "error message: " + error);
-//                                }
-//                            });
-
                             FileDatabase.child(mUid).child("file_name").setValue(filename);
 
                             progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기

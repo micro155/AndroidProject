@@ -3,14 +3,11 @@ package com.example.academyapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
-import androidx.loader.content.AsyncTaskLoader;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -20,10 +17,8 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,8 +31,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.academyapp.Model.AcademyInfo;
-import com.example.academyapp.Model.MemberInfoModel;
-import com.example.academyapp.RestAPI.RequestAddress;
+import com.example.academyapp.RestAPI.GeocodingResponse;
 import com.example.academyapp.RestAPI.RetrofitConnection;
 import com.example.academyapp.Utils.UserUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -57,7 +51,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.gson.Gson;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraAnimation;
 import com.naver.maps.map.CameraUpdate;
@@ -66,24 +59,9 @@ import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 
-import org.json.simple.JSONArray;
-import org.json.JSONException;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -92,8 +70,6 @@ import retrofit2.Response;
 public class AcademyManagementActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     DatabaseReference AcademyInfoRef;
-    String ResultAddressX;
-    String ResultAddressY;
     String mUid;
 
     private DrawerLayout drawer;
@@ -105,6 +81,8 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
     private StorageReference storageReference;
     private ImageView img_profile;
     private Uri imageUri;
+    private double ResultAddressX;
+    private double ResultAddressY;
 
     private static final int PICK_IMAGE_REQUEST = 100;
 
@@ -116,7 +94,6 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
         setContentView(R.layout.activity_academy_management);
 
         confirmAcademyInfo();
-        showAcademyManagement();
 
         Toolbar toolbar = findViewById(R.id.toolbar_management);
         setSupportActionBar(toolbar);
@@ -149,13 +126,52 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
 
     @UiThread
     @Override
-    public void onMapReady(@NonNull NaverMap naverMap) {
-        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(36.763695, 127.281796)).animate(CameraAnimation.Fly);
-        naverMap.moveCamera(cameraUpdate);
+    public void onMapReady(@NonNull final NaverMap naverMap) {
 
-        Marker marker = new Marker();
-        marker.setPosition(new LatLng(36.763695, 127.281796));
-        marker.setMap(naverMap);
+        AcademyInfoRef.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String location = snapshot.child("academy_address").getValue(String.class);
+
+                RetrofitConnection retrofitConnection = new RetrofitConnection();
+                Call<GeocodingResponse> geocodingResponse = retrofitConnection.mapAPI.getCoordinate(location);
+
+                Log.d("location",  location);
+
+                geocodingResponse.enqueue(new Callback<GeocodingResponse>() {
+                    @Override
+                    public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
+                        if (response.isSuccessful()) {
+                            GeocodingResponse geocodingResponse = response.body();
+                            List<GeocodingResponse.RequestAddress> addressList = geocodingResponse.getAddresses();
+
+                            ResultAddressX = addressList.get(0).getX();
+                            ResultAddressY = addressList.get(0).getY();
+
+                            Log.d("x", "x : " + ResultAddressX);
+                            Log.d("y", "y : " + ResultAddressY);
+
+                            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(ResultAddressX, ResultAddressY)).animate(CameraAnimation.Fly);
+                            naverMap.moveCamera(cameraUpdate);
+
+                            Marker marker = new Marker();
+                            marker.setPosition(new LatLng(ResultAddressX, ResultAddressY));
+                            marker.setMap(naverMap);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<GeocodingResponse> call, Throwable t) {
+                        Log.d("ERROR", "Failure Log :" + t.toString());
+                    }
+                });
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     private void confirmAcademyInfo() {
@@ -180,95 +196,48 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
         });
     }
 
-    private void showAcademyManagement() {
-
-//        final String[] academy_addr = new String[1];
-
-        AcademyInfoRef.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String location = snapshot.child("academy_address").getValue(String.class);
-
-//                    AsyncTask.execute(new Runnable() {
+//    private void showAcademyManagement() {
+//
+//        AcademyInfoRef.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    String location = snapshot.child("academy_address").getValue(String.class);
+//
+//                    RetrofitConnection retrofitConnection = new RetrofitConnection();
+//                    Call<GeocodingResponse> geocodingResponse = retrofitConnection.mapAPI.getCoordinate(location);
+//
+//                    Log.d("location",  location);
+//
+//                geocodingResponse.enqueue(new Callback<GeocodingResponse>() {
 //                        @Override
-//                        public void run() {
-//                            try {
-//                                URL requestURL = new URL("https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode");
-//                                HttpsURLConnection connection = (HttpsURLConnection) requestURL.openConnection();
-//                                connection.setRequestMethod("GET");
-//                                connection.setRequestProperty("X-NCP-APIGW-API-KEY-ID", "z79q0dob9r");
-//                                connection.setRequestProperty("X-NCP-APIGW-API-KEY", "l7JKaTHv8v4CE3wV5xc7G8exQs3HQ61y8n0ajNr3");
-//                                if (connection.getResponseCode() == 200) {
-//                                    String data = "query=서초대로29길 22-20";
-//                                    connection.getOutputStream().write(data.getBytes());
-//                                    InputStream responseBody = connection.getInputStream();
-//                                    InputStreamReader responseBodyReader = new InputStreamReader(responseBody, "UTF-8");
-//                                    JsonReader jsonReader = new JsonReader(responseBodyReader);
-//                                    jsonReader.beginObject();
-//                                    while(jsonReader.hasNext()) {
-//                                        String key = jsonReader.nextName();
-//                                        if (key.equals("x")) {
-//                                            String x = jsonReader.nextString();
-//                                            Log.d("x", "x value : " + x);
-//                                        } else {
-//                                            jsonReader.skipValue();
-//                                        }
-//                                        if (key.equals("y")) {
-//                                            String y = jsonReader.nextString();
-//                                            Log.d("y", "y value : " + y);
-//                                        } else {
-//                                            jsonReader.skipValue();
-//                                        }
-//                                    }
-//                                } else {
-//                                    Log.d("error", "error");
-//                                }
-//                            } catch (MalformedURLException e) {
-//                                e.printStackTrace();
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
+//                        public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
+//                            if (response.isSuccessful()) {
+//                                GeocodingResponse geocodingResponse = response.body();
+//                                List<GeocodingResponse.RequestAddress> addressList = geocodingResponse.getAddresses();
+//
+//                                ResultAddressX = addressList.get(0).getX();
+//                                ResultAddressY = addressList.get(0).getY();
+//
+//                                Log.d("x", "x : " + ResultAddressX);
+//                                Log.d("y", "y : " + ResultAddressY);
+//
+//                                SaveCoordinate(ResultAddressX, ResultAddressY);
 //                            }
 //                        }
+//
+//                        @Override
+//                        public void onFailure(Call<GeocodingResponse> call, Throwable t) {
+//                            Log.d("ERROR", "Failure Log :" + t.toString());
+//                        }
 //                    });
-
-//                try {
-//                    String encodeAddress = URLEncoder.encode(location, "UTF-8");
-                    RetrofitConnection retrofitConnection = new RetrofitConnection();
-                    Call<RequestAddress> requestAddress = retrofitConnection.mapAPI.getCoordinate(location);
-
-                    Log.d("location", "location" + location);
-
-                    requestAddress.enqueue(new Callback<RequestAddress>() {
-                        @Override
-                        public void onResponse(Call<RequestAddress> call, Response<RequestAddress> response) {
-                            if (response.isSuccessful()) {
-                                String x = response.body().getX();
-                                String y = response.body().getY();
-                                Log.d("x", "x = " + call.request().body());
-                                Log.d("y", "y = " + y);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<RequestAddress> call, Throwable t) {
-                            Log.d("ERROR", "Failure Log :" + t.toString());
-                        }
-                    });
-//                } catch (UnsupportedEncodingException e) {
-//                    e.printStackTrace();
 //                }
-                }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-//        Log.d("x out", "x : " + ResultAddressX);
-//        Log.d("y out", "y : " + ResultAddressY);
-//        LatLng coord = new LatLng(ResultAddressX, ResultAddressY);
-
-    }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//
+//    }
 
 
     private void showRegisterAcademy() {
