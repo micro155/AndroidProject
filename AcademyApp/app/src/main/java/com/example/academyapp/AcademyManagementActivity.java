@@ -57,7 +57,9 @@ import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.overlay.Overlay;
 
 import java.util.HashMap;
 import java.util.List;
@@ -128,10 +130,11 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
     @Override
     public void onMapReady(@NonNull final NaverMap naverMap) {
 
-        AcademyInfoRef.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
+        AcademyInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String location = snapshot.child("academy_address").getValue(String.class);
+                String location = snapshot.child(mUid).child("academy_address").getValue(String.class);
+                final String academy_name = snapshot.child(mUid).child("academy_name").getValue(String.class);
 
                 RetrofitConnection retrofitConnection = new RetrofitConnection();
                 Call<GeocodingResponse> geocodingResponse = retrofitConnection.mapAPI.getCoordinate(location);
@@ -148,15 +151,33 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                             ResultAddressX = addressList.get(0).getX();
                             ResultAddressY = addressList.get(0).getY();
 
-                            Log.d("x", "x : " + ResultAddressX);
-                            Log.d("y", "y : " + ResultAddressY);
+                            Log.d("marker_x", "marker_x : " + ResultAddressX);
+                            Log.d("marker_y", "marker_y : " + ResultAddressY);
 
-                            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(ResultAddressX, ResultAddressY)).animate(CameraAnimation.Fly);
+                            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(ResultAddressY, ResultAddressX)).animate(CameraAnimation.Fly);
                             naverMap.moveCamera(cameraUpdate);
 
                             Marker marker = new Marker();
-                            marker.setPosition(new LatLng(ResultAddressX, ResultAddressY));
+                            marker.setPosition(new LatLng(ResultAddressY, ResultAddressX));
                             marker.setMap(naverMap);
+
+                            InfoWindow infoWindow = new InfoWindow();
+                            infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(AcademyManagementActivity.this) {
+                                @NonNull
+                                @Override
+                                public CharSequence getText(@NonNull InfoWindow infoWindow) {
+                                    return academy_name;
+                                }
+                            });
+                            infoWindow.open(marker);
+
+                            infoWindow.setOnClickListener(new Overlay.OnClickListener() {
+                                @Override
+                                public boolean onClick(@NonNull Overlay overlay) {
+                                    Toast.makeText(AcademyManagementActivity.this, "마커 클릭 확인", Toast.LENGTH_SHORT).show();
+                                    return true;
+                                }
+                            });
                         }
                     }
 
@@ -195,49 +216,6 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
             }
         });
     }
-
-//    private void showAcademyManagement() {
-//
-//        AcademyInfoRef.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                    String location = snapshot.child("academy_address").getValue(String.class);
-//
-//                    RetrofitConnection retrofitConnection = new RetrofitConnection();
-//                    Call<GeocodingResponse> geocodingResponse = retrofitConnection.mapAPI.getCoordinate(location);
-//
-//                    Log.d("location",  location);
-//
-//                geocodingResponse.enqueue(new Callback<GeocodingResponse>() {
-//                        @Override
-//                        public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
-//                            if (response.isSuccessful()) {
-//                                GeocodingResponse geocodingResponse = response.body();
-//                                List<GeocodingResponse.RequestAddress> addressList = geocodingResponse.getAddresses();
-//
-//                                ResultAddressX = addressList.get(0).getX();
-//                                ResultAddressY = addressList.get(0).getY();
-//
-//                                Log.d("x", "x : " + ResultAddressX);
-//                                Log.d("y", "y : " + ResultAddressY);
-//
-//                                SaveCoordinate(ResultAddressX, ResultAddressY);
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<GeocodingResponse> call, Throwable t) {
-//                            Log.d("ERROR", "Failure Log :" + t.toString());
-//                        }
-//                    });
-//                }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//
-//    }
 
 
     private void showRegisterAcademy() {

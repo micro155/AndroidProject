@@ -17,8 +17,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -57,9 +59,9 @@ public class DownloadContentsActivity extends AppCompatActivity {
     private NavController navController;
     private NavigationView navigationView;
 
-//    private FirebaseRecyclerAdapter<FileListInfo, FileListViewHolder> mFirebaseAdapter;
-//    private RecyclerView mFileListRecyclerView;
-    private DatabaseReference mFirebaseDatabase;
+    private DatabaseReference FileStorage_Ref;
+    private DatabaseReference Contracts_Ref;
+    private DatabaseReference Normal_Ref;
 
     private AlertDialog waitingDialog;
     private StorageReference storageReference;
@@ -68,22 +70,8 @@ public class DownloadContentsActivity extends AppCompatActivity {
 
     private ListView listView;
     private FileListViewAdapter adapter;
-//    private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-//    private ArrayAdapter<HashMap<String, String>> dataAdapter;
 
     private FirebaseStorage storage;
-
-//    public static class FileListViewHolder extends RecyclerView.ViewHolder {
-//
-//        TextView academyNameView;
-//        TextView fileNameView;
-//
-//        public FileListViewHolder(View itemView) {
-//            super(itemView);
-//            academyNameView = itemView.findViewById(R.id.AcademyNameView);
-//            fileNameView = itemView.findViewById(R.id.FileNameView);
-//        }
-//    }
 
 
     @Override
@@ -91,7 +79,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_contents);
 
-//        mFileListRecyclerView = findViewById(R.id.download_list_recycler_view);
+        confirmContractVideo();
 
         Toolbar toolbar = findViewById(R.id.toolbar_download);
         setSupportActionBar(toolbar);
@@ -109,29 +97,20 @@ public class DownloadContentsActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-//        final TextView academy_view = (TextView) findViewById(R.id.file_academy);
-//        final TextView file_view = (TextView) findViewById(R.id.file_name);
-
         listView = (ListView) findViewById(R.id.file_list_view);
 
         final ArrayList<String> academy_list = new ArrayList<String>();
         final ArrayList<String> file_list = new ArrayList<String>();
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance().getReference("FileList");
-//        Query query = mFirebaseDatabase.child("FileList");
+        FileStorage_Ref = FirebaseDatabase.getInstance().getReference("FileList");
 
-//        listView = findViewById(R.id.file_list_view);
-//        dataAdapter = new ArrayAdapter<HashMap<String, String>>(this, android.R.layout.simple_dropdown_item_1line, list);
-
-        mFirebaseDatabase.addValueEventListener(new ValueEventListener() {
+        FileStorage_Ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                dataAdapter.clear();
+
                 for (DataSnapshot fileData : snapshot.getChildren()) {
                     String key = fileData.getKey();
                     final String value = fileData.child("file_name").getValue(String.class);
-
-//                    final FileListInfo fileListInfo = new FileListInfo(value);
 
                     DatabaseReference mUid = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
 
@@ -139,7 +118,6 @@ public class DownloadContentsActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             String academy = snapshot.child("academy_name").getValue(String.class);
-
 
                             academy_list.add(academy);
                             file_list.add(value);
@@ -161,28 +139,6 @@ public class DownloadContentsActivity extends AppCompatActivity {
                         }
                     });
                 }
-//                dataAdapter.notifyDataSetChanged();
-//
-//                listView.setAdapter(dataAdapter);
-//
-//                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                        String data = (String) parent.getItemAtPosition(position);
-//                        Toast.makeText(DownloadContentsActivity.this, data, Toast.LENGTH_SHORT).show();
-//
-//                        download_file(data);
-//                    }
-//                });
-
-//                adapter = new ListViewAdapter(DownloadContentsActivity.this, file_list, new ListViewAdapter.OnDownloadClickListener() {
-//                    @Override
-//                    public void onDownload(View v) {
-//                        adapter.download_File(v);
-//                    }
-//                });
-//                adapter.notifyDataSetChanged();
-//                listView.setAdapter(adapter);
             }
 
             @Override
@@ -191,87 +147,60 @@ public class DownloadContentsActivity extends AppCompatActivity {
             }
         });
 
-//        adapter = new ListViewAdapter(this, file_list, new ListViewAdapter.OnDownloadClickListener() {
-//            @Override
-//            public void onDownload(View v) {
-//                adapter.download_File(v);
-//            }
-//        });
-//        listView.setAdapter(adapter);
-
         init();
-
-
-//        FirebaseRecyclerOptions<FileListInfo> options = new FirebaseRecyclerOptions.Builder<FileListInfo>().setQuery(query, FileListInfo.class).build();
-//        mFirebaseAdapter = new FirebaseRecyclerAdapter<FileListInfo, FileListViewHolder>(options) {
-//            @Override
-//            protected void onBindViewHolder(FileListViewHolder viewHolder, int i, final FileListInfo listInfo) {
-//                viewHolder.academyNameView.setText(listInfo.getAcademy_name());
-//                viewHolder.fileNameView.setText(listInfo.getFile_name());
-//                Button download_btn = findViewById(R.id.download_button);
-//
-//                download_btn.setOnClickListener(new Button.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        AlertDialog.Builder builder = new AlertDialog.Builder(DownloadContentsActivity.this);
-//                        builder.setTitle("다운로드 하시겠습니까?");
-//                        builder.setMessage(listInfo.getFile_name());
-//                        builder.setPositiveButton("예", null);
-//                        builder.setNegativeButton("아니오", null);
-//                        builder.create().show();
-//                    }
-//                });
-//            }
-//
-//            @NonNull
-//            @Override
-//            public FileListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.download_list_base, parent, false);
-//                return new FileListViewHolder(view);
-//            }
-//        };
-
-//        mFileListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        mFileListRecyclerView.setAdapter(mFirebaseAdapter);
 
     }
 
-//    private void download_file(final String file_name) { //alertdialog 형식 파일 다운로드 메소드
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//
-//        builder.setTitle("파일 다운로드").setMessage(file_name + "를 다운로드 하시겠습니까?");
-//
-//        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                StorageReference fileRef = storage.getReference().child("video/"+ file_name);
-//                try {
-//                    File localFile = File.createTempFile(file_name, "mp4");
-//
-//                    fileRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-//
-//                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//
-//                        }
-//                    });
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//
-//        builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                Toast.makeText(DownloadContentsActivity.this, "파일 다운로드 취소", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
+    private void confirmContractVideo() {
+
+        Normal_Ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        
+        Contracts_Ref = FirebaseDatabase.getInstance().getReference("Contracts");
+
+        Normal_Ref.child("nickName").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                final String name = snapshot.getValue(String.class);
+                
+                Contracts_Ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String normal_contracts = snapshot.getValue(String.class);
+                        
+                        if (name.equals(normal_contracts)) {
+                            showDownloadContentsList(name);
+                        } else {
+                            RegisterContractVideo();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void RegisterContractVideo() {
+
+        AlertDialog.Builder registerDialog = new AlertDialog.Builder(this);
+//        View registerView = LayoutInflater.from(this).inflate()
+
+    }
+
+    private void showDownloadContentsList(String normal_name) {
+
+
+    }
 
 
     private void init() {

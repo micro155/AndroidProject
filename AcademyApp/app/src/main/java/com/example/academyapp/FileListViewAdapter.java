@@ -205,7 +205,6 @@ public class FileListViewAdapter extends BaseAdapter {
                             }
                         }
                     });
-
                     cursor.close();
                 }
             }
