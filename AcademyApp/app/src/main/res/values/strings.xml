@@ -16,5 +16,7 @@
     <string name="menu_download">강의 영상 다운로드</string>
     <string name="menu_chatting">학원 문의 채팅</string>
     <string name="menu_academy_management">학원 정보 관리</string>
+    <string name="chatting_management">채팅 문의 관리</string>
+    <string name="menu_downloader_management">강의 영상 고객 관리</string>
 
 </resources>
