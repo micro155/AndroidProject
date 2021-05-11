@@ -168,17 +168,15 @@ public class DownloadContentsActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 final String normal_name = snapshot.getValue(String.class);
 
-                Log.d("name", "normal_name : " + normal_name);
-                
                 Contracts_Ref.child(normal_name).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String normal_contracts = snapshot.getKey();
 
-                        Log.d("normal_name", "normal_name : " + normal_contracts);
-                        
-                        if (normal_contracts != null && normal_contracts == normal_name) {
+                        String normal_user = snapshot.child("downloader_nickName").getValue(String.class);
 
+                        if (normal_user == null) {
+                            RegisterContractVideo();
+                        } else {
                             for (DataSnapshot uploaderSnapshot : snapshot.getChildren()) {
                                 String uploader_name = uploaderSnapshot.child("academy_name").getValue(String.class);
 
@@ -186,9 +184,32 @@ public class DownloadContentsActivity extends AppCompatActivity {
 
                                 showDownloadContentsList(uploader_name);
                             }
-                        } else {
-                            RegisterContractVideo();
                         }
+
+//                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                            String normal_user = dataSnapshot.child("downloader_nickName").getValue(String.class);
+//
+//                        }
+//
+//                        for (DataSnapshot dataSnapshot2 : snapshot.getChildren()) {
+//
+//                            String normal_user = dataSnapshot2.child("downloader_nickName").getValue(String.class);
+//
+//                            Log.d("normal_user", "normal_user : " + normal_user);
+//
+//                            if (normal_user.equals(normal_name)) {
+//                                for (DataSnapshot uploaderSnapshot : snapshot.getChildren()) {
+//                                    String uploader_name = uploaderSnapshot.child("academy_name").getValue(String.class);
+//
+//                                    Log.d("uploader_name", "uploader_name : " + uploader_name);
+//
+//                                    showDownloadContentsList(uploader_name);
+//                                }
+//                            } else if (normal_user == null) {
+//                                RegisterContractVideo();
+//                            }
+//                        }
+
                     }
 
                     @Override
@@ -231,15 +252,10 @@ public class DownloadContentsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SearchAcademyActivity.class);
+                dialog.dismiss();
                 startActivityForResult(intent, 1000);
-//                dialog.dismiss();
-//                finish();
             }
         });
-
-//        Intent intent = getIntent();
-//        String academy = intent.getExtras().getString("academy_name");
-//        academy_name.setText(academy);
 
         contracts_register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -268,7 +284,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             String normal_nickName = snapshot.child("nickName").getValue(String.class);
 
-                            Contracts_Ref.child(normal_nickName).push().setValue(model)
+                            Contracts_Ref.child(normal_nickName).setValue(model)
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
@@ -284,7 +300,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
                                         }
                                     });
 
-                            Contracts_Ref.child(academy_name.getText().toString()).push().setValue(model)
+                            Contracts_Ref.child(academy_name.getText().toString()).setValue(model)
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
@@ -338,13 +354,10 @@ public class DownloadContentsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SearchAcademyActivity.class);
                 startActivityForResult(intent, 1000);
-                finish();
+                dialog.dismiss();
+//                finish();
             }
         });
-
-//        Intent intent = getIntent();
-//        String academy = intent.getExtras().getString("academy_name");
-//        academy_name.setText(academy);
 
         contracts_register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -372,6 +385,8 @@ public class DownloadContentsActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             String normal_nickName = snapshot.child("nickName").getValue(String.class);
+
+                            model.setDownloader_nickName(normal_nickName);
 
                             Contracts_Ref.child(normal_nickName).push().setValue(model)
                                     .addOnFailureListener(new OnFailureListener() {
@@ -423,7 +438,6 @@ public class DownloadContentsActivity extends AppCompatActivity {
         final ArrayList<String> academy_list = new ArrayList<String>();
         final ArrayList<String> file_list = new ArrayList<String>();
 
-//        Log.d("uploader name", " uploader_name : " + uploader_name);
 
         FileStorage_Ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -471,7 +485,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.nav_director_logout) {
+                if (item.getItemId() == R.id.nav_normalmember_logout) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(DownloadContentsActivity.this);
                     builder.setTitle("로그아웃")
                             .setMessage("정말 로그아웃 하시겠습니까?")

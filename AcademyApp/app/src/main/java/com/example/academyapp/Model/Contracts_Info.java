@@ -1,7 +1,7 @@
 package com.example.academyapp.Model;
 
 public class Contracts_Info {
-    String academy_name, academy_code, downloader_name, downloader_phone;
+    String downloader_nickName, academy_name, academy_code, downloader_name, downloader_phone;
 
     public String getAcademy_name() {
         return academy_name;
@@ -33,5 +33,13 @@ public class Contracts_Info {
 
     public void setDownloader_phone(String downloader_phone) {
         this.downloader_phone = downloader_phone;
+    }
+
+    public String getDownloader_nickName() {
+        return downloader_nickName;
+    }
+
+    public void setDownloader_nickName(String downloader_nickName) {
+        this.downloader_nickName = downloader_nickName;
     }
 }

@@ -11,13 +11,17 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,11 +35,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,6 +64,11 @@ public class Downloader_Management_Activity extends AppCompatActivity {
     private Uri imageUri;
 
     private ListView listView;
+    private DatabaseReference downloader_ref;
+    private DatabaseReference user_ref;
+    private String user_auth;
+    private DownloaderListViewAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +93,86 @@ public class Downloader_Management_Activity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         listView = findViewById(R.id.downloader_list_view);
+        downloader_ref = FirebaseDatabase.getInstance().getReference("Contracts");
+        user_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+        user_auth = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         init();
 
-        
+        user_ref.child(user_auth).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String academy_name = snapshot.child("academy_name").getValue(String.class);
+
+                showDownloaderList(academy_name);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void showDownloaderList(final String academy_name) {
+
+        final ArrayList<String> downloader_name_list = new ArrayList<String>();
+        final ArrayList<String> downloader_phone_list = new ArrayList<String>();
+
+        downloader_ref.child(academy_name).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot downloader_list : snapshot.getChildren()) {
+                    String downloader_name = downloader_list.child("downloader_name").getValue(String.class);
+                    String downloader_phone = downloader_list.child("downloader_phone").getValue(String.class);
+                    String academy_code = downloader_list.child("academy_code").getValue(String.class);
+
+                    downloader_name_list.add(downloader_name);
+                    downloader_phone_list.add(downloader_phone);
+
+                    adapter = new DownloaderListViewAdapter(Downloader_Management_Activity.this, downloader_name_list, downloader_phone_list, academy_name);
+                    adapter.notifyDataSetChanged();
+                    listView.setAdapter(adapter);
+
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            AlertDialog.Builder detail_dialog = new AlertDialog.Builder(Downloader_Management_Activity.this);
+                            View detail_info_view = LayoutInflater.from(Downloader_Management_Activity.this).inflate(R.layout.layout_detail_downloader_info, null);
+
+                            TextView downloader_nick_name = (TextView) detail_info_view.findViewById(R.id.downloader_detail_nickName);
+                            TextView downloader_name = (TextView) detail_info_view.findViewById(R.id.downloader_detail_downloader_name);
+                            TextView downloader_phone = (TextView) detail_info_view.findViewById(R.id.downloader_detail_downloader_phone);
+                            TextView downloader_academy_code = (TextView) detail_info_view.findViewById(R.id.downloader_detail_academy_code);
+
+                            Button downloader_detail_confirm_button = (Button) detail_info_view.findViewById(R.id.downloader_detail_confirm);
+
+                            detail_dialog.setView(detail_info_view);
+
+                            final AlertDialog dialog = detail_dialog.create();
+                            dialog.show();
+
+                            downloader_detail_confirm_button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
 
     }
 
@@ -240,6 +331,19 @@ public class Downloader_Management_Activity extends AppCompatActivity {
             }
         });
         dialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+            if(data != null && data.getData() != null) {
+                imageUri = data.getData();
+                img_profile.setImageURI(imageUri);
+
+                showDialogUpload();
+            }
+        }
     }
 
     @Override
