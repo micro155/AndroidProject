@@ -172,11 +172,15 @@ public class DownloadContentsActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                        String normal_user = snapshot.child("downloader_nickName").getValue(String.class);
+                        String normal_user = null;
 
-                        if (normal_user == null) {
-                            RegisterContractVideo();
-                        } else {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            normal_user = dataSnapshot.child("downloader_nickName").getValue(String.class);
+
+                            Log.d("normal_user", "normal_user : " + normal_user);
+                        }
+
+                        if (normal_user != null && normal_user.equals(normal_name)) {
                             for (DataSnapshot uploaderSnapshot : snapshot.getChildren()) {
                                 String uploader_name = uploaderSnapshot.child("academy_name").getValue(String.class);
 
@@ -184,31 +188,9 @@ public class DownloadContentsActivity extends AppCompatActivity {
 
                                 showDownloadContentsList(uploader_name);
                             }
+                        } else if (normal_user == null) {
+                            RegisterContractVideo();
                         }
-
-//                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                            String normal_user = dataSnapshot.child("downloader_nickName").getValue(String.class);
-//
-//                        }
-//
-//                        for (DataSnapshot dataSnapshot2 : snapshot.getChildren()) {
-//
-//                            String normal_user = dataSnapshot2.child("downloader_nickName").getValue(String.class);
-//
-//                            Log.d("normal_user", "normal_user : " + normal_user);
-//
-//                            if (normal_user.equals(normal_name)) {
-//                                for (DataSnapshot uploaderSnapshot : snapshot.getChildren()) {
-//                                    String uploader_name = uploaderSnapshot.child("academy_name").getValue(String.class);
-//
-//                                    Log.d("uploader_name", "uploader_name : " + uploader_name);
-//
-//                                    showDownloadContentsList(uploader_name);
-//                                }
-//                            } else if (normal_user == null) {
-//                                RegisterContractVideo();
-//                            }
-//                        }
 
                     }
 

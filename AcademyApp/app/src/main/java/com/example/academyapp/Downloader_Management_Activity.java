@@ -124,10 +124,11 @@ public class Downloader_Management_Activity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                for (DataSnapshot downloader_list : snapshot.getChildren()) {
-                    String downloader_name = downloader_list.child("downloader_name").getValue(String.class);
-                    String downloader_phone = downloader_list.child("downloader_phone").getValue(String.class);
-                    String academy_code = downloader_list.child("academy_code").getValue(String.class);
+                for (DataSnapshot downloader : snapshot.getChildren()) {
+                    final String downloader_name = downloader.child("downloader_name").getValue(String.class);
+                    final String downloader_phone = downloader.child("downloader_phone").getValue(String.class);
+                    final String academy_code = downloader.child("academy_code").getValue(String.class);
+                    final String downloader_nickName = downloader.child("downloader_nickName").getValue(String.class);
 
                     downloader_name_list.add(downloader_name);
                     downloader_phone_list.add(downloader_phone);
@@ -142,12 +143,17 @@ public class Downloader_Management_Activity extends AppCompatActivity {
                             AlertDialog.Builder detail_dialog = new AlertDialog.Builder(Downloader_Management_Activity.this);
                             View detail_info_view = LayoutInflater.from(Downloader_Management_Activity.this).inflate(R.layout.layout_detail_downloader_info, null);
 
-                            TextView downloader_nick_name = (TextView) detail_info_view.findViewById(R.id.downloader_detail_nickName);
-                            TextView downloader_name = (TextView) detail_info_view.findViewById(R.id.downloader_detail_downloader_name);
-                            TextView downloader_phone = (TextView) detail_info_view.findViewById(R.id.downloader_detail_downloader_phone);
-                            TextView downloader_academy_code = (TextView) detail_info_view.findViewById(R.id.downloader_detail_academy_code);
+                            TextView downloader_nickName_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_nickName);
+                            TextView downloader_name_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_downloader_name);
+                            TextView downloader_phone_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_downloader_phone);
+                            TextView downloader_academy_code_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_academy_code);
 
                             Button downloader_detail_confirm_button = (Button) detail_info_view.findViewById(R.id.downloader_detail_confirm);
+
+                            downloader_nickName_view.setText(downloader_nickName);
+                            downloader_name_view.setText(downloader_name);
+                            downloader_phone_view.setText(downloader_phone);
+                            downloader_academy_code_view.setText(academy_code);
 
                             detail_dialog.setView(detail_info_view);
 
@@ -233,6 +239,10 @@ public class Downloader_Management_Activity extends AppCompatActivity {
                     finish();
                 } else if (item.getItemId() == R.id.nav_chatting_director) {
                     Intent intent = new Intent(Downloader_Management_Activity.this, ChattingRoom_Director_Activity.class);
+                    startActivity(intent);
+                    finish();
+                } else if (item.getItemId() == R.id.nav_downloader_management_director) {
+                    Intent intent = new Intent(Downloader_Management_Activity.this, Downloader_Management_Activity.class);
                     startActivity(intent);
                     finish();
                 }

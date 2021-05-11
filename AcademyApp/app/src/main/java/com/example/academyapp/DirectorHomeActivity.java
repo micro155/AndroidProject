@@ -232,6 +232,10 @@ public class DirectorHomeActivity extends AppCompatActivity {
                     Intent intent = new Intent(DirectorHomeActivity.this, ChattingRoom_Director_Activity.class);
                     startActivity(intent);
                     finish();
+                } else if (item.getItemId() == R.id.nav_downloader_management_director) {
+                    Intent intent = new Intent(DirectorHomeActivity.this, Downloader_Management_Activity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 return false;
             }

@@ -412,6 +412,10 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                     Intent intent = new Intent(AcademyManagementActivity.this, ChattingRoom_Director_Activity.class);
                     startActivity(intent);
                     finish();
+                } else if (item.getItemId() == R.id.nav_downloader_management_director) {
+                    Intent intent = new Intent(AcademyManagementActivity.this, Downloader_Management_Activity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 return false;
             }
