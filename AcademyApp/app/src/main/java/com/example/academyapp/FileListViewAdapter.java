@@ -51,7 +51,6 @@ public class FileListViewAdapter extends BaseAdapter {
     private OnDownloadClickListener mlistener;
     private String academy_name;
     private String file_name;
-    private AlertDialog progressDialog;
 
     public interface OnDownloadClickListener {
         void onDownload (String fileName);

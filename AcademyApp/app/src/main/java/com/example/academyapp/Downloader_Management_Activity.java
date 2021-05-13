@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -130,16 +131,28 @@ public class Downloader_Management_Activity extends AppCompatActivity {
                     final String academy_code = downloader.child("academy_code").getValue(String.class);
                     final String downloader_nickName = downloader.child("downloader_nickName").getValue(String.class);
 
-                    downloader_name_list.add(downloader_name);
+                    downloader_name_list.add(downloader_nickName);
                     downloader_phone_list.add(downloader_phone);
 
-                    adapter = new DownloaderListViewAdapter(Downloader_Management_Activity.this, downloader_name_list, downloader_phone_list, academy_name);
+                    adapter = new DownloaderListViewAdapter(Downloader_Management_Activity.this, downloader_name_list, downloader_phone_list, academy_name, new DownloaderListViewAdapter.OnDeleteClickListener() {
+                        @Override
+                        public void onDelete(String downloader_nickName, String academy_name) {
+                            adapter.deleteDownloader(downloader_nickName, academy_name);
+//                            downloader_name_list.remove(downloader_nickName_input);
+//                            downloader_phone_list.remove(downloader_phone);
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+
                     adapter.notifyDataSetChanged();
                     listView.setAdapter(adapter);
 
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                            Log.d("Button click", "click OK");
+
                             AlertDialog.Builder detail_dialog = new AlertDialog.Builder(Downloader_Management_Activity.this);
                             View detail_info_view = LayoutInflater.from(Downloader_Management_Activity.this).inflate(R.layout.layout_detail_downloader_info, null);
 
@@ -150,10 +163,10 @@ public class Downloader_Management_Activity extends AppCompatActivity {
 
                             Button downloader_detail_confirm_button = (Button) detail_info_view.findViewById(R.id.downloader_detail_confirm);
 
-                            downloader_nickName_view.setText(downloader_nickName);
-                            downloader_name_view.setText(downloader_name);
-                            downloader_phone_view.setText(downloader_phone);
-                            downloader_academy_code_view.setText(academy_code);
+                            downloader_nickName_view.setText(downloader_name);
+                            downloader_name_view.setText(downloader_phone);
+                            downloader_phone_view.setText(academy_code);
+                            downloader_academy_code_view.setText(downloader_nickName);
 
                             detail_dialog.setView(detail_info_view);
 
@@ -169,7 +182,13 @@ public class Downloader_Management_Activity extends AppCompatActivity {
 
                         }
                     });
+
                 }
+
+//                adapter.notifyDataSetChanged();
+//                listView.setAdapter(adapter);
+
+
             }
 
             @Override

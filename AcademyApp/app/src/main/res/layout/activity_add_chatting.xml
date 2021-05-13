@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:hint="학원 이름 입력"/>
+
         <AutoCompleteTextView
             android:id="@+id/autoSearch_academy"
             android:layout_width="match_parent"

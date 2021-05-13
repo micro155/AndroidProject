@@ -103,8 +103,6 @@ public class DownloadContentsActivity extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.file_list_view);
 
-        final ArrayList<String> academy_list = new ArrayList<String>();
-        final ArrayList<String> file_list = new ArrayList<String>();
 
         FileStorage_Ref = FirebaseDatabase.getInstance().getReference("FileList");
 
