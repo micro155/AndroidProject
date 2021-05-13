@@ -126,8 +126,9 @@ public class DownloaderListViewAdapter extends BaseAdapter {
                         normal_user_ref.child(academy_name).getRef().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Downloader_Management_Activity downloader_management_activity = new Downloader_Management_Activity();
-                                downloader_management_activity.listUpdateAdapter();
+                                downloader_nickName_list.remove(downloader_nickName);
+                                downloader_phone_list.remove(downloader_phone);
+                                setItemList(downloader_nickName_list, downloader_phone_list);
                                 Toast.makeText(context, "해당 회원이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -150,8 +151,9 @@ public class DownloaderListViewAdapter extends BaseAdapter {
 
     }
 
-//    public void setItemList(ArrayList<String> downloader_nickName_list, ArrayList<String> downloader_phone_list) {
-//        this.downloader_nickName_list = downloader_nickName_list;
-//        this.downloader_phone_list = downloader_phone_list;
-//    }
+    public void setItemList(ArrayList<String> downloader_nickName_list, ArrayList<String> downloader_phone_list) {
+        this.downloader_nickName_list = downloader_nickName_list;
+        this.downloader_phone_list = downloader_phone_list;
+        notifyDataSetChanged();
+    }
 }

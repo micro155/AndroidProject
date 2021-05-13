@@ -138,9 +138,6 @@ public class Downloader_Management_Activity extends AppCompatActivity {
                         @Override
                         public void onDelete(String downloader_nickName, String academy_name) {
                             adapter.deleteDownloader(downloader_nickName, academy_name);
-//                            downloader_name_list.remove(downloader_nickName_input);
-//                            downloader_phone_list.remove(downloader_phone);
-                            adapter.notifyDataSetChanged();
                         }
                     });
 
