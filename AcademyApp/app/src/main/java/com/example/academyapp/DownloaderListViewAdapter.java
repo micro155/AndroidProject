@@ -34,17 +34,21 @@ public class DownloaderListViewAdapter extends BaseAdapter {
     private OnDeleteClickListener deleteClickListener;
     private String downloader_nickName;
     private String downloader_phone;
+    private String downloader_name;
+    private String academy_code;
 
     public interface OnDeleteClickListener {
         void onDelete (String downloader_nickName, String academy_name);
     }
 
-    public DownloaderListViewAdapter(Context context, ArrayList<String> downloader_nickName_list, ArrayList<String> downloader_phone_list, String academy_name, OnDeleteClickListener deleteClickListener) {
+    public DownloaderListViewAdapter(Context context, ArrayList<String> downloader_nickName_list, ArrayList<String> downloader_phone_list, String academy_name, String downloader_name, String academy_code, OnDeleteClickListener deleteClickListener) {
         this.context = context;
         this.downloader_nickName_list = downloader_nickName_list;
         this.downloader_phone_list = downloader_phone_list;
         this.academy_name = academy_name;
         this.deleteClickListener = deleteClickListener;
+        this.downloader_name = downloader_name;
+        this.academy_code = academy_code;
     }
 
     @Override
@@ -80,19 +84,73 @@ public class DownloaderListViewAdapter extends BaseAdapter {
         downloader_nickName_view.setText(downloader_nickName);
         downloader_phone_view.setText(downloader_phone);
 
-//        downloader_name_view.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-//
-//        downloader_phone_view.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
+        downloader_nickName_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("nickName click", "click OK");
+
+                androidx.appcompat.app.AlertDialog.Builder detail_dialog = new androidx.appcompat.app.AlertDialog.Builder(context);
+                View detail_info_view = LayoutInflater.from(context).inflate(R.layout.layout_detail_downloader_info, null);
+
+                TextView downloader_nickName_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_nickName);
+                TextView downloader_name_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_downloader_name);
+                TextView downloader_phone_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_downloader_phone);
+                TextView downloader_academy_code_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_academy_code);
+
+                Button downloader_detail_confirm_button = (Button) detail_info_view.findViewById(R.id.downloader_detail_confirm);
+
+                downloader_nickName_view.setText(downloader_nickName);
+                downloader_name_view.setText(downloader_name);
+                downloader_phone_view.setText(downloader_phone);
+                downloader_academy_code_view.setText(academy_code);
+
+                detail_dialog.setView(detail_info_view);
+
+                final androidx.appcompat.app.AlertDialog dialog = detail_dialog.create();
+                dialog.show();
+
+                downloader_detail_confirm_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
+
+        downloader_phone_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("phone click", "click OK");
+
+                androidx.appcompat.app.AlertDialog.Builder detail_dialog = new androidx.appcompat.app.AlertDialog.Builder(context);
+                View detail_info_view = LayoutInflater.from(context).inflate(R.layout.layout_detail_downloader_info, null);
+
+                TextView downloader_nickName_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_nickName);
+                TextView downloader_name_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_downloader_name);
+                TextView downloader_phone_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_downloader_phone);
+                TextView downloader_academy_code_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_academy_code);
+
+                Button downloader_detail_confirm_button = (Button) detail_info_view.findViewById(R.id.downloader_detail_confirm);
+
+                downloader_nickName_view.setText(downloader_nickName);
+                downloader_name_view.setText(downloader_name);
+                downloader_phone_view.setText(downloader_phone);
+                downloader_academy_code_view.setText(academy_code);
+
+                detail_dialog.setView(detail_info_view);
+
+                final androidx.appcompat.app.AlertDialog dialog = detail_dialog.create();
+                dialog.show();
+
+                downloader_detail_confirm_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
 
         btn_downloader_delete.setOnClickListener(new View.OnClickListener() {
             @Override

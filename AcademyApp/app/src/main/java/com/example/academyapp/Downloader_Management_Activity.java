@@ -118,7 +118,7 @@ public class Downloader_Management_Activity extends AppCompatActivity {
 
     private void showDownloaderList(final String academy_name) {
 
-        final ArrayList<String> downloader_name_list = new ArrayList<String>();
+        final ArrayList<String> downloader_nickName_list = new ArrayList<String>();
         final ArrayList<String> downloader_phone_list = new ArrayList<String>();
 
         downloader_ref.child(academy_name).addValueEventListener(new ValueEventListener() {
@@ -131,10 +131,10 @@ public class Downloader_Management_Activity extends AppCompatActivity {
                     final String academy_code = downloader.child("academy_code").getValue(String.class);
                     final String downloader_nickName = downloader.child("downloader_nickName").getValue(String.class);
 
-                    downloader_name_list.add(downloader_nickName);
+                    downloader_nickName_list.add(downloader_nickName);
                     downloader_phone_list.add(downloader_phone);
 
-                    adapter = new DownloaderListViewAdapter(Downloader_Management_Activity.this, downloader_name_list, downloader_phone_list, academy_name, new DownloaderListViewAdapter.OnDeleteClickListener() {
+                    adapter = new DownloaderListViewAdapter(Downloader_Management_Activity.this, downloader_nickName_list, downloader_phone_list, academy_name, downloader_name, academy_code, new DownloaderListViewAdapter.OnDeleteClickListener() {
                         @Override
                         public void onDelete(String downloader_nickName, String academy_name) {
                             adapter.deleteDownloader(downloader_nickName, academy_name);
@@ -144,41 +144,41 @@ public class Downloader_Management_Activity extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                     listView.setAdapter(adapter);
 
-                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                            Log.d("Button click", "click OK");
-
-                            AlertDialog.Builder detail_dialog = new AlertDialog.Builder(Downloader_Management_Activity.this);
-                            View detail_info_view = LayoutInflater.from(Downloader_Management_Activity.this).inflate(R.layout.layout_detail_downloader_info, null);
-
-                            TextView downloader_nickName_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_nickName);
-                            TextView downloader_name_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_downloader_name);
-                            TextView downloader_phone_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_downloader_phone);
-                            TextView downloader_academy_code_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_academy_code);
-
-                            Button downloader_detail_confirm_button = (Button) detail_info_view.findViewById(R.id.downloader_detail_confirm);
-
-                            downloader_nickName_view.setText(downloader_name);
-                            downloader_name_view.setText(downloader_phone);
-                            downloader_phone_view.setText(academy_code);
-                            downloader_academy_code_view.setText(downloader_nickName);
-
-                            detail_dialog.setView(detail_info_view);
-
-                            final AlertDialog dialog = detail_dialog.create();
-                            dialog.show();
-
-                            downloader_detail_confirm_button.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.dismiss();
-                                }
-                            });
-
-                        }
-                    });
+//                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                        @Override
+//                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                            Log.d("Button click", "click OK");
+//
+//                            AlertDialog.Builder detail_dialog = new AlertDialog.Builder(Downloader_Management_Activity.this);
+//                            View detail_info_view = LayoutInflater.from(Downloader_Management_Activity.this).inflate(R.layout.layout_detail_downloader_info, null);
+//
+//                            TextView downloader_nickName_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_nickName);
+//                            TextView downloader_name_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_downloader_name);
+//                            TextView downloader_phone_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_downloader_phone);
+//                            TextView downloader_academy_code_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_academy_code);
+//
+//                            Button downloader_detail_confirm_button = (Button) detail_info_view.findViewById(R.id.downloader_detail_confirm);
+//
+//                            downloader_nickName_view.setText(downloader_name);
+//                            downloader_name_view.setText(downloader_phone);
+//                            downloader_phone_view.setText(academy_code);
+//                            downloader_academy_code_view.setText(downloader_nickName);
+//
+//                            detail_dialog.setView(detail_info_view);
+//
+//                            final AlertDialog dialog = detail_dialog.create();
+//                            dialog.show();
+//
+//                            downloader_detail_confirm_button.setOnClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+//                                    dialog.dismiss();
+//                                }
+//                            });
+//
+//                        }
+//                    });
 
                 }
 
