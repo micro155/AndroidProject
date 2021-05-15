@@ -30,7 +30,8 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_dialog_email" />
 
-    <fragment android:layout_width="match_parent"
+    <fragment
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/map2"
         android:name="com.naver.maps.map.MapFragment" />
