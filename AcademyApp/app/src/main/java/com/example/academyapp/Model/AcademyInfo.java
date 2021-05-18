@@ -1,7 +1,7 @@
 package com.example.academyapp.Model;
 
 public class AcademyInfo {
-    private String academy_name, academy_address, academy_tel;
+    private String academy_name, academy_address, academy_tel, academy_image;
 
     public AcademyInfo() {
     }
@@ -28,5 +28,13 @@ public class AcademyInfo {
 
     public void setAcademy_tel(String academy_tel) {
         this.academy_tel = academy_tel;
+    }
+
+    public String getAcademy_image() {
+        return academy_image;
+    }
+
+    public void setAcademy_image(String academy_image) {
+        this.academy_image = academy_image;
     }
 }

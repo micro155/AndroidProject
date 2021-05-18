@@ -14,10 +14,16 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,6 +67,7 @@ import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.Overlay;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,6 +92,11 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
     private Uri imageUri;
     private double ResultAddressX;
     private double ResultAddressY;
+    private String file_name;
+    private ImageView preview_image;
+    private String uri_string;
+    private Uri uri;
+    private TextInputEditText academy_image_name;
 
     private static final int PICK_IMAGE_REQUEST = 100;
 
@@ -130,68 +142,73 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
     @Override
     public void onMapReady(@NonNull final NaverMap naverMap) {
 
-        AcademyInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String location = snapshot.child(mUid).child("academy_address").getValue(String.class);
-                final String academy_name = snapshot.child(mUid).child("academy_name").getValue(String.class);
+        if (ResultAddressX != 0 && ResultAddressY != 0) {
 
-                RetrofitConnection retrofitConnection = new RetrofitConnection();
-                Call<GeocodingResponse> geocodingResponse = retrofitConnection.mapAPI.getCoordinate(location);
+            AcademyInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String location = snapshot.child(mUid).child("academy_address").getValue(String.class);
+                    final String academy_name = snapshot.child(mUid).child("academy_name").getValue(String.class);
 
-                Log.d("location",  location);
+                    RetrofitConnection retrofitConnection = new RetrofitConnection();
+                    Call<GeocodingResponse> geocodingResponse = retrofitConnection.mapAPI.getCoordinate(location);
 
-                geocodingResponse.enqueue(new Callback<GeocodingResponse>() {
-                    @Override
-                    public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
-                        if (response.isSuccessful()) {
-                            GeocodingResponse geocodingResponse = response.body();
-                            List<GeocodingResponse.RequestAddress> addressList = geocodingResponse.getAddresses();
+                    Log.d("location", "location : " + location);
 
-                            ResultAddressX = addressList.get(0).getX();
-                            ResultAddressY = addressList.get(0).getY();
+                    geocodingResponse.enqueue(new Callback<GeocodingResponse>() {
+                        @Override
+                        public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
+                            if (response.isSuccessful()) {
+                                GeocodingResponse geocodingResponse = response.body();
+                                List<GeocodingResponse.RequestAddress> addressList = geocodingResponse.getAddresses();
 
-                            Log.d("marker_x", "marker_x : " + ResultAddressX);
-                            Log.d("marker_y", "marker_y : " + ResultAddressY);
+                                ResultAddressX = addressList.get(0).getX();
+                                ResultAddressY = addressList.get(0).getY();
 
-                            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(ResultAddressY, ResultAddressX)).animate(CameraAnimation.Fly);
-                            naverMap.moveCamera(cameraUpdate);
+                                Log.d("marker_x", "marker_x : " + ResultAddressX);
+                                Log.d("marker_y", "marker_y : " + ResultAddressY);
 
-                            Marker marker = new Marker();
-                            marker.setPosition(new LatLng(ResultAddressY, ResultAddressX));
-                            marker.setMap(naverMap);
+                                CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(ResultAddressY, ResultAddressX)).animate(CameraAnimation.Fly);
+                                naverMap.moveCamera(cameraUpdate);
 
-                            InfoWindow infoWindow = new InfoWindow();
-                            infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(AcademyManagementActivity.this) {
-                                @NonNull
-                                @Override
-                                public CharSequence getText(@NonNull InfoWindow infoWindow) {
-                                    return academy_name;
-                                }
-                            });
-                            infoWindow.open(marker);
+                                Marker marker = new Marker();
+                                marker.setPosition(new LatLng(ResultAddressY, ResultAddressX));
+                                marker.setMap(naverMap);
 
-                            infoWindow.setOnClickListener(new Overlay.OnClickListener() {
-                                @Override
-                                public boolean onClick(@NonNull Overlay overlay) {
-                                    Toast.makeText(AcademyManagementActivity.this, "마커 클릭 확인", Toast.LENGTH_SHORT).show();
-                                    return true;
-                                }
-                            });
+                                InfoWindow infoWindow = new InfoWindow();
+                                infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(AcademyManagementActivity.this) {
+                                    @NonNull
+                                    @Override
+                                    public CharSequence getText(@NonNull InfoWindow infoWindow) {
+                                        return academy_name;
+                                    }
+                                });
+                                infoWindow.open(marker);
+
+                                infoWindow.setOnClickListener(new Overlay.OnClickListener() {
+                                    @Override
+                                    public boolean onClick(@NonNull Overlay overlay) {
+                                        Toast.makeText(AcademyManagementActivity.this, "마커 클릭 확인", Toast.LENGTH_SHORT).show();
+                                        return true;
+                                    }
+                                });
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<GeocodingResponse> call, Throwable t) {
-                        Log.d("ERROR", "Failure Log :" + t.toString());
-                    }
-                });
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onFailure(Call<GeocodingResponse> call, Throwable t) {
+                            Log.d("ERROR", "Failure Log :" + t.toString());
+                        }
+                    });
+                }
 
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+        }
 
     }
 
@@ -222,15 +239,36 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View itemView = LayoutInflater.from(this).inflate(R.layout.academy_register, null);
 
-        final TextInputEditText academy_name = (TextInputEditText)itemView.findViewById(R.id.edt_academy_name);
-        final TextInputEditText academy_address = (TextInputEditText)itemView.findViewById(R.id.edt_academy_address);
-        final TextInputEditText academy_tel = (TextInputEditText)itemView.findViewById(R.id.edt_academy_tel);
+        final TextInputEditText academy_name = (TextInputEditText) itemView.findViewById(R.id.edt_academy_name);
+        final TextInputEditText academy_address = (TextInputEditText) itemView.findViewById(R.id.edt_academy_address);
+        final TextInputEditText academy_tel = (TextInputEditText) itemView.findViewById(R.id.edt_academy_tel);
+        academy_image_name = (TextInputEditText) itemView.findViewById(R.id.academy_image_name);
 
-        Button btn_academy_register = (Button)itemView.findViewById(R.id.btn_academy_register);
+        Button btn_academy_register = (Button) itemView.findViewById(R.id.btn_academy_register);
+        Button btn_academy_image_choose = (Button) itemView.findViewById(R.id.btn_image_choose);
+
+        preview_image = (ImageView) findViewById(R.id.academy_image_sample);
+
+
 
         builder.setView(itemView);
         final AlertDialog dialog = builder.create();
         dialog.show();
+
+        btn_academy_image_choose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 2000);
+            }
+        });
+
+
+//        preview_image.setImageURI(uri);
+
+//        Log.d("file_name", "file name : " + file_name);
 
         btn_academy_register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,14 +282,19 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                 } else if (TextUtils.isEmpty(academy_tel.getText().toString())) {
                     Toast.makeText(AcademyManagementActivity.this, "전화번호를 입력하세요.", Toast.LENGTH_SHORT).show();
                     return;
+                } else if (TextUtils.isEmpty(academy_image_name.getText().toString())) {
+                    Toast.makeText(AcademyManagementActivity.this, "업로드 사진을 입력하세요.", Toast.LENGTH_SHORT).show();
+                    return;
                 } else {
                     final AcademyInfo model = new AcademyInfo();
                     model.setAcademy_name(academy_name.getText().toString());
                     model.setAcademy_address(academy_address.getText().toString());
                     model.setAcademy_tel(academy_tel.getText().toString());
+                    model.setAcademy_image(uri_string);
 
-                    AcademyInfoRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .setValue(model)
+                    upload_academy_image(academy_image_name.getText().toString());
+
+                    AcademyInfoRef.setValue(model)
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
@@ -272,9 +315,63 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
 
     }
 
+    private void upload_academy_image(final String upload_file_name) {
+
+        //업로드할 파일이 있으면 수행
+        if (uri != null && upload_file_name != null) {
+            //업로드 진행 Dialog 보이기
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("업로드중...");
+            progressDialog.show();
+
+
+            //storage
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+
+            //storage 주소와 폴더 파일명을 지정해 준다.
+            StorageReference storageRef = storage.getReferenceFromUrl("gs://academyapp-d7c41.appspot.com").child("academy_images/" + upload_file_name);
+            //올라가거라...
+            storageRef.putFile(uri)
+                    //성공시
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+//                            FileDatabase.child(academy_name).child("file_name").setValue(upload_file_name);
+
+                            progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기
+                            Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    //실패시
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    //진행중
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+//                            @SuppressWarnings("VisibleForTests") //이걸 넣어 줘야 아랫줄에 에러가 사라진다.
+//                                    double progress = 100 * (taskSnapshot.getBytesTransferred() /  taskSnapshot.getTotalByteCount());
+                            //dialog에 진행률을 퍼센트로 출력해 준다
+                            progressDialog.setMessage("잠시만 기다려주세요.");
+                        }
+                    });
+        } else if (uri == null){
+            Toast.makeText(getApplicationContext(), "파일을 선택하세요.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+//        uri_string = String.valueOf(uri);
+
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
             if(data != null && data.getData() != null) {
                 imageUri = data.getData();
@@ -282,8 +379,47 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
 
                 showDialogUpload();
             }
+        } else if (requestCode == 2000 && resultCode == RESULT_OK) {
+            uri = data.getData();
+            String file_name_confirm = getName(uri);
+            Log.d("file_string", "file_string : " + file_name_confirm);
+            Log.d("uri", "uri : " + uri);
+
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                preview_image.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            academy_image_name.setText(file_name_confirm);
         }
     }
+
+    private String getName(Uri uri) {
+        String[] projection = {MediaStore.Images.ImageColumns.DISPLAY_NAME};
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+
+//    private String getUri(Uri uri_content) {
+//        String id = DocumentsContract.getDocumentId(uri).split(":")[1];
+//        String[] columns = {MediaStore.Files.FileColumns.DATA};
+//        String select = MediaStore.Images.Media._ID + "=?";
+//        Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, select, new String[]{id}, null);
+//
+//        String file_path = "";
+//        int columnIndex = cursor.getColumnIndex(columns[0]);
+//
+//        if (cursor.moveToFirst()) {
+//            file_path = cursor.getString(columnIndex);
+//        }
+//
+//        cursor.close();
+//
+//        return file_path;
+//    }
 
     private void showDialogUpload() {
         AlertDialog.Builder builder = new AlertDialog.Builder(AcademyManagementActivity.this);

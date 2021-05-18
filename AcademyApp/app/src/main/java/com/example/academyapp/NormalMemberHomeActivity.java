@@ -160,27 +160,43 @@ public class NormalMemberHomeActivity extends AppCompatActivity implements OnMap
 //                            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(addressY, addressX)).animate(CameraAnimation.Fly);
 //                            naverMap.moveCamera(cameraUpdate);
 
-                            Marker marker = new Marker();
+                            final Marker marker = new Marker();
                             marker.setPosition(new LatLng(addressY, addressX));
                             marker.setMap(naverMap);
 
-                            InfoWindow infoWindow = new InfoWindow();
-                            infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(NormalMemberHomeActivity.this) {
-                                @NonNull
-                                @Override
-                                public CharSequence getText(@NonNull InfoWindow infoWindow) {
-                                    return name;
-                                }
-                            });
-                            infoWindow.open(marker);
-
-                            infoWindow.setOnClickListener(new Overlay.OnClickListener() {
+                            marker.setOnClickListener(new Overlay.OnClickListener() {
                                 @Override
                                 public boolean onClick(@NonNull Overlay overlay) {
-                                    Toast.makeText(getApplicationContext(), "마커 클릭 확인", Toast.LENGTH_SHORT).show();
-                                    return true;
+
+                                    final InfoWindow infoWindow = new InfoWindow();
+                                    infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(NormalMemberHomeActivity.this) {
+                                        @NonNull
+                                        @Override
+                                        public CharSequence getText(@NonNull InfoWindow infoWindow) {
+                                            return name;
+                                        }
+                                    });
+                                    infoWindow.open(marker);
+
+                                    infoWindow.setOnClickListener(new Overlay.OnClickListener() {
+                                        @Override
+                                        public boolean onClick(@NonNull Overlay overlay) {
+                                            Toast.makeText(getApplicationContext(), "마커 클릭 확인", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(NormalMemberHomeActivity.this, AcademyInfoActivity.class);
+                                            intent.putExtra("academy_name", name);
+                                            startActivity(intent);
+                                            infoWindow.close();
+                                            return true;
+                                        }
+                                    });
+
+                                    return false;
                                 }
                             });
+
+
+
+
 
                         }
 
