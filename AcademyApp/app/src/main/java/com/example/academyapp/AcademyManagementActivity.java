@@ -2,6 +2,7 @@ package com.example.academyapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,6 +49,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -92,8 +94,6 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
     private Uri imageUri;
     private double ResultAddressX;
     private double ResultAddressY;
-    private String file_name;
-    private ImageView preview_image;
     private String uri_string;
     private Uri uri;
     private TextInputEditText academy_image_name;
@@ -247,10 +247,6 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
         Button btn_academy_register = (Button) itemView.findViewById(R.id.btn_academy_register);
         Button btn_academy_image_choose = (Button) itemView.findViewById(R.id.btn_image_choose);
 
-        preview_image = (ImageView) findViewById(R.id.academy_image_sample);
-
-
-
         builder.setView(itemView);
         final AlertDialog dialog = builder.create();
         dialog.show();
@@ -265,10 +261,8 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
             }
         });
 
-
-//        preview_image.setImageURI(uri);
-
-//        Log.d("file_name", "file name : " + file_name);
+        FirebaseUser director_ref = FirebaseAuth.getInstance().getCurrentUser();
+        final String director_photo_url = director_ref.getPhotoUrl().toString();
 
         btn_academy_register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -290,11 +284,82 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                     model.setAcademy_name(academy_name.getText().toString());
                     model.setAcademy_address(academy_address.getText().toString());
                     model.setAcademy_tel(academy_tel.getText().toString());
-                    model.setAcademy_image(uri_string);
+                    model.setAcademy_image(academy_image_name.getText().toString());
+                    model.setDirector_photo_url(director_photo_url);
+
+//                    String address_academy = academy_address.getText().toString();
+
+                    final String[] geocoding_string = new String[1];
+
+                    RetrofitConnection retrofit_connection = new RetrofitConnection();
+                    final Call<GeocodingResponse> call = retrofit_connection.mapAPI.getCoordinate(academy_address.getText().toString());
+
+                    Log.d("academy_address", "address : " + academy_address.getText().toString());
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                               GeocodingResponse geocoding = call.execute().body();
+                                List<GeocodingResponse.RequestAddress> geocodeList = geocoding.getAddresses();
+
+                                ResultAddressX = geocodeList.get(0).getX();
+                                ResultAddressY = geocodeList.get(0).getY();
+
+                                Log.d("address_x", "address_x : " + ResultAddressX);
+                                Log.d("address_y", "address_y : " + ResultAddressY);
+
+                                model.setX(ResultAddressX);
+                                model.setY(ResultAddressY);
+
+                                geocoding_string[0] = ResultAddressX + ", " + ResultAddressY;
+
+                                Log.d("geocoding_string1", "geocoding_string1 : " + geocoding_string[0]);
+
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+
+                    try {
+                        Thread.sleep(500);
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+//                    call.enqueue(new Callback<GeocodingResponse>() {
+//                        @Override
+//                        public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
+//                            if (response.isSuccessful()) {
+//                                GeocodingResponse geocoding = response.body();
+//                                List<GeocodingResponse.RequestAddress> geocodeList = geocoding.getAddresses();
+//
+//                                ResultAddressX = geocodeList.get(0).getX();
+//                                ResultAddressY = geocodeList.get(0).getY();
+//
+//                                Log.d("address_x", "address_x : " + ResultAddressX);
+//                                Log.d("address_y", "address_y : " + ResultAddressY);
+//
+//                                geocoding_string[0] = ResultAddressX + ", " + ResultAddressY;
+//
+//                                Log.d("geocoding_string1", "geocoding_string1 : " + geocoding_string[0]);
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<GeocodingResponse> call, Throwable t) {
+//                            Log.d("geocoding fail", "reason : " + t);
+//                        }
+//                    });
+
+                    Log.d("geocoding_string2", "geocoding_string2 : " + geocoding_string[0]);
 
                     upload_academy_image(academy_image_name.getText().toString());
 
-                    AcademyInfoRef.setValue(model)
+                    AcademyInfoRef.child(academy_name.getText().toString()).setValue(model)
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
@@ -309,6 +374,7 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                                     dialog.dismiss();
                                 }
                             });
+
                 }
             }
         });
@@ -383,14 +449,14 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
             uri = data.getData();
             String file_name_confirm = getName(uri);
             Log.d("file_string", "file_string : " + file_name_confirm);
-            Log.d("uri", "uri : " + uri);
+            Log.d("uri", "uri : " + String.valueOf(uri));
 
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                preview_image.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+//                preview_image.setImageBitmap(bitmap);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
             academy_image_name.setText(file_name_confirm);
         }
     }

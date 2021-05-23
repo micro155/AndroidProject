@@ -36,8 +36,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -88,9 +91,33 @@ public class AcademyInfoActivity extends AppCompatActivity {
 
     }
 
-    private void showDetailAcademy(String academy) {
+    private void showDetailAcademy(final String academy) {
 
         DatabaseReference academy_info = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+
+        academy_info.child("academy").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String image_name = snapshot.child("academy_image").getValue(String.class);
+                String address = snapshot.child("academy_address").getValue(String.class);
+                String tel = snapshot.child("academy_tel").getValue(String.class);
+
+                academy_image.setImageURI(Uri.parse("https://firebasestorage.googleapis.com/v0/b/academyapp-d7c41.appspot.com/o/academy_images%2F" + image_name));
+                academy_name.setText(academy);
+                academy_phone.setText(tel);
+                academy_address.setText(address);
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
 
     }
 

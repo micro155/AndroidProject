@@ -90,10 +90,10 @@
                 android:layout_height="wrap_content"
                 android:text="파일 선택"/>
 
-            <ImageView
+            <!--<ImageView
                 android:id="@+id/academy_image_sample"
                 android:layout_width="300dp"
-                android:layout_height="200dp" />
+                android:layout_height="200dp" /> -->
 
         </com.google.android.material.textfield.TextInputLayout>
 
