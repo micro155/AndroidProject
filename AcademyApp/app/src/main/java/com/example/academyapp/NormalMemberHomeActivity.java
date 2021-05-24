@@ -181,7 +181,7 @@ public class NormalMemberHomeActivity extends AppCompatActivity implements OnMap
                                     infoWindow.setOnClickListener(new Overlay.OnClickListener() {
                                         @Override
                                         public boolean onClick(@NonNull Overlay overlay) {
-                                            Toast.makeText(getApplicationContext(), "마커 클릭 확인", Toast.LENGTH_SHORT).show();
+//                                            Toast.makeText(getApplicationContext(), "마커 클릭 확인", Toast.LENGTH_SHORT).show();
                                             Intent intent = new Intent(NormalMemberHomeActivity.this, AcademyInfoActivity.class);
                                             intent.putExtra("academy_name", name);
                                             startActivity(intent);
