@@ -33,8 +33,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center" >
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/academy_profile_info"
@@ -51,12 +51,14 @@
     <TextView
         android:id="@+id/academy_phone_info"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/academy_address_info"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="center" />
 
     <ListView
         android:id="@+id/user_rating_list"
@@ -81,14 +83,14 @@
             <EditText
                 android:id="@+id/edit_user_text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="40dp" />
 
         </LinearLayout>
 
         <Button
             android:id="@+id/btn_user_rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:text="등록" />
 
 

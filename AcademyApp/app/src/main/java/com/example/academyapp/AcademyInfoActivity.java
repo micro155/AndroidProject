@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -65,8 +67,8 @@ public class AcademyInfoActivity extends AppCompatActivity {
 
         Log.d("academy_value", "value : " + academy);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_academy_info);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = findViewById(R.id.toolbar_academy_info);
+//        setSupportActionBar(toolbar);
 //        getSupportActionBar().setTitle(academy);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -135,6 +137,8 @@ public class AcademyInfoActivity extends AppCompatActivity {
 
     private void showDetailAcademy(final String academy) {
 
+        final Handler handler = new Handler();
+
         final ArrayList<String> user_profile_list = new ArrayList<>();
         final ArrayList<String> user_name_list = new ArrayList<>();
         final ArrayList<String> user_rating_list = new ArrayList<>();
@@ -145,37 +149,47 @@ public class AcademyInfoActivity extends AppCompatActivity {
         academy_info.child(academy).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String image_name = snapshot.child("academy_image").getValue(String.class);
+                final String image_name = snapshot.child("academy_image").getValue(String.class);
                 String address = snapshot.child("academy_address").getValue(String.class);
                 String tel = snapshot.child("academy_tel").getValue(String.class);
-
-//                academy_image.setImageURI(Uri.parse("https://firebasestorage.googleapis.com/v0/b/academyapp-d7c41.appspot.com/o/academy_images%2F" + image_name + "?alt=media"));
+                final String profile_url = snapshot.child("director_photo_url").getValue(String.class);
 
                 Glide.with(AcademyInfoActivity.this).load("https://firebasestorage.googleapis.com/v0/b/academyapp-d7c41.appspot.com/o/academy_images%2F" + image_name + "?alt=media")
                         .into(academy_image);
 
-//                try {
-//                    URL url = new URL("https://firebasestorage.googleapis.com/v0/b/academyapp-d7c41.appspot.com/o/academy_images%2F" + image_name + "?alt=media");
-//                    Log.d("url string", "url : " + String.valueOf(url));
-//                    URLConnection conn = url.openConnection();
-//                    conn.connect();
-//                    BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
-//                    Bitmap bm = BitmapFactory.decodeStream(bis);
-//                    bis.close();
-//                    academy_image.setImageBitmap(bm);
-//                } catch(Exception e) {
-//                    e.printStackTrace();
-//                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            URL url = new URL(String.valueOf(profile_url));
+                            Log.d("url string", "url : " + url);
+
+                            URLConnection conn = url.openConnection();
+                            conn.connect();
+                            BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
+                            final Bitmap bm = BitmapFactory.decodeStream(bis);
+                            bis.close();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    academy_profile.setImageBitmap(bm);
+                                }
+                            });
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
 
                 academy_name.setText(academy);
                 academy_phone.setText(tel);
                 academy_address.setText(address);
 
                 for (DataSnapshot rating_snapshot : snapshot.getChildren()) {
-                    String user_name = rating_snapshot.child("user_rating_info").child("user_name").getValue(String.class);
-                    String user_profile = rating_snapshot.child("user_rating_info").child("user_profile").getValue(String.class);
-                    String user_text = rating_snapshot.child("user_rating_info").child("user_text").getValue(String.class);
-                    String user_rating = rating_snapshot.child("user_rating_info").child("user_rating").getValue(String.class);
+                    String user_name = rating_snapshot.child("user_name").getValue(String.class);
+                    String user_profile = rating_snapshot.child("user_profile").getValue(String.class);
+                    String user_text = rating_snapshot.child("user_text").getValue(String.class);
+                    String user_rating = rating_snapshot.child("user_rating").getValue(String.class);
 
                     if (user_name != null && user_profile != null && user_text != null && user_rating != null) {
 
@@ -186,16 +200,19 @@ public class AcademyInfoActivity extends AppCompatActivity {
                         user_text_list.add(user_text);
                         user_rating_list.add(user_rating);
 
-
                     }
 
-                    adapter = new UserRatingListViewAdapter(AcademyInfoActivity.this, user_profile_list, user_name_list, user_rating_list, user_text_list, academy);
-                    adapter.notifyDataSetChanged();
-
-                    user_rating_listView.setAdapter(adapter);
                 }
 
+                adapter = new UserRatingListViewAdapter(AcademyInfoActivity.this, user_profile_list, user_name_list, user_rating_list, user_text_list, academy, new UserRatingListViewAdapter.OnRatingDeleteListener() {
+                    @Override
+                    public void onRatingDelete(String normal_name) {
+                        adapter.deleteButtonAction(normal_name);
+                    }
+                });
+                adapter.notifyDataSetChanged();
 
+                user_rating_listView.setAdapter(adapter);
 
             }
 

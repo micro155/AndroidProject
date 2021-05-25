@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -115,10 +116,11 @@ public class NormalMemberHomeActivity extends AppCompatActivity implements OnMap
 //        NaverMapSdk.getInstance(this).setClient(
 //                new NaverMapSdk.NaverCloudPlatformClient("z79q0dob9r"));
 
-        MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
+        FragmentManager fm = getSupportFragmentManager();
+        MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.map2);
         if (mapFragment == null) {
             mapFragment = MapFragment.newInstance();
-            getSupportFragmentManager().beginTransaction().add(R.id.map2, mapFragment).commit();
+            fm.beginTransaction().add(R.id.map2, mapFragment).commit();
         }
 
         mapFragment.getMapAsync(this);

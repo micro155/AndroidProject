@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".AcademyInfoActivity"
             android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:parentActivityName=".NormalMemberHomeActivity"/>
         <activity
             android:name=".Downloader_Management_Activity"
             android:theme="@style/AppTheme.NoActionBar" />
