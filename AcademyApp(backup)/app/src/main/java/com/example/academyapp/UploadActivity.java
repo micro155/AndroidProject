@@ -27,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,6 +76,7 @@ public class UploadActivity extends AppCompatActivity {
 
     private Button btChoose;
     private Button btUpload;
+    private EditText upload_file_name;
     private ImageView ivPreview;
     private String mUid;
 
@@ -94,7 +96,7 @@ public class UploadActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_director_home, R.id.nav_director_logout, R.id.nav_upload, R.id.nav_academy_management)
+                R.id.nav_director_home, R.id.nav_director_logout, R.id.nav_upload, R.id.nav_academy_management, R.id.nav_chatting_director, R.id.nav_downloader_management_director)
                 .setDrawerLayout(drawer)
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_upload_fragment);
@@ -105,6 +107,7 @@ public class UploadActivity extends AppCompatActivity {
 
         btChoose = (Button) findViewById(R.id.bt_choose);
         btUpload = (Button) findViewById(R.id.bt_upload);
+        upload_file_name = (EditText) findViewById(R.id.upload_file);
         ivPreview = (ImageView) findViewById(R.id.iv_preview);
 
         //버튼 클릭 이벤트
@@ -123,7 +126,27 @@ public class UploadActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //업로드
-                uploadFile();
+                DatabaseReference academy_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+                String academy_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                academy_ref.child(academy_uid).child("academy_name").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String academy_name = snapshot.getValue(String.class);
+                        String upload_name = upload_file_name.getText().toString();
+                        if (upload_name.isEmpty()) {
+                            Toast.makeText(getApplicationContext(), "파일 이름을 입력하세요.", Toast.LENGTH_SHORT).show();
+                            return;
+                        } else {
+                            uploadFile(academy_name, upload_name);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
     }
@@ -276,6 +299,14 @@ public class UploadActivity extends AppCompatActivity {
                     Intent intent = new Intent(UploadActivity.this, DirectorHomeActivity.class);
                     startActivity(intent);
                     finish();
+                } else if (item.getItemId() == R.id.nav_chatting_director) {
+                    Intent intent = new Intent(UploadActivity.this, ChattingRoom_Director_Activity.class);
+                    startActivity(intent);
+                    finish();
+                } else if (item.getItemId() == R.id.nav_downloader_management_director) {
+                    Intent intent = new Intent(UploadActivity.this, Downloader_Management_Activity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 return false;
             }
@@ -308,30 +339,32 @@ public class UploadActivity extends AppCompatActivity {
 
 
     //upload the file
-    private void uploadFile() {
+    private void uploadFile(final String academy_name, final String upload_file_name) {
 
         FileDatabase = FirebaseDatabase.getInstance().getReference("FileList");
         mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        final MemberInfoModel model = new MemberInfoModel();
+//        final MemberInfoModel model = new MemberInfoModel();
 
 
         //업로드할 파일이 있으면 수행
-        if (filePath != null) {
+        if (filePath != null && upload_file_name != null) {
             //업로드 진행 Dialog 보이기
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("업로드중...");
             progressDialog.show();
 
+//            Log.d("filePath", "filePath" + filePath);
+
             //storage
             FirebaseStorage storage = FirebaseStorage.getInstance();
 
             //Unique한 파일명을 만들자.
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");
-            Date now = new Date();
-            final String filename = formatter.format(now);
+//            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");
+//            Date now = new Date();
+//            final String filename = formatter.format(now);
             //storage 주소와 폴더 파일명을 지정해 준다.
-            StorageReference storageRef = storage.getReferenceFromUrl("gs://academyapp-d7c41.appspot.com").child("videos/" + filename);
+            StorageReference storageRef = storage.getReferenceFromUrl("gs://academyapp-d7c41.appspot.com").child("videos/" + upload_file_name);
             //올라가거라...
             storageRef.putFile(filePath)
                     //성공시
@@ -339,25 +372,7 @@ public class UploadActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-//                            DatabaseReference name_reference = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
-//
-//                            name_reference.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                    String academy_name = snapshot.child("academy_name").getValue(String.class);
-//                                    academy[0] = academy_name;
-//
-////                                    FileDatabase.child("academy_name").setValue(academy_name);
-////                                    FileDatabase.child("file_name").setValue(filename);
-//                                }
-//
-//                                @Override
-//                                public void onCancelled(@NonNull DatabaseError error) {
-//                                    Log.d("Error", "error message: " + error);
-//                                }
-//                            });
-
-                            FileDatabase.child(mUid).child("file_name").setValue(filename);
+                            FileDatabase.child(academy_name).child("file_name").setValue(upload_file_name);
 
                             progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
@@ -381,8 +396,8 @@ public class UploadActivity extends AppCompatActivity {
                             progressDialog.setMessage("잠시만 기다려주세요.");
                         }
                     });
-        } else {
-            Toast.makeText(getApplicationContext(), "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show();
+        } else if (filePath == null){
+            Toast.makeText(getApplicationContext(), "파일을 선택하세요.", Toast.LENGTH_SHORT).show();
         }
     }
 

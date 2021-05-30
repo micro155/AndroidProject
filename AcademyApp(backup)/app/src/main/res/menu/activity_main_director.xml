@@ -26,7 +26,12 @@
         <item
             android:id="@+id/nav_chatting_director"
             android:icon="@drawable/ic_baseline_chat_24"
-            android:title="채팅 문의 관리" />
+            android:title="@string/chatting_management" />
+
+        <item
+            android:id="@+id/nav_downloader_management_director"
+            android:icon="@drawable/ic_baseline_format_list_bulleted_24"
+            android:title="@string/menu_downloader_management" />
 
     </group>
 </menu>

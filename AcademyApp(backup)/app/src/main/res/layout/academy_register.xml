@@ -72,6 +72,31 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/academy_image_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:hint="업로드 이미지" />
+
+            <Button
+                android:id="@+id/btn_image_choose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="파일 선택"/>
+
+            <!--<ImageView
+                android:id="@+id/academy_image_sample"
+                android:layout_width="300dp"
+                android:layout_height="200dp" /> -->
+
+        </com.google.android.material.textfield.TextInputLayout>
+
     </LinearLayout>
 
         <Button

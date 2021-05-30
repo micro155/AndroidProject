@@ -17,15 +17,22 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.academyapp.Model.AcademyInfo;
+import com.example.academyapp.Model.Contracts_Info;
 import com.example.academyapp.Utils.UserUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -57,9 +64,9 @@ public class DownloadContentsActivity extends AppCompatActivity {
     private NavController navController;
     private NavigationView navigationView;
 
-//    private FirebaseRecyclerAdapter<FileListInfo, FileListViewHolder> mFirebaseAdapter;
-//    private RecyclerView mFileListRecyclerView;
-    private DatabaseReference mFirebaseDatabase;
+    private DatabaseReference FileStorage_Ref;
+    private DatabaseReference Contracts_Ref;
+    private DatabaseReference Normal_Ref;
 
     private AlertDialog waitingDialog;
     private StorageReference storageReference;
@@ -68,22 +75,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
 
     private ListView listView;
     private FileListViewAdapter adapter;
-//    private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-//    private ArrayAdapter<HashMap<String, String>> dataAdapter;
-
     private FirebaseStorage storage;
-
-//    public static class FileListViewHolder extends RecyclerView.ViewHolder {
-//
-//        TextView academyNameView;
-//        TextView fileNameView;
-//
-//        public FileListViewHolder(View itemView) {
-//            super(itemView);
-//            academyNameView = itemView.findViewById(R.id.AcademyNameView);
-//            fileNameView = itemView.findViewById(R.id.FileNameView);
-//        }
-//    }
 
 
     @Override
@@ -91,7 +83,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_contents);
 
-//        mFileListRecyclerView = findViewById(R.id.download_list_recycler_view);
+        confirmContractVideo();
 
         Toolbar toolbar = findViewById(R.id.toolbar_download);
         setSupportActionBar(toolbar);
@@ -109,40 +101,336 @@ public class DownloadContentsActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-//        final TextView academy_view = (TextView) findViewById(R.id.file_academy);
-//        final TextView file_view = (TextView) findViewById(R.id.file_name);
-
         listView = (ListView) findViewById(R.id.file_list_view);
+
+
+        FileStorage_Ref = FirebaseDatabase.getInstance().getReference("FileList");
+
+
+//        FileStorage_Ref.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//                for (DataSnapshot fileData : snapshot.getChildren()) {
+//                    String key = fileData.getKey();
+//                    final String value = fileData.child("file_name").getValue(String.class);
+//
+//                    DatabaseReference mUid = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+//
+//                    mUid.child(key).addValueEventListener(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                            String academy = snapshot.child("academy_name").getValue(String.class);
+//
+//                            academy_list.add(academy);
+//                            file_list.add(value);
+//
+//                            Log.d("dataAdapter", "adapter : " + snapshot.getChildren());
+//                            adapter = new FileListViewAdapter(DownloadContentsActivity.this, file_list, academy_list, new FileListViewAdapter.OnDownloadClickListener() {
+//                                @Override
+//                                public void onDownload(String fileName) {
+//                                    adapter.download_File(fileName);
+//                                }
+//                            });
+//                            adapter.notifyDataSetChanged();
+//                            listView.setAdapter(adapter);
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError error) {
+//
+//                        }
+//                    });
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+
+        init();
+
+    }
+
+    private void confirmContractVideo() {
+
+        Normal_Ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        String normal_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        Contracts_Ref = FirebaseDatabase.getInstance().getReference("Contracts");
+
+        Normal_Ref.child(normal_uid).child("nickName").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                final String normal_name = snapshot.getValue(String.class);
+
+                Contracts_Ref.child(normal_name).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        String normal_user = null;
+
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            normal_user = dataSnapshot.child("downloader_nickName").getValue(String.class);
+
+                            Log.d("normal_user", "normal_user : " + normal_user);
+                        }
+
+                        if (normal_user != null && normal_user.equals(normal_name)) {
+                            for (DataSnapshot uploaderSnapshot : snapshot.getChildren()) {
+                                String uploader_name = uploaderSnapshot.child("academy_name").getValue(String.class);
+
+                                Log.d("uploader_name", "uploader_name : " + uploader_name);
+
+                                showDownloadContentsList(uploader_name);
+                            }
+                        } else if (normal_user == null) {
+                            RegisterContractVideo();
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void RegisterContractVideo() {
+
+        AlertDialog.Builder registerDialog = new AlertDialog.Builder(this);
+        View registerView = LayoutInflater.from(this).inflate(R.layout.layout_register_contracts_video, null);
+
+        final DatabaseReference normal_ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        final String normal_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        final EditText academy_name = (EditText) registerView.findViewById(R.id.academy_name_video);
+        final EditText academy_code = (EditText) registerView.findViewById(R.id.academy_code);
+        final EditText downloader_name = (EditText) registerView.findViewById(R.id.downloader_name);
+        final EditText downloader_phone = (EditText) registerView.findViewById(R.id.downloader_phone);
+
+        Button academy_search = (Button) registerView.findViewById(R.id.academy_search);
+        Button contracts_register = (Button) registerView.findViewById(R.id.contracts_register);
+
+        registerDialog.setView(registerView);
+        final AlertDialog dialog = registerDialog.create();
+        dialog.show();
+
+        academy_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SearchAcademyActivity.class);
+                dialog.dismiss();
+                startActivityForResult(intent, 1000);
+            }
+        });
+
+        contracts_register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(academy_name.getText().toString())) {
+                    Toast.makeText(DownloadContentsActivity.this, "학원명을 입력하세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (TextUtils.isEmpty(academy_code.getText().toString())) {
+                    Toast.makeText(DownloadContentsActivity.this, "학원 코드를 입력하세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (TextUtils.isEmpty(downloader_name.getText().toString())) {
+                    Toast.makeText(DownloadContentsActivity.this, "사용자 이름을 입력하세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (TextUtils.isEmpty(downloader_phone.getText().toString())) {
+                    Toast.makeText(DownloadContentsActivity.this, "사용자 전화번호를 입력하세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    final Contracts_Info model = new Contracts_Info();
+                    model.setAcademy_name(academy_name.getText().toString());
+                    model.setAcademy_code(academy_code.getText().toString());
+                    model.setDownloader_name(downloader_name.getText().toString());
+                    model.setDownloader_phone(downloader_phone.getText().toString());
+
+                    normal_ref.child(normal_uid).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String normal_nickName = snapshot.child("nickName").getValue(String.class);
+
+                            Contracts_Ref.child(normal_nickName).setValue(model)
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            dialog.dismiss();
+                                            Toast.makeText(DownloadContentsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+//                                            Toast.makeText(DownloadContentsActivity.this, "학원 정보 등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+//                                            dialog.dismiss();
+                                        }
+                                    });
+
+                            Contracts_Ref.child(academy_name.getText().toString()).setValue(model)
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            dialog.dismiss();
+                                            Toast.makeText(DownloadContentsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(DownloadContentsActivity.this, "학원 정보 등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                            dialog.dismiss();
+                                        }
+                                    });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void RegisterContractVideo(String academy_search_name) {
+
+        AlertDialog.Builder registerDialog = new AlertDialog.Builder(this);
+        View registerView = LayoutInflater.from(this).inflate(R.layout.layout_register_contracts_video, null);
+
+        final DatabaseReference normal_ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        final String normal_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        final EditText academy_name = (EditText) registerView.findViewById(R.id.academy_name_video);
+        final EditText academy_code = (EditText) registerView.findViewById(R.id.academy_code);
+        final EditText downloader_name = (EditText) registerView.findViewById(R.id.downloader_name);
+        final EditText downloader_phone = (EditText) registerView.findViewById(R.id.downloader_phone);
+
+        Button academy_search = (Button) registerView.findViewById(R.id.academy_search);
+        Button contracts_register = (Button) registerView.findViewById(R.id.contracts_register);
+
+        registerDialog.setView(registerView);
+        final AlertDialog dialog = registerDialog.create();
+        dialog.show();
+
+        academy_name.setText(academy_search_name);
+
+        academy_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SearchAcademyActivity.class);
+                startActivityForResult(intent, 1000);
+                dialog.dismiss();
+//                finish();
+            }
+        });
+
+        contracts_register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(academy_name.getText().toString())) {
+                    Toast.makeText(DownloadContentsActivity.this, "학원명을 입력하세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (TextUtils.isEmpty(academy_code.getText().toString())) {
+                    Toast.makeText(DownloadContentsActivity.this, "학원 코드를 입력하세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (TextUtils.isEmpty(downloader_name.getText().toString())) {
+                    Toast.makeText(DownloadContentsActivity.this, "사용자 이름을 입력하세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (TextUtils.isEmpty(downloader_phone.getText().toString())) {
+                    Toast.makeText(DownloadContentsActivity.this, "사용자 전화번호를 입력하세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    final Contracts_Info model = new Contracts_Info();
+                    model.setAcademy_name(academy_name.getText().toString());
+                    model.setAcademy_code(academy_code.getText().toString());
+                    model.setDownloader_name(downloader_name.getText().toString());
+                    model.setDownloader_phone(downloader_phone.getText().toString());
+
+                    normal_ref.child(normal_uid).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String normal_nickName = snapshot.child("nickName").getValue(String.class);
+
+                            model.setDownloader_nickName(normal_nickName);
+
+                            Contracts_Ref.child(normal_nickName).push().setValue(model)
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            dialog.dismiss();
+                                            Toast.makeText(DownloadContentsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+//                                            Toast.makeText(DownloadContentsActivity.this, "학원 정보 등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+//                                            dialog.dismiss();
+                                        }
+                                    });
+
+                            Contracts_Ref.child(academy_name.getText().toString()).push().setValue(model)
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            dialog.dismiss();
+                                            Toast.makeText(DownloadContentsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(DownloadContentsActivity.this, "학원 정보 등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                            dialog.dismiss();
+                                        }
+                                    });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+
+
+    private void showDownloadContentsList(final String uploader_name) {
 
         final ArrayList<String> academy_list = new ArrayList<String>();
         final ArrayList<String> file_list = new ArrayList<String>();
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance().getReference("FileList");
-//        Query query = mFirebaseDatabase.child("FileList");
 
-//        listView = findViewById(R.id.file_list_view);
-//        dataAdapter = new ArrayAdapter<HashMap<String, String>>(this, android.R.layout.simple_dropdown_item_1line, list);
-
-        mFirebaseDatabase.addValueEventListener(new ValueEventListener() {
+        FileStorage_Ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                dataAdapter.clear();
+
                 for (DataSnapshot fileData : snapshot.getChildren()) {
-                    String key = fileData.getKey();
-                    final String value = fileData.child("file_name").getValue(String.class);
 
-//                    final FileListInfo fileListInfo = new FileListInfo(value);
+                    final String file_name = fileData.child("file_name").getValue(String.class);
 
-                    DatabaseReference mUid = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+                    Log.d("file_name", "file_name : " + file_name);
 
-                    mUid.child(key).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String academy = snapshot.child("academy_name").getValue(String.class);
-
-
-                            academy_list.add(academy);
-                            file_list.add(value);
+                            academy_list.add(uploader_name);
+                            file_list.add(file_name);
 
                             Log.d("dataAdapter", "adapter : " + snapshot.getChildren());
                             adapter = new FileListViewAdapter(DownloadContentsActivity.this, file_list, academy_list, new FileListViewAdapter.OnDownloadClickListener() {
@@ -153,36 +441,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
                             });
                             adapter.notifyDataSetChanged();
                             listView.setAdapter(adapter);
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
                 }
-//                dataAdapter.notifyDataSetChanged();
-//
-//                listView.setAdapter(dataAdapter);
-//
-//                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                        String data = (String) parent.getItemAtPosition(position);
-//                        Toast.makeText(DownloadContentsActivity.this, data, Toast.LENGTH_SHORT).show();
-//
-//                        download_file(data);
-//                    }
-//                });
-
-//                adapter = new ListViewAdapter(DownloadContentsActivity.this, file_list, new ListViewAdapter.OnDownloadClickListener() {
-//                    @Override
-//                    public void onDownload(View v) {
-//                        adapter.download_File(v);
-//                    }
-//                });
-//                adapter.notifyDataSetChanged();
-//                listView.setAdapter(adapter);
             }
 
             @Override
@@ -191,87 +450,8 @@ public class DownloadContentsActivity extends AppCompatActivity {
             }
         });
 
-//        adapter = new ListViewAdapter(this, file_list, new ListViewAdapter.OnDownloadClickListener() {
-//            @Override
-//            public void onDownload(View v) {
-//                adapter.download_File(v);
-//            }
-//        });
-//        listView.setAdapter(adapter);
-
-        init();
-
-
-//        FirebaseRecyclerOptions<FileListInfo> options = new FirebaseRecyclerOptions.Builder<FileListInfo>().setQuery(query, FileListInfo.class).build();
-//        mFirebaseAdapter = new FirebaseRecyclerAdapter<FileListInfo, FileListViewHolder>(options) {
-//            @Override
-//            protected void onBindViewHolder(FileListViewHolder viewHolder, int i, final FileListInfo listInfo) {
-//                viewHolder.academyNameView.setText(listInfo.getAcademy_name());
-//                viewHolder.fileNameView.setText(listInfo.getFile_name());
-//                Button download_btn = findViewById(R.id.download_button);
-//
-//                download_btn.setOnClickListener(new Button.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        AlertDialog.Builder builder = new AlertDialog.Builder(DownloadContentsActivity.this);
-//                        builder.setTitle("다운로드 하시겠습니까?");
-//                        builder.setMessage(listInfo.getFile_name());
-//                        builder.setPositiveButton("예", null);
-//                        builder.setNegativeButton("아니오", null);
-//                        builder.create().show();
-//                    }
-//                });
-//            }
-//
-//            @NonNull
-//            @Override
-//            public FileListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.download_list_base, parent, false);
-//                return new FileListViewHolder(view);
-//            }
-//        };
-
-//        mFileListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        mFileListRecyclerView.setAdapter(mFirebaseAdapter);
 
     }
-
-//    private void download_file(final String file_name) { //alertdialog 형식 파일 다운로드 메소드
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//
-//        builder.setTitle("파일 다운로드").setMessage(file_name + "를 다운로드 하시겠습니까?");
-//
-//        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                StorageReference fileRef = storage.getReference().child("video/"+ file_name);
-//                try {
-//                    File localFile = File.createTempFile(file_name, "mp4");
-//
-//                    fileRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-//
-//                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//
-//                        }
-//                    });
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//
-//        builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                Toast.makeText(DownloadContentsActivity.this, "파일 다운로드 취소", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
 
 
     private void init() {
@@ -285,7 +465,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.nav_director_logout) {
+                if (item.getItemId() == R.id.nav_normalmember_logout) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(DownloadContentsActivity.this);
                     builder.setTitle("로그아웃")
                             .setMessage("정말 로그아웃 하시겠습니까?")
@@ -434,18 +614,13 @@ public class DownloadContentsActivity extends AppCompatActivity {
             if(data != null && data.getData() != null) {
                 imageUri = data.getData();
                 img_profile.setImageURI(imageUri);
-
                 showDialogUpload();
             }
+        } else if (requestCode == 1000 && resultCode == Activity.RESULT_OK) {
+            RegisterContractVideo(data.getStringExtra("academy_name"));
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.customer_home, menu);
-//        return true;
-//    }
 
     @Override
     public boolean onSupportNavigateUp() {

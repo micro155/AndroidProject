@@ -56,7 +56,7 @@ public class AddChattingActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                    String key = dataSnapshot.getKey();
+
                     String address = dataSnapshot.child("academy_address").getValue(String.class);
                     String academy = dataSnapshot.child("academy_name").getValue(String.class);
 

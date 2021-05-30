@@ -8,12 +8,25 @@
     tools:context=".UploadActivity">
 
     <TextView
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:layout_margin="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Upload Here!" />
+        android:layout_marginTop="20dp"
+        android:padding="16dp"
+        android:text="강의 영상 업로드"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id="@+id/upload_file"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:padding="16dp"
+        android:textAlignment="center"
+        android:textSize="15dp"
+        android:hint="파일 이름 입력"
+        android:inputType="text"/>
 
     <LinearLayout
         android:gravity="center_horizontal"
@@ -22,13 +35,13 @@
 
         <Button
             android:id="@+id/bt_choose"
-            android:text="Choose"
+            android:text="파일 열기"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/bt_upload"
-            android:text="Upload"
+            android:text="업로드"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

@@ -54,8 +54,8 @@ public class AcademyListViewAdapter extends BaseAdapter {
         final TextView name_view = (TextView) convertView.findViewById(R.id.list_academy_name);
         final TextView address_view = (TextView) convertView.findViewById(R.id.list_academy_address);
 
-        String academy_name = name_list.get(position);
-        String academy_address = address_list.get(position);
+        academy_name = name_list.get(position);
+        academy_address = address_list.get(position);
 
         name_view.setText(academy_name);
         address_view.setText(academy_address);

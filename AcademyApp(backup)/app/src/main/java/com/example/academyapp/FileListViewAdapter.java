@@ -51,7 +51,6 @@ public class FileListViewAdapter extends BaseAdapter {
     private OnDownloadClickListener mlistener;
     private String academy_name;
     private String file_name;
-    private AlertDialog progressDialog;
 
     public interface OnDownloadClickListener {
         void onDownload (String fileName);
@@ -117,16 +116,9 @@ public class FileListViewAdapter extends BaseAdapter {
 
 
         Log.d("fileName", "filename : " + fileName);
-
-        File localFile = null;
-        try {
-            localFile = File.createTempFile("videos", "jpg");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        final File finalLocalFile = localFile;
 
         builder.setTitle("강의 다운로드")
                 .setMessage(fileName + "를 다운로드하시겠습니까?")
@@ -205,7 +197,6 @@ public class FileListViewAdapter extends BaseAdapter {
                             }
                         }
                     });
-
                     cursor.close();
                 }
             }

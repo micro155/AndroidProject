@@ -2,11 +2,13 @@ package com.example.academyapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -18,13 +20,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.academyapp.RestAPI.GeocodingResponse;
+import com.example.academyapp.RestAPI.RetrofitConnection;
 import com.example.academyapp.Utils.UserUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,16 +40,35 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.CameraAnimation;
+import com.naver.maps.map.CameraUpdate;
+import com.naver.maps.map.MapFragment;
+import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.NaverMapSdk;
+import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.overlay.InfoWindow;
+import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.overlay.Overlay;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class NormalMemberHomeActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class NormalMemberHomeActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int PICK_IMAGE_REQUEST = 101;
 
@@ -56,6 +81,8 @@ public class NormalMemberHomeActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private ImageView img_profile;
     private Uri imageUri;
+    private double addressX;
+    private double addressY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,10 +112,112 @@ public class NormalMemberHomeActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        NaverMapSdk.getInstance(this).setClient(
-                new NaverMapSdk.NaverCloudPlatformClient("z79q0dob9r"));
+
+//        NaverMapSdk.getInstance(this).setClient(
+//                new NaverMapSdk.NaverCloudPlatformClient("z79q0dob9r"));
+
+        FragmentManager fm = getSupportFragmentManager();
+        MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.map2);
+        if (mapFragment == null) {
+            mapFragment = MapFragment.newInstance();
+            fm.beginTransaction().add(R.id.map2, mapFragment).commit();
+        }
+
+        mapFragment.getMapAsync(this);
 
         init();
+
+    }
+
+    @UiThread
+    @Override
+    public void onMapReady(@NonNull final NaverMap naverMap) {
+
+        DatabaseReference academy_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+
+        academy_ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    String address = dataSnapshot.child("academy_address").getValue(String.class);
+                    final String name = dataSnapshot.child("academy_name").getValue(String.class);
+
+                    RetrofitConnection retrofitConnection = new RetrofitConnection();
+                    Call<GeocodingResponse> geocodingResponse = retrofitConnection.mapAPI.getCoordinate(address);
+
+                    geocodingResponse.enqueue(new Callback<GeocodingResponse>() {
+                        @Override
+                        public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
+                            GeocodingResponse geocodingResponse = response.body();
+                            List<GeocodingResponse.RequestAddress> addressList = geocodingResponse.getAddresses();
+
+                            addressX = addressList.get(0).getX();
+                            addressY = addressList.get(0).getY();
+
+                            Log.d("marker_x", "marker_x : " + addressX);
+                            Log.d("marker_y", "marker_y : " + addressY);
+
+//                            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(addressY, addressX)).animate(CameraAnimation.Fly);
+//                            naverMap.moveCamera(cameraUpdate);
+
+                            final Marker marker = new Marker();
+                            marker.setPosition(new LatLng(addressY, addressX));
+                            marker.setMap(naverMap);
+
+                            marker.setOnClickListener(new Overlay.OnClickListener() {
+                                @Override
+                                public boolean onClick(@NonNull Overlay overlay) {
+
+                                    final InfoWindow infoWindow = new InfoWindow();
+                                    infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(NormalMemberHomeActivity.this) {
+                                        @NonNull
+                                        @Override
+                                        public CharSequence getText(@NonNull InfoWindow infoWindow) {
+                                            return name;
+                                        }
+                                    });
+                                    infoWindow.open(marker);
+
+                                    infoWindow.setOnClickListener(new Overlay.OnClickListener() {
+                                        @Override
+                                        public boolean onClick(@NonNull Overlay overlay) {
+//                                            Toast.makeText(getApplicationContext(), "마커 클릭 확인", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(NormalMemberHomeActivity.this, AcademyInfoActivity.class);
+                                            intent.putExtra("academy_name", name);
+                                            startActivity(intent);
+                                            infoWindow.close();
+                                            return true;
+                                        }
+                                    });
+
+                                    return false;
+                                }
+                            });
+
+
+
+
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<GeocodingResponse> call, Throwable t) {
+
+                        }
+                    });
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
 
@@ -244,6 +373,9 @@ public class NormalMemberHomeActivity extends AppCompatActivity {
                     .into(img_profile);
         }
     }
+
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

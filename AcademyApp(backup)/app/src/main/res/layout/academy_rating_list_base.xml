@@ -51,7 +51,7 @@
     </LinearLayout>
 
         <Button
-            android:id="@+id/btn_delete_user_text"
+            android:id="@+id/delete_user_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="삭제" />

@@ -28,4 +28,10 @@
         android:label="@string/menu_academy_management"
         tools:layout="@layout/fragment_management" />
 
+    <fragment
+        android:id="@+id/nav_downloader_management"
+        android:name="com.example.academyapp.ui.gallery.FunctionFragment"
+        android:label="@string/menu_downloader_management"
+        tools:layout="@layout/fragment_downloader_management" />
+
 </navigation>

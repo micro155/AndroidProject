@@ -11,17 +11,19 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatRoomListViewAdapter extends BaseAdapter {
 
-    Handler handler = new Handler();
+    private Handler handler = new Handler();
 
     private Context context;
     private ArrayList<String> name_list;
@@ -77,15 +79,19 @@ public class ChatRoomListViewAdapter extends BaseAdapter {
                     try {
                         URL url = new URL(photoUrl);
                         Log.d("url", "link : " + photoUrl);
-                        InputStream is = url.openStream();
-                        final Bitmap bm = BitmapFactory.decodeStream(is);
+
+                        URLConnection conn = url.openConnection();
+                        conn.connect();
+                        BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
+//                        InputStream is = url.openStream();
+                        final Bitmap bm = BitmapFactory.decodeStream(bis);
+                        bis.close();
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
                                 profile_view.setImageBitmap(bm);
                             }
                         });
-//                        profile_view.setImageBitmap(bm);
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                         Log.d("error log", "log : " + e.getMessage());

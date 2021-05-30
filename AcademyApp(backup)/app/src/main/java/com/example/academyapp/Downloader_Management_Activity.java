@@ -1,7 +1,6 @@
 package com.example.academyapp;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -19,10 +18,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -50,65 +50,62 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChattingRoom_Director_Activity extends AppCompatActivity {
+public class Downloader_Management_Activity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 100;
 
     private DrawerLayout drawer;
+    private NavigationView navigationView;
     private AppBarConfiguration mAppBarConfiguration;
     private NavController navController;
-    private NavigationView navigationView;
 
     private AlertDialog waitingDialog;
     private StorageReference storageReference;
     private ImageView img_profile;
     private Uri imageUri;
-    private ChatRoomListViewAdapter adapter;
-    private ArrayList<String> name_list;
-    private ArrayList<String> messages_array;
-    private ArrayList<String> profile;
+
     private ListView listView;
+    private DatabaseReference downloader_ref;
+    private DatabaseReference user_ref;
+    private String user_auth;
+    private DownloaderListViewAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chatting_room_director);
+        setContentView(R.layout.activity_downloader_management);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_chatting_room_director);
+        Toolbar toolbar = findViewById(R.id.toolbar_downloader_management);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("강의 영상 고객 관리");
 
-        drawer = findViewById(R.id.drawer_chatting_room_director_layout);
+        drawer = findViewById(R.id.drawer_director_downloader_management);
 
-        navigationView = findViewById(R.id.nav_chatting_room_director_view);
+        navigationView = findViewById(R.id.nav_director_downloader_management_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_director_home, R.id.nav_director_logout, R.id.nav_upload, R.id.nav_academy_management, R.id.nav_chatting_director, R.id.nav_downloader_management_director)
                 .setDrawerLayout(drawer)
                 .build();
-
-        navController = Navigation.findNavController(this, R.id.nav_chatting_room_director_fragment);
+        navController = Navigation.findNavController(this, R.id.nav_downloader_management_director_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        NavigationUI.setupActionBarWithNavController(ChattingRoom_Director_Activity.this, navController, mAppBarConfiguration);
 
-        listView = (ListView) findViewById(R.id.chatting_room_list_view);
+        listView = findViewById(R.id.downloader_list_view);
+        downloader_ref = FirebaseDatabase.getInstance().getReference("Contracts");
+        user_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+        user_auth = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         init();
 
-//        mAppBarConfiguration = new AppBarConfiguration.Builder(
-//                R.id.nav_normalmember_home, R.id.nav_normalmember_logout, R.id.nav_download, R.id.nav_chatting)
-//                .setDrawerLayout(drawer)
-//                .build();
-
-
-        String director_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference academy_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE).child(director_uid);
-        academy_ref.child("academy_name").addValueEventListener(new ValueEventListener() {
+        user_ref.child(user_auth).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String academy = snapshot.getValue(String.class);
-                showDirectorChattingRoomList(academy);
+                String academy_name = snapshot.child("academy_name").getValue(String.class);
+
+                showDownloaderList(academy_name);
             }
 
             @Override
@@ -119,124 +116,86 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
 
     }
 
-//    private void ConfirmMemberType() {
-//        final DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
-//        final String Uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//
-//        mRef.child(Uid).child("type").addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                String mType = snapshot.getValue(String.class);
-//                Log.d("value1", "it's type " + mType);
-//
-//                if (mType.equals("일반회원")) {
-//                    mRef.child(Uid).addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                            String normal_nickName = snapshot.child("nickName").getValue(String.class);
-//                            showNormalChattingRoomList(normal_nickName);
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError error) {
-//
-//                        }
-//                    });
-//                } else {
-//                    DatabaseReference academy_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE).child(Uid);
-//                    academy_ref.child("academy_name").addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                            String academy = snapshot.getValue(String.class);
-//                            showDirectorChattingRoomList(academy);
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError error) {
-//
-//                        }
-//                    });
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//            }
-//        });
-//
-//    }
+    private void showDownloaderList(final String academy_name) {
 
-    private void showDirectorChattingRoomList(final String academy_name) {
-        name_list = new ArrayList<String>();
-        messages_array = new ArrayList<String>();
-        profile = new ArrayList<String>();
+        final ArrayList<String> downloader_nickName_list = new ArrayList<String>();
+        final ArrayList<String> downloader_phone_list = new ArrayList<String>();
 
-        DatabaseReference director_chat_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(academy_name);
-
-        director_chat_ref.addValueEventListener(new ValueEventListener() {
+        downloader_ref.child(academy_name).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                for (DataSnapshot list_data : snapshot.getChildren()) {
-                    final String normal_list = list_data.getKey();
-                    final String[] normal_profile = {null};
-                    final String[] chat_text = {null};
-                    final String[] name = {null};
+                for (DataSnapshot downloader : snapshot.getChildren()) {
+                    final String downloader_name = downloader.child("downloader_name").getValue(String.class);
+                    final String downloader_phone = downloader.child("downloader_phone").getValue(String.class);
+                    final String academy_code = downloader.child("academy_code").getValue(String.class);
+                    final String downloader_nickName = downloader.child("downloader_nickName").getValue(String.class);
 
-                    Log.d("normal list", "list : " + normal_list);
+                    downloader_nickName_list.add(downloader_nickName);
+                    downloader_phone_list.add(downloader_phone);
 
-                        DatabaseReference token_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(academy_name).child(normal_list).child("chat_messages");
+                    adapter = new DownloaderListViewAdapter(Downloader_Management_Activity.this, downloader_nickName_list, downloader_phone_list, academy_name, downloader_name, academy_code, new DownloaderListViewAdapter.OnDeleteClickListener() {
+                        @Override
+                        public void onDelete(String downloader_nickName, String academy_name) {
+                            adapter.deleteDownloader(downloader_nickName, academy_name);
+                        }
+                    });
 
-                        token_ref.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for (DataSnapshot chat_list : snapshot.getChildren()) {
+                    adapter.notifyDataSetChanged();
+                    listView.setAdapter(adapter);
 
-                                        chat_text[0] = chat_list.child("text").getValue(String.class);
-                                        name[0] = chat_list.child("name").getValue(String.class);
+//                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                        @Override
+//                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                            Log.d("Button click", "click OK");
+//
+//                            AlertDialog.Builder detail_dialog = new AlertDialog.Builder(Downloader_Management_Activity.this);
+//                            View detail_info_view = LayoutInflater.from(Downloader_Management_Activity.this).inflate(R.layout.layout_detail_downloader_info, null);
+//
+//                            TextView downloader_nickName_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_nickName);
+//                            TextView downloader_name_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_downloader_name);
+//                            TextView downloader_phone_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_downloader_phone);
+//                            TextView downloader_academy_code_view = (TextView) detail_info_view.findViewById(R.id.downloader_detail_academy_code);
+//
+//                            Button downloader_detail_confirm_button = (Button) detail_info_view.findViewById(R.id.downloader_detail_confirm);
+//
+//                            downloader_nickName_view.setText(downloader_name);
+//                            downloader_name_view.setText(downloader_phone);
+//                            downloader_phone_view.setText(academy_code);
+//                            downloader_academy_code_view.setText(downloader_nickName);
+//
+//                            detail_dialog.setView(detail_info_view);
+//
+//                            final AlertDialog dialog = detail_dialog.create();
+//                            dialog.show();
+//
+//                            downloader_detail_confirm_button.setOnClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+//                                    dialog.dismiss();
+//                                }
+//                            });
+//
+//                        }
+//                    });
 
-                                        Log.d("chat list", "list : " + chat_text[0]);
-                                        Log.d("name list", "list : " + name[0]);
-
-                                        if (normal_list.equals(name[0])) {
-                                            normal_profile[0] = chat_list.child("photoURL").getValue(String.class);
-                                            Log.d("normal_profile list", "list : " + normal_profile[0]);
-                                        }
-                                }
-
-                                name_list.add(normal_list);
-                                profile.add(normal_profile[0]);
-                                messages_array.add(chat_text[0]);
-
-                                adapter = new ChatRoomListViewAdapter(ChattingRoom_Director_Activity.this, name_list, messages_array, profile);
-                                adapter.notifyDataSetChanged();
-
-                                listView.setAdapter(adapter);
-                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
-                                        intent.putExtra("normal_name", name_list.get(position));
-                                        intent.putExtra("normal_profile", profile.get(position));
-                                        intent.putExtra("academy_name", academy_name);
-                                        startActivity(intent);
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
                 }
+
+//                adapter.notifyDataSetChanged();
+//                listView.setAdapter(adapter);
+
+
+            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
+
+
+
     }
 
     private void init() {
@@ -251,7 +210,7 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.nav_director_logout) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ChattingRoom_Director_Activity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Downloader_Management_Activity.this);
                     builder.setTitle("로그아웃")
                             .setMessage("정말 로그아웃 하시겠습니까?")
                             .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -264,7 +223,7 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     FirebaseAuth.getInstance().signOut();
-                                    Intent intent = new Intent(ChattingRoom_Director_Activity.this, SplashScreenActivity.class);
+                                    Intent intent = new Intent(Downloader_Management_Activity.this, SplashScreenActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
                                     finish();
@@ -276,30 +235,30 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
                         @Override
                         public void onShow(DialogInterface dialogInterface) {
                             dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                                    .setTextColor(ContextCompat.getColor(ChattingRoom_Director_Activity.this, android.R.color.holo_red_dark));
+                                    .setTextColor(ContextCompat.getColor(Downloader_Management_Activity.this, android.R.color.holo_red_dark));
                             dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-                                    .setTextColor(ContextCompat.getColor(ChattingRoom_Director_Activity.this, R.color.colorAccent));
+                                    .setTextColor(ContextCompat.getColor(Downloader_Management_Activity.this, R.color.colorAccent));
                         }
                     });
                     dialog.show();
                 } else if (item.getItemId() == R.id.nav_upload) {
-                    Intent intent = new Intent(ChattingRoom_Director_Activity.this, UploadActivity.class);
+                    Intent intent = new Intent(Downloader_Management_Activity.this, UploadActivity.class);
                     startActivity(intent);
                     finish();
                 } else if (item.getItemId() == R.id.nav_academy_management) {
-                    Intent intent = new Intent(ChattingRoom_Director_Activity.this, AcademyManagementActivity.class);
+                    Intent intent = new Intent(Downloader_Management_Activity.this, AcademyManagementActivity.class);
                     startActivity(intent);
                     finish();
                 } else if (item.getItemId() == R.id.nav_director_home) {
-                    Intent intent = new Intent(ChattingRoom_Director_Activity.this, DirectorHomeActivity.class);
+                    Intent intent = new Intent(Downloader_Management_Activity.this, DirectorHomeActivity.class);
                     startActivity(intent);
                     finish();
                 } else if (item.getItemId() == R.id.nav_chatting_director) {
-                    Intent intent = new Intent(ChattingRoom_Director_Activity.this, ChattingRoom_Director_Activity.class);
+                    Intent intent = new Intent(Downloader_Management_Activity.this, ChattingRoom_Director_Activity.class);
                     startActivity(intent);
                     finish();
                 } else if (item.getItemId() == R.id.nav_downloader_management_director) {
-                    Intent intent = new Intent(ChattingRoom_Director_Activity.this, Downloader_Management_Activity.class);
+                    Intent intent = new Intent(Downloader_Management_Activity.this, Downloader_Management_Activity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -333,7 +292,7 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
     }
 
     private void showDialogUpload() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(ChattingRoom_Director_Activity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(Downloader_Management_Activity.this);
         builder.setTitle("프로필 변경")
                 .setMessage("정말로 프로필을 변경하시겠습니까?")
                 .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -401,7 +360,7 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
             if(data != null && data.getData() != null) {
@@ -413,30 +372,12 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.chatting_room_normal_menu, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.add_chatting: {
-//                Intent intent = new Intent(this, AddChattingActivity.class);
-//                startActivity(intent);
-//                return true;
-//            }
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
-
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_chatting_room_director_fragment);
+        NavController navController = Navigation.findNavController(this, R.id.nav_downloader_management_director_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+
 }

@@ -171,19 +171,21 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
         messages_array = new ArrayList<String>();
         profile = new ArrayList<String>();
 
-        DatabaseReference director_chat_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(academy_name);
+        if (academy_name != null) {
 
-        director_chat_ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            DatabaseReference director_chat_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(academy_name);
 
-                for (DataSnapshot list_data : snapshot.getChildren()) {
-                    final String normal_list = list_data.getKey();
-                    final String[] normal_profile = {null};
-                    final String[] chat_text = {null};
-                    final String[] name = {null};
+            director_chat_ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                    Log.d("normal list", "list : " + normal_list);
+                    for (DataSnapshot list_data : snapshot.getChildren()) {
+                        final String normal_list = list_data.getKey();
+                        final String[] normal_profile = {null};
+                        final String[] chat_text = {null};
+                        final String[] name = {null};
+
+                        Log.d("normal list", "list : " + normal_list);
 
                         DatabaseReference token_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(academy_name).child(normal_list).child("chat_messages");
 
@@ -192,16 +194,16 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 for (DataSnapshot chat_list : snapshot.getChildren()) {
 
-                                        chat_text[0] = chat_list.child("text").getValue(String.class);
-                                        name[0] = chat_list.child("name").getValue(String.class);
+                                    chat_text[0] = chat_list.child("text").getValue(String.class);
+                                    name[0] = chat_list.child("name").getValue(String.class);
 
-                                        Log.d("chat list", "list : " + chat_text[0]);
-                                        Log.d("name list", "list : " + name[0]);
+                                    Log.d("chat list", "list : " + chat_text[0]);
+                                    Log.d("name list", "list : " + name[0]);
 
-                                        if (normal_list.equals(name[0])) {
-                                            normal_profile[0] = chat_list.child("photoURL").getValue(String.class);
-                                            Log.d("normal_profile list", "list : " + normal_profile[0]);
-                                        }
+                                    if (normal_list.equals(name[0])) {
+                                        normal_profile[0] = chat_list.child("photoURL").getValue(String.class);
+                                        Log.d("normal_profile list", "list : " + normal_profile[0]);
+                                    }
                                 }
 
                                 name_list.add(normal_list);
@@ -232,11 +234,12 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
                     }
                 }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     private void init() {

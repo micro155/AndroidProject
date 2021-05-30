@@ -12,5 +12,5 @@ public interface MapAPI {
             "X-NCP-APIGW-API-KEY:l7JKaTHv8v4CE3wV5xc7G8exQs3HQ61y8n0ajNr3"
     })
     @GET("/map-geocode/v2/geocode")
-    Call<RequestAddress> getCoordinate(@Query("query") String location);
+    Call<GeocodingResponse> getCoordinate(@Query("query") String location);
 }

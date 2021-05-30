@@ -55,6 +55,7 @@ public class AcademyInfoActivity extends AppCompatActivity {
     private String[] rating_items = {"1.0 / 5.0", "2.0 / 5.0", "3.0 / 5.0", "4.0 / 5.0", "5.0 / 5.0"};
     private String user_rating_input;
     private Button btn_user_rating;
+//    private String user_text_input;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,14 +77,13 @@ public class AcademyInfoActivity extends AppCompatActivity {
         academy_name = (TextView) findViewById(R.id.academy_name_info);
         academy_phone = (TextView) findViewById(R.id.academy_phone_info);
         academy_address = (TextView) findViewById(R.id.academy_address_info);
+        user_rating_listView = (ListView) findViewById(R.id.user_rating_list);
         user_rating_input_spinner = (Spinner) findViewById(R.id.user_rating_input);
         edit_user_text = (EditText) findViewById(R.id.edit_user_text);
         btn_user_rating = (Button) findViewById(R.id.btn_user_rating);
-        user_rating_listView = (ListView) findViewById(R.id.user_rating_list);
 
 
         showDetailAcademy(academy);
-
 
         ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, rating_items);
 
@@ -121,7 +121,7 @@ public class AcademyInfoActivity extends AppCompatActivity {
                         model.setUser_rating(user_rating_input);
                         model.setUser_text(edit_user_text.getText().toString());
 
-                        academy_ref.child(academy).child("user_rating_info").child(user_name).setValue(model);
+                        academy_ref.child(academy).child("user_rating_info").setValue(model);
                     }
 
                     @Override
@@ -185,56 +185,34 @@ public class AcademyInfoActivity extends AppCompatActivity {
                 academy_phone.setText(tel);
                 academy_address.setText(address);
 
-                DatabaseReference rating_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+                for (DataSnapshot rating_snapshot : snapshot.getChildren()) {
+                    String user_name = rating_snapshot.child("user_name").getValue(String.class);
+                    String user_profile = rating_snapshot.child("user_profile").getValue(String.class);
+                    String user_text = rating_snapshot.child("user_text").getValue(String.class);
+                    String user_rating = rating_snapshot.child("user_rating").getValue(String.class);
 
-                rating_ref.child(academy).child("user_rating_info").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (user_name != null && user_profile != null && user_text != null && user_rating != null) {
 
-                        for (DataSnapshot rating_snapshot : snapshot.getChildren()) {
-                            String user_name = rating_snapshot.child("user_name").getValue(String.class);
-                            String user_profile = rating_snapshot.child("user_profile").getValue(String.class);
-                            String user_text = rating_snapshot.child("user_text").getValue(String.class);
-                            String user_rating = rating_snapshot.child("user_rating").getValue(String.class);
+                        Log.d("user_rating", "user name : " + user_name + ", user profile : " + user_profile + ", " + "user text : " + user_text + ", " + "user rating : " + user_rating);
 
-//                            Log.d("user_rating", "user name : " + user_name + ", user profile : " + user_profile + ", " + "user text : " + user_text + ", " + "user rating : " + user_rating);
-
-                            if (user_name != null && user_profile != null && user_text != null && user_rating != null) {
-
-                                Log.d("user_rating", "user name : " + user_name + ", user profile : " + user_profile + ", " + "user text : " + user_text + ", " + "user rating : " + user_rating);
-
-                                user_profile_list.add(user_profile);
-                                user_name_list.add(user_name);
-                                user_text_list.add(user_text);
-                                user_rating_list.add(user_rating);
-
-                            }
-
-
-                            adapter = new UserRatingListViewAdapter(AcademyInfoActivity.this, user_profile_list, user_name_list, user_rating_list, user_text_list, academy, new UserRatingListViewAdapter.OnRatingDeleteListener() {
-                                @Override
-                                public void onRatingDelete(String normal_name) {
-                                    adapter.deleteButtonAction(normal_name);
-                                }
-                            });
-                            adapter.notifyDataSetChanged();
-                            user_rating_listView.setAdapter(adapter);
-
-                        }
-
+                        user_profile_list.add(user_profile);
+                        user_name_list.add(user_name);
+                        user_text_list.add(user_text);
+                        user_rating_list.add(user_rating);
 
                     }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                }
 
+                adapter = new UserRatingListViewAdapter(AcademyInfoActivity.this, user_profile_list, user_name_list, user_rating_list, user_text_list, academy, new UserRatingListViewAdapter.OnRatingDeleteListener() {
+                    @Override
+                    public void onRatingDelete(String normal_name) {
+                        adapter.deleteButtonAction(normal_name);
                     }
                 });
+                adapter.notifyDataSetChanged();
 
-                user_profile_list.clear();
-                user_name_list.clear();
-                user_text_list.clear();
-                user_rating_list.clear();
+                user_rating_listView.setAdapter(adapter);
 
             }
 
@@ -243,6 +221,7 @@ public class AcademyInfoActivity extends AppCompatActivity {
 
             }
         });
+
 
 
     }

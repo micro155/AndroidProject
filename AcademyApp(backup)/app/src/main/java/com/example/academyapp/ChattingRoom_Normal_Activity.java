@@ -124,7 +124,7 @@ public class ChattingRoom_Normal_Activity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.nav_director_logout) {
+                if (item.getItemId() == R.id.nav_normalmember_logout) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(ChattingRoom_Normal_Activity.this);
                     builder.setTitle("로그아웃")
                             .setMessage("정말 로그아웃 하시겠습니까?")
