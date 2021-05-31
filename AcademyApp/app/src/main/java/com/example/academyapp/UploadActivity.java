@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +56,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -77,8 +79,10 @@ public class UploadActivity extends AppCompatActivity {
     private Button btChoose;
     private Button btUpload;
     private EditText upload_file_name;
-    private ImageView ivPreview;
+//    private ImageView ivPreview;
     private String mUid;
+    private ListView listView;
+    private DirectorFileListViewAdapter adapter;
 
     private Uri filePath;
     DatabaseReference FileDatabase;
@@ -108,7 +112,7 @@ public class UploadActivity extends AppCompatActivity {
         btChoose = (Button) findViewById(R.id.bt_choose);
         btUpload = (Button) findViewById(R.id.bt_upload);
         upload_file_name = (EditText) findViewById(R.id.upload_file);
-        ivPreview = (ImageView) findViewById(R.id.iv_preview);
+        listView = (ListView) findViewById(R.id.video_list);
 
         //버튼 클릭 이벤트
         btChoose.setOnClickListener(new View.OnClickListener() {
@@ -149,6 +153,60 @@ public class UploadActivity extends AppCompatActivity {
                 });
             }
         });
+
+        final ArrayList<String> file_list = new ArrayList<String>();
+
+        DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+        final DatabaseReference file_ref = FirebaseDatabase.getInstance().getReference("FileList");
+        final Uri photo_url = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+
+        user_ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot profileSnapshot : snapshot.getChildren()) {
+                    String profile_url = profileSnapshot.child("director_photo_url").getValue(String.class);
+
+                    if (String.valueOf(photo_url).equals(profile_url)) {
+                        final String academy_name = profileSnapshot.child("academy_name").getValue(String.class);
+
+                        file_ref.child(academy_name).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                for (DataSnapshot fileSnapshot : snapshot.getChildren()) {
+                                    String file_name = fileSnapshot.child("file_name").getValue(String.class);
+
+                                    file_list.add(file_name);
+                                }
+
+                                adapter = new DirectorFileListViewAdapter(UploadActivity.this, file_list, academy_name, new DirectorFileListViewAdapter.OnFileDeleteClickListener() {
+                                    @Override
+                                    public void onFileDelete(String fileName, String academy_name) {
+                                        adapter.delete_File(fileName, academy_name);
+                                    }
+                                });
+
+                                adapter.notifyDataSetChanged();
+                                listView.setAdapter(adapter);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
     }
 
     //결과 처리
@@ -161,9 +219,9 @@ public class UploadActivity extends AppCompatActivity {
             Log.d(TAG, "uri:" + String.valueOf(filePath));
             //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
 //                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-            Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(String.valueOf(filePath), MediaStore.Video.Thumbnails.MICRO_KIND);
-            Bitmap thumbnail = ThumbnailUtils.extractThumbnail(bitmap, 360, 480);
-            ivPreview.setImageBitmap(thumbnail);
+//            Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(String.valueOf(filePath), MediaStore.Video.Thumbnails.MICRO_KIND);
+//            Bitmap thumbnail = ThumbnailUtils.extractThumbnail(bitmap, 360, 480);
+//            ivPreview.setImageBitmap(thumbnail);
         }
 
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {

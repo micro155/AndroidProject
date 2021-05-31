@@ -81,7 +81,6 @@ import retrofit2.Response;
 public class AcademyManagementActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     DatabaseReference AcademyInfoRef;
-    String mUid;
 
     private DrawerLayout drawer;
     private NavigationView navigationView;
@@ -94,7 +93,6 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
     private Uri imageUri;
     private double ResultAddressX;
     private double ResultAddressY;
-    private String uri_string;
     private Uri uri;
     private TextInputEditText academy_image_name;
 
@@ -106,8 +104,6 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_academy_management);
-
-        confirmAcademyInfo();
 
         Toolbar toolbar = findViewById(R.id.toolbar_management);
         setSupportActionBar(toolbar);
@@ -126,6 +122,9 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        AcademyInfoRef = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+
+        confirmAcademyInfo();
 
         MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.map_management);
         if (mapFragment == null) {
@@ -142,7 +141,7 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
     @Override
     public void onMapReady(@NonNull final NaverMap naverMap) {
 
-        if (ResultAddressX != 0 && ResultAddressY != 0) {
+//        if (ResultAddressX != 0 && ResultAddressY != 0) {
 
             Log.d("logic check", "check confirm");
 
@@ -156,120 +155,68 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
 
                         String photo_url_string = checkSnapshot.child("director_photo_url").getValue(String.class);
 
-                        Log.d("director_url tag", "director_url : " + photo_url_string + ", current_user_url : " + String.valueOf(profile_url));
+                        if (photo_url_string != null) {
 
-                        if (String.valueOf(profile_url).equals(photo_url_string)) {
-                            String location = checkSnapshot.child("academy_address").getValue(String.class);
-                            final String academy_name = checkSnapshot.child("academy_name").getValue(String.class);
+                            if (String.valueOf(profile_url).equals(photo_url_string)) {
+                                String location = checkSnapshot.child("academy_address").getValue(String.class);
+                                final String academy_name = checkSnapshot.child("academy_name").getValue(String.class);
 
-                            RetrofitConnection retrofitConnection = new RetrofitConnection();
-                            Call<GeocodingResponse> geocodingResponse = retrofitConnection.mapAPI.getCoordinate(location);
+                                RetrofitConnection retrofitConnection = new RetrofitConnection();
+                                Call<GeocodingResponse> geocodingResponse = retrofitConnection.mapAPI.getCoordinate(location);
 
-                            Log.d("location", "location : " + location);
+                                Log.d("location", "location : " + location);
 
-//                            Log.d("director_url tag", "director_url : " + photo_url_string + ", current_user_url : " + String.valueOf(profile_url));
+                                Log.d("director_url tag", "director_url : " + photo_url_string + ", current_user_url : " + String.valueOf(profile_url));
 
-                            geocodingResponse.enqueue(new Callback<GeocodingResponse>() {
-                                @Override
-                                public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
-                                    if (response.isSuccessful()) {
-                                        GeocodingResponse geocodingResponse = response.body();
-                                        List<GeocodingResponse.RequestAddress> addressList = geocodingResponse.getAddresses();
+                                geocodingResponse.enqueue(new Callback<GeocodingResponse>() {
+                                    @Override
+                                    public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
+                                        if (response.isSuccessful()) {
+                                            GeocodingResponse geocodingResponse = response.body();
+                                            List<GeocodingResponse.RequestAddress> addressList = geocodingResponse.getAddresses();
 
-                                        ResultAddressX = addressList.get(0).getX();
-                                        ResultAddressY = addressList.get(0).getY();
+                                            ResultAddressX = addressList.get(0).getX();
+                                            ResultAddressY = addressList.get(0).getY();
 
-                                        Log.d("marker_x", "marker_x : " + ResultAddressX);
-                                        Log.d("marker_y", "marker_y : " + ResultAddressY);
+                                            Log.d("marker_x", "marker_x : " + ResultAddressX);
+                                            Log.d("marker_y", "marker_y : " + ResultAddressY);
 
-                                        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(ResultAddressY, ResultAddressX)).animate(CameraAnimation.Fly);
-                                        naverMap.moveCamera(cameraUpdate);
+                                            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(ResultAddressY, ResultAddressX)).animate(CameraAnimation.Fly);
+                                            naverMap.moveCamera(cameraUpdate);
 
-                                        Marker marker = new Marker();
-                                        marker.setPosition(new LatLng(ResultAddressY, ResultAddressX));
-                                        marker.setMap(naverMap);
+                                            Marker marker = new Marker();
+                                            marker.setPosition(new LatLng(ResultAddressY, ResultAddressX));
+                                            marker.setMap(naverMap);
 
-                                        InfoWindow infoWindow = new InfoWindow();
-                                        infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(AcademyManagementActivity.this) {
-                                            @NonNull
-                                            @Override
-                                            public CharSequence getText(@NonNull InfoWindow infoWindow) {
-                                                return academy_name;
-                                            }
-                                        });
-                                        infoWindow.open(marker);
+                                            InfoWindow infoWindow = new InfoWindow();
+                                            infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(AcademyManagementActivity.this) {
+                                                @NonNull
+                                                @Override
+                                                public CharSequence getText(@NonNull InfoWindow infoWindow) {
+                                                    return academy_name;
+                                                }
+                                            });
+                                            infoWindow.open(marker);
 
-                                        infoWindow.setOnClickListener(new Overlay.OnClickListener() {
-                                            @Override
-                                            public boolean onClick(@NonNull Overlay overlay) {
-                                                Toast.makeText(AcademyManagementActivity.this, "마커 클릭 확인", Toast.LENGTH_SHORT).show();
-                                                return true;
-                                            }
-                                        });
+                                            infoWindow.setOnClickListener(new Overlay.OnClickListener() {
+                                                @Override
+                                                public boolean onClick(@NonNull Overlay overlay) {
+                                                    Toast.makeText(AcademyManagementActivity.this, "마커 클릭 확인", Toast.LENGTH_SHORT).show();
+                                                    return true;
+                                                }
+                                            });
+                                        }
                                     }
-                                }
 
-                                @Override
-                                public void onFailure(Call<GeocodingResponse> call, Throwable t) {
-                                    Log.d("ERROR", "Failure Log :" + t.toString());
-                                }
-                            });
+                                    @Override
+                                    public void onFailure(Call<GeocodingResponse> call, Throwable t) {
+                                        Log.d("ERROR", "Failure Log :" + t.toString());
+                                    }
+                                });
+                            }
                         }
                     }
 
-//                    String location = snapshot.child(mUid).child("academy_address").getValue(String.class);
-//                    final String academy_name = snapshot.child(mUid).child("academy_name").getValue(String.class);
-
-//                    RetrofitConnection retrofitConnection = new RetrofitConnection();
-//                    Call<GeocodingResponse> geocodingResponse = retrofitConnection.mapAPI.getCoordinate(location);
-//
-//                    Log.d("location", "location : " + location);
-//
-//                    geocodingResponse.enqueue(new Callback<GeocodingResponse>() {
-//                        @Override
-//                        public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
-//                            if (response.isSuccessful()) {
-//                                GeocodingResponse geocodingResponse = response.body();
-//                                List<GeocodingResponse.RequestAddress> addressList = geocodingResponse.getAddresses();
-//
-//                                ResultAddressX = addressList.get(0).getX();
-//                                ResultAddressY = addressList.get(0).getY();
-//
-//                                Log.d("marker_x", "marker_x : " + ResultAddressX);
-//                                Log.d("marker_y", "marker_y : " + ResultAddressY);
-//
-//                                CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(ResultAddressY, ResultAddressX)).animate(CameraAnimation.Fly);
-//                                naverMap.moveCamera(cameraUpdate);
-//
-//                                Marker marker = new Marker();
-//                                marker.setPosition(new LatLng(ResultAddressY, ResultAddressX));
-//                                marker.setMap(naverMap);
-//
-//                                InfoWindow infoWindow = new InfoWindow();
-//                                infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(AcademyManagementActivity.this) {
-//                                    @NonNull
-//                                    @Override
-//                                    public CharSequence getText(@NonNull InfoWindow infoWindow) {
-//                                        return academy_name;
-//                                    }
-//                                });
-//                                infoWindow.open(marker);
-//
-//                                infoWindow.setOnClickListener(new Overlay.OnClickListener() {
-//                                    @Override
-//                                    public boolean onClick(@NonNull Overlay overlay) {
-//                                        Toast.makeText(AcademyManagementActivity.this, "마커 클릭 확인", Toast.LENGTH_SHORT).show();
-//                                        return true;
-//                                    }
-//                                });
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<GeocodingResponse> call, Throwable t) {
-//                            Log.d("ERROR", "Failure Log :" + t.toString());
-//                        }
-//                    });
                 }
 
                 @Override
@@ -278,23 +225,17 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                 }
             });
 
-        }
+//        }
 
     }
 
     private void confirmAcademyInfo() {
 
-        AcademyInfoRef = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
         final Uri photo_url = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
 
         AcademyInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                String location = snapshot.child("academy_address").getValue(String.class);
-//
-//                if (location == null) {
-//                    showRegisterAcademy();
-//                }
 
                 boolean isRegistered = false;
 
@@ -375,8 +316,6 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                     model.setAcademy_tel(academy_tel.getText().toString());
                     model.setAcademy_image(academy_image_name.getText().toString());
                     model.setDirector_photo_url(director_photo_url);
-
-//                    String address_academy = academy_address.getText().toString();
 
                     final String[] geocoding_string = new String[1];
 
@@ -524,8 +463,6 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-//        uri_string = String.valueOf(uri);
 
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
             if(data != null && data.getData() != null) {
