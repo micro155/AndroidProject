@@ -84,7 +84,9 @@ public class DirectorFileListViewAdapter extends BaseAdapter {
 
         file_name = file_list.get(position);
 
+        Log.d("FileListViewAdapter TAG", "file_name : " + file_name);
         file_view.setText(file_name);
+
 
 
         btn_file_delete.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +123,7 @@ public class DirectorFileListViewAdapter extends BaseAdapter {
 
 
         final StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://academyapp-d7c41.appspot.com").child("videos/" + fileName);
-        final DatabaseReference file_data_ref = FirebaseDatabase.getInstance().getReference("FileList").child(academy_name);
+        final DatabaseReference file_data_ref = FirebaseDatabase.getInstance().getReference("FileList").child(academy_name).child(fileName);
 
         Log.d("fileName", "filename : " + fileName);
 
@@ -139,6 +141,8 @@ public class DirectorFileListViewAdapter extends BaseAdapter {
                                 file_data_ref.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
+                                        file_list.remove(fileName);
+                                        setItemList(file_list);
                                         Toast.makeText(context, "강의 영상 삭제 완료", Toast.LENGTH_SHORT).show();
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
@@ -165,6 +169,11 @@ public class DirectorFileListViewAdapter extends BaseAdapter {
         AlertDialog alertDialog = builder.create();
 
         alertDialog.show();
+    }
+
+    public void setItemList(ArrayList<String> file_list) {
+        this.file_list = file_list;
+        notifyDataSetChanged();
     }
 }
 
