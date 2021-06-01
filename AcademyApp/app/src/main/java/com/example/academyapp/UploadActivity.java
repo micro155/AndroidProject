@@ -177,7 +177,7 @@ public class UploadActivity extends AppCompatActivity {
                         file_ref.child(academy_name).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                                file_list.clear();
                                 for (DataSnapshot fileSnapshot : snapshot.getChildren()) {
                                     String file_name = fileSnapshot.child("file_name").getValue(String.class);
 
@@ -186,15 +186,6 @@ public class UploadActivity extends AppCompatActivity {
 
                                     file_list.add(file_name);
 
-//                                    adapter = new DirectorFileListViewAdapter(UploadActivity.this, file_list, academy_name, new DirectorFileListViewAdapter.OnFileDeleteClickListener() {
-//                                        @Override
-//                                        public void onFileDelete(String fileName, String academy_name) {
-//                                            adapter.delete_File(fileName, academy_name);
-//                                        }
-//                                    });
-//
-//                                    adapter.notifyDataSetChanged();
-//                                    listView.setAdapter(adapter);
                                 }
 
                                 adapter = new DirectorFileListViewAdapter(UploadActivity.this, file_list, academy_name, new DirectorFileListViewAdapter.OnFileDeleteClickListener() {

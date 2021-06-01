@@ -79,8 +79,6 @@ public class DirectorFileListViewAdapter extends BaseAdapter {
 
         final TextView file_view = (TextView) convertView.findViewById(R.id.upload_file_name);
         Button btn_file_delete = (Button) convertView.findViewById(R.id.upload_file_delete);
-//        final DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
-//        final Uri user_profile_url = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
 
         file_name = file_list.get(position);
 
@@ -94,25 +92,6 @@ public class DirectorFileListViewAdapter extends BaseAdapter {
             public void onClick(View v) {
                 final String fileName = file_list.get(position);
                 listener.onFileDelete(fileName, academy_name);
-//                user_ref.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        for (DataSnapshot photoSnapshot : snapshot.getChildren()) {
-//                            String photo_url = photoSnapshot.child("director_photo_url").getValue(String.class);
-//
-//                            if (String.valueOf(user_profile_url).equals(photo_url)) {
-//                                String academy_name = photoSnapshot.child("academy_name").getValue(String.class);
-//
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-
             }
         });
 
