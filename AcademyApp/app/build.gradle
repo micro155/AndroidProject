@@ -73,5 +73,8 @@ dependencies {
     //CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    //Naver location
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
+
 
 }
