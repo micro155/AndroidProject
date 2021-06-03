@@ -17,7 +17,6 @@ import androidx.navigation.ui.NavigationUI;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -27,7 +26,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.academyapp.RestAPI.GeocodingResponse;
@@ -51,12 +49,9 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.naver.maps.geometry.LatLng;
-import com.naver.maps.map.CameraAnimation;
-import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
-import com.naver.maps.map.NaverMapSdk;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.Marker;
@@ -197,7 +192,7 @@ public class NormalMemberHomeActivity extends AppCompatActivity implements OnMap
                                         @Override
                                         public boolean onClick(@NonNull Overlay overlay) {
 //                                            Toast.makeText(getApplicationContext(), "마커 클릭 확인", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(NormalMemberHomeActivity.this, AcademyInfoActivity.class);
+                                            Intent intent = new Intent(NormalMemberHomeActivity.this, AcademyDetailActivity.class);
                                             intent.putExtra("academy_name", name);
                                             startActivity(intent);
                                             infoWindow.close();

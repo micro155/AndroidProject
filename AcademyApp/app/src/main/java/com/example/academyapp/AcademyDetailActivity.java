@@ -2,7 +2,6 @@ package com.example.academyapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +38,7 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AcademyInfoActivity extends AppCompatActivity {
+public class AcademyDetailActivity extends AppCompatActivity {
 
     private ImageView academy_image;
     private CircleImageView academy_profile;
@@ -64,6 +62,10 @@ public class AcademyInfoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         academy = intent.getExtras().getString("academy_name");
 
+        final DatabaseReference academy_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+        final DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        final String user_auth = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         Log.d("academy_value", "value : " + academy);
 
 //        Toolbar toolbar = findViewById(R.id.toolbar_academy_info);
@@ -81,57 +83,121 @@ public class AcademyInfoActivity extends AppCompatActivity {
         btn_user_rating = (Button) findViewById(R.id.btn_user_rating);
         user_rating_listView = (ListView) findViewById(R.id.user_rating_list);
 
-
-        showDetailAcademy(academy);
-
-
-        ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, rating_items);
-
-        user_rating_input_spinner.setAdapter(spinner_adapter);
-        user_rating_input_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        user_ref.child(user_auth).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                user_rating_input = rating_items[position];
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String user_type = snapshot.child("type").getValue(String.class);
+
+                if(user_type.equals("일반회원")) {
+
+                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(AcademyDetailActivity.this, android.R.layout.simple_spinner_dropdown_item, rating_items);
+
+                    user_rating_input_spinner.setAdapter(spinner_adapter);
+                    user_rating_input_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            user_rating_input = rating_items[position];
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+
+                    btn_user_rating.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            user_ref.child(user_auth).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    String user_name = snapshot.child("nickName").getValue(String.class);
+
+                                    Uri user_profile_uri = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+
+                                    Rating_Info model = new Rating_Info();
+
+                                    model.setUser_profile(String.valueOf(user_profile_uri));
+                                    model.setUser_name(user_name);
+                                    model.setUser_rating(user_rating_input);
+                                    model.setUser_text(edit_user_text.getText().toString());
+
+                                    academy_ref.child(academy).child("user_rating_info").child(user_name).setValue(model);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
+                        }
+                    });
+
+                    showDetailAcademy(academy);
+                } else {
+                    user_rating_input_spinner.setVisibility(View.INVISIBLE);
+                    edit_user_text.setVisibility(View.INVISIBLE);
+                    btn_user_rating.setVisibility(View.INVISIBLE);
+                    showDetailAcademy(academy);
+                }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
 
-        btn_user_rating.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final DatabaseReference academy_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
-                DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
-                String user_auth = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                user_ref.child(user_auth).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String user_name = snapshot.child("nickName").getValue(String.class);
+//        showDetailAcademy(academy);
 
-                        Uri user_profile_uri = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
 
-                        Rating_Info model = new Rating_Info();
+//        ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, rating_items);
+//
+//        user_rating_input_spinner.setAdapter(spinner_adapter);
+//        user_rating_input_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                user_rating_input = rating_items[position];
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
 
-                        model.setUser_profile(String.valueOf(user_profile_uri));
-                        model.setUser_name(user_name);
-                        model.setUser_rating(user_rating_input);
-                        model.setUser_text(edit_user_text.getText().toString());
-
-                        academy_ref.child(academy).child("user_rating_info").child(user_name).setValue(model);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-            }
-        });
+//        btn_user_rating.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                user_ref.child(user_auth).addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        String user_name = snapshot.child("nickName").getValue(String.class);
+//
+//                        Uri user_profile_uri = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+//
+//                        Rating_Info model = new Rating_Info();
+//
+//                        model.setUser_profile(String.valueOf(user_profile_uri));
+//                        model.setUser_name(user_name);
+//                        model.setUser_rating(user_rating_input);
+//                        model.setUser_text(edit_user_text.getText().toString());
+//
+//                        academy_ref.child(academy).child("user_rating_info").child(user_name).setValue(model);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//
+//            }
+//        });
 
     }
 
@@ -154,7 +220,7 @@ public class AcademyInfoActivity extends AppCompatActivity {
                 String tel = snapshot.child("academy_tel").getValue(String.class);
                 final String profile_url = snapshot.child("director_photo_url").getValue(String.class);
 
-                Glide.with(AcademyInfoActivity.this).load("https://firebasestorage.googleapis.com/v0/b/academyapp-d7c41.appspot.com/o/academy_images%2F" + image_name + "?alt=media")
+                Glide.with(AcademyDetailActivity.this).load("https://firebasestorage.googleapis.com/v0/b/academyapp-d7c41.appspot.com/o/academy_images%2F" + image_name + "?alt=media")
                         .into(academy_image);
 
                 new Thread(new Runnable() {
@@ -211,7 +277,7 @@ public class AcademyInfoActivity extends AppCompatActivity {
                             }
 
 
-                            adapter = new UserRatingListViewAdapter(AcademyInfoActivity.this, user_profile_list, user_name_list, user_rating_list, user_text_list, academy, new UserRatingListViewAdapter.OnRatingDeleteListener() {
+                            adapter = new UserRatingListViewAdapter(AcademyDetailActivity.this, user_profile_list, user_name_list, user_rating_list, user_text_list, academy, new UserRatingListViewAdapter.OnRatingDeleteListener() {
                                 @Override
                                 public void onRatingDelete(String normal_name) {
                                     adapter.deleteButtonAction(normal_name);
