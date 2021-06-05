@@ -13,9 +13,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AcademyDetailActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:parentActivityName=".NormalMemberHomeActivity"/>
+        <activity
+            android:name=".ModifyAcademyInfoActivity"
+            android:parentActivityName=".AcademyDetailActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".AcademyDetailActivity"
+            android:parentActivityName=".NormalMemberHomeActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Downloader_Management_Activity"
             android:theme="@style/AppTheme.NoActionBar" />

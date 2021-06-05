@@ -2,7 +2,6 @@ package com.example.academyapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RestrictTo;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,11 +18,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -188,7 +184,7 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                                             marker.setPosition(new LatLng(ResultAddressY, ResultAddressX));
                                             marker.setMap(naverMap);
 
-                                            InfoWindow infoWindow = new InfoWindow();
+                                            final InfoWindow infoWindow = new InfoWindow();
                                             infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(AcademyManagementActivity.this) {
                                                 @NonNull
                                                 @Override
@@ -201,7 +197,10 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                                             infoWindow.setOnClickListener(new Overlay.OnClickListener() {
                                                 @Override
                                                 public boolean onClick(@NonNull Overlay overlay) {
-                                                    Toast.makeText(AcademyManagementActivity.this, "마커 클릭 확인", Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(getApplicationContext(), ModifyAcademyInfoActivity.class);
+                                                    intent.putExtra("academy_name", academy_name);
+                                                    startActivity(intent);
+                                                    infoWindow.close();
                                                     return true;
                                                 }
                                             });

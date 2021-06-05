@@ -114,10 +114,6 @@ public class NormalMemberHomeActivity extends AppCompatActivity implements OnMap
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-
-//        NaverMapSdk.getInstance(this).setClient(
-//                new NaverMapSdk.NaverCloudPlatformClient("z79q0dob9r"));
-
         FragmentManager fm = getSupportFragmentManager();
         MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.map2);
         if (mapFragment == null) {
