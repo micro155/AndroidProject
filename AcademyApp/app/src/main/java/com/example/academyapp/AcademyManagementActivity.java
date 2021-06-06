@@ -139,6 +139,13 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
 
 //        if (ResultAddressX != 0 && ResultAddressY != 0) {
 
+//        final Marker marker = new Marker();
+//        final InfoWindow infoWindow = new InfoWindow();
+//
+//
+//        marker.setMap(null);
+//        infoWindow.setMap(null);
+
             Log.d("logic check", "check confirm");
 
             AcademyInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -226,6 +233,44 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
 
 //        }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+//        setContentView(R.layout.activity_academy_management);
+
+        Toolbar toolbar = findViewById(R.id.toolbar_management);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("학원 정보 관리");
+
+        drawer = findViewById(R.id.drawer_director_academy_management);
+
+        navigationView = findViewById(R.id.nav_management_view);
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_director_home, R.id.nav_director_logout, R.id.nav_upload, R.id.nav_academy_management, R.id.nav_chatting_director, R.id.nav_downloader_management_director)
+                .setDrawerLayout(drawer)
+                .build();
+        navController = Navigation.findNavController(this, R.id.nav_management_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
+
+        AcademyInfoRef = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+
+        confirmAcademyInfo();
+
+        MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.map_management);
+        if (mapFragment == null) {
+            mapFragment = MapFragment.newInstance();
+            getSupportFragmentManager().beginTransaction().add(R.id.map_management, mapFragment).commit();
+        }
+
+        mapFragment.getMapAsync(this);
+
+        init();
     }
 
     private void confirmAcademyInfo() {
