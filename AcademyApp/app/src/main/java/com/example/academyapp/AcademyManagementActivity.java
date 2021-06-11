@@ -51,6 +51,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -207,7 +209,6 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                                                     Intent intent = new Intent(getApplicationContext(), ModifyAcademyInfoActivity.class);
                                                     intent.putExtra("academy_name", academy_name);
                                                     startActivity(intent);
-                                                    infoWindow.close();
                                                     return true;
                                                 }
                                             });
@@ -235,43 +236,10 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-//        setContentView(R.layout.activity_academy_management);
-
-        Toolbar toolbar = findViewById(R.id.toolbar_management);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("학원 정보 관리");
-
-        drawer = findViewById(R.id.drawer_director_academy_management);
-
-        navigationView = findViewById(R.id.nav_management_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_director_home, R.id.nav_director_logout, R.id.nav_upload, R.id.nav_academy_management, R.id.nav_chatting_director, R.id.nav_downloader_management_director)
-                .setDrawerLayout(drawer)
-                .build();
-        navController = Navigation.findNavController(this, R.id.nav_management_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
-
-        AcademyInfoRef = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
-
-        confirmAcademyInfo();
-
-        MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.map_management);
-        if (mapFragment == null) {
-            mapFragment = MapFragment.newInstance();
-            getSupportFragmentManager().beginTransaction().add(R.id.map_management, mapFragment).commit();
-        }
-
-        mapFragment.getMapAsync(this);
-
-        init();
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//    }
 
     private void confirmAcademyInfo() {
 
@@ -401,52 +369,41 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                         e.printStackTrace();
                     }
 
-
-//                    call.enqueue(new Callback<GeocodingResponse>() {
-//                        @Override
-//                        public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
-//                            if (response.isSuccessful()) {
-//                                GeocodingResponse geocoding = response.body();
-//                                List<GeocodingResponse.RequestAddress> geocodeList = geocoding.getAddresses();
-//
-//                                ResultAddressX = geocodeList.get(0).getX();
-//                                ResultAddressY = geocodeList.get(0).getY();
-//
-//                                Log.d("address_x", "address_x : " + ResultAddressX);
-//                                Log.d("address_y", "address_y : " + ResultAddressY);
-//
-//                                geocoding_string[0] = ResultAddressX + ", " + ResultAddressY;
-//
-//                                Log.d("geocoding_string1", "geocoding_string1 : " + geocoding_string[0]);
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<GeocodingResponse> call, Throwable t) {
-//                            Log.d("geocoding fail", "reason : " + t);
-//                        }
-//                    });
-
                     Log.d("geocoding_string2", "geocoding_string2 : " + geocoding_string[0]);
 
-                    upload_academy_image(academy_image_name.getText().toString());
+                    FirebaseMessaging.getInstance().getToken()
+                            .addOnCompleteListener(new OnCompleteListener<String>() {
+                                @Override
+                                public void onComplete(@NonNull Task<String> task) {
+                                    if (!task.isSuccessful()) {
+                                        Log.d("getToken fail tag", "getToken failed", task.getException());
+                                        return;
+                                    }
 
-                    AcademyInfoRef.child(academy_name.getText().toString()).setValue(model)
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    dialog.dismiss();
-                                    Toast.makeText(AcademyManagementActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            })
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(AcademyManagementActivity.this, "학원 정보 등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                                    dialog.dismiss();
+                                    // Get new Instance ID token
+                                    String token = task.getResult();
+                                    Log.d("token", "token string : " + token);
+                                    model.setToken(token);
+
+                                    upload_academy_image(academy_image_name.getText().toString());
+
+                                    AcademyInfoRef.child(academy_name.getText().toString()).setValue(model)
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    dialog.dismiss();
+                                                    Toast.makeText(AcademyManagementActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            })
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(AcademyManagementActivity.this, "학원 정보 등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                                    dialog.dismiss();
+                                                }
+                                            });
                                 }
                             });
-
                 }
             }
         });
@@ -521,12 +478,6 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
             Log.d("file_string", "file_string : " + file_name_confirm);
             Log.d("uri", "uri : " + String.valueOf(uri));
 
-//            try {
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-//                preview_image.setImageBitmap(bitmap);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
             academy_image_name.setText(file_name_confirm);
         }
     }

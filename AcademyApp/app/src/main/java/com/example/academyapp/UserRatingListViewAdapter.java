@@ -141,27 +141,35 @@ public class UserRatingListViewAdapter extends BaseAdapter {
 //            });
 
             DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
-            String Uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            final String Uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
             final View second_convertView = convertView;
-            user_ref.child(Uid).addValueEventListener(new ValueEventListener() {
+            user_ref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    final String normal_name = snapshot.child("nickName").getValue(String.class);
 
-//                    if (normal_name.equals(user_name)) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        String uid = dataSnapshot.child("uid").getValue(String.class);
 
-                        Button delete_user_text = (Button) second_convertView.findViewById(R.id.btn_delete_user_text);
+                        if (uid != null) {
+                            if (uid.equals(Uid)) {
+                                final String normal_name = dataSnapshot.child("nickName").getValue(String.class);
 
-                        delete_user_text.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                rating_deleteClickListener.onRatingDelete(normal_name);
+                                Button delete_user_text = (Button) second_convertView.findViewById(R.id.btn_delete_user_text);
+
+                                delete_user_text.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        rating_deleteClickListener.onRatingDelete(normal_name);
+                                    }
+
+                                });
+
                             }
+                        }
+                    }
 
-                        });
 
-//                    }
                 }
 
                 @Override

@@ -82,9 +82,6 @@ public class ChattingActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final String academy_name = intent.getStringExtra("academy_name");
         final String normal_name = intent.getStringExtra("normal_name");
-        String director_profile = intent.getStringExtra("director_profile");
-        String normal_profile = intent.getStringExtra("normal_profile");
-
 
         Log.d("academy_name", "name : " + academy_name);
 
@@ -96,59 +93,84 @@ public class ChattingActivity extends AppCompatActivity {
 
         Uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        user_name = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE).child(Uid);
+        user_name = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
 
         user_name.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String type = snapshot.child("type").getValue(String.class);
-                normal_username = snapshot.child("nickName").getValue(String.class);
 
-                ConfirmUserType(type);
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                if (type.equals("일반회원")) {
+                    String uid = dataSnapshot.child("uid").getValue(String.class);
 
-                    findViewById(R.id.send_button).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            final ChatMessage chatMessage = new ChatMessage(mMessageEditText.getText().toString(), normal_username, mPhotoUrl);
+                    if (uid != null) {
+                        if (uid.equals(Uid)) {
+                            String type = dataSnapshot.child("type").getValue(String.class);
+                            normal_username = dataSnapshot.child("nickName").getValue(String.class);
 
-                            mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_username).child(MESSAGES_CHILD).push().setValue(chatMessage);
+                            ConfirmUserType(type);
 
-                            mFirebaseDatabaseReference.child("ChatRoom").child(normal_username).child(academy_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
-                            mMessageEditText.setText("");
+                            if (type.equals("일반회원")) {
+
+                                findViewById(R.id.send_button).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        final ChatMessage chatMessage = new ChatMessage(mMessageEditText.getText().toString(), normal_username, mPhotoUrl);
+
+                                        mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_username).child(MESSAGES_CHILD).push().setValue(chatMessage);
+
+//                                        mFirebaseDatabaseReference.child(Common.ACADEMY_INFO_REFERENCE).child(academy_name).child("token").addValueEventListener(new ValueEventListener() {
+//                                            @Override
+//                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                                String token = snapshot.getValue(String.class);
+//
+//                                            }
+//
+//                                            @Override
+//                                            public void onCancelled(@NonNull DatabaseError error) {
+//
+//                                            }
+//                                        });
+
+                                        mFirebaseDatabaseReference.child("ChatRoom").child(normal_username).child(academy_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
+                                        mMessageEditText.setText("");
+                                    }
+                                });
+
+                            } else {
+//                                final DatabaseReference academy = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE).child(academy_name);
+
+                                findViewById(R.id.send_button).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        final ChatMessage chatMessage = new ChatMessage(mMessageEditText.getText().toString(), academy_name, mPhotoUrl);
+
+                                        Log.d("director", "director name: " + academy_name);
+
+                                        mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
+
+                                        mFirebaseDatabaseReference.child("ChatRoom").child(normal_name).child(academy_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
+                                        mMessageEditText.setText("");
+                                    }
+                                });
+
+//                                academy.addValueEventListener(new ValueEventListener() {
+//                                    @Override
+//                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                        director_username = snapshot.child("academy_name").getValue(String.class);
+//
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                                    }
+//                                });
+
+                            }
                         }
-                    });
-
-                } else {
-                    final DatabaseReference academy = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE).child(Uid).child("academy_name");
-
-                    academy.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            director_username = snapshot.getValue(String.class);
-
-                            findViewById(R.id.send_button).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    final ChatMessage chatMessage = new ChatMessage(mMessageEditText.getText().toString(), director_username, mPhotoUrl);
-
-                                    Log.d("director", "director name: " + normal_name);
-
-                                    mFirebaseDatabaseReference.child("ChatRoom").child(director_username).child(normal_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
-
-                                    mFirebaseDatabaseReference.child("ChatRoom").child(normal_name).child(director_username).child(MESSAGES_CHILD).push().setValue(chatMessage);
-                                    mMessageEditText.setText("");
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-
+                    }
                 }
             }
 
@@ -228,6 +250,37 @@ public class ChattingActivity extends AppCompatActivity {
             User_type = "일반회원";
         }
     }
+
+//    private void sendGson() {
+//        mRootDatabaseReference.child("UserList").child(mFriendUid).child("PushToken").addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                Map<String,String> map= (Map<String, String>) dataSnapshot.getValue(); //상대유저의 토큰
+//                mPushToken = map.get("pushToken");
+//
+//
+//
+//                Log.d(TAG, "상대방의 토큰 : " + mPushToken);
+//                mRootDatabaseReference.child("UserList").child(mFriendUid).addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        Profile profile = dataSnapshot.getValue(Profile.class);
+//                        SendNotification.sendNotification(mPushToken, profile.getNickName(), mFcmMessage);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 
     @Override
     protected void onStart() {

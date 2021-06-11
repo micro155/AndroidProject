@@ -96,14 +96,23 @@ public class ChattingRoom_Normal_Activity extends AppCompatActivity {
 
         init();
 
-        String normal_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference normal_ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE).child(normal_uid);
+        final String normal_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference normal_ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
 
-        normal_ref.child("nickName").addValueEventListener(new ValueEventListener() {
+        normal_ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String nick_name = snapshot.getValue(String.class);
-                showNormalChattingRoomList(nick_name);
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String uid = dataSnapshot.child("uid").getValue(String.class);
+
+                    if (uid != null) {
+                        if (uid.equals(normal_uid)) {
+                            String nick_name = dataSnapshot.child("nickName").getValue(String.class);
+                            showNormalChattingRoomList(nick_name);
+                        }
+                    }
+                }
             }
 
             @Override

@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +56,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -77,8 +79,10 @@ public class UploadActivity extends AppCompatActivity {
     private Button btChoose;
     private Button btUpload;
     private EditText upload_file_name;
-    private ImageView ivPreview;
+//    private ImageView ivPreview;
     private String mUid;
+    private ListView listView;
+    private DirectorFileListViewAdapter adapter;
 
     private Uri filePath;
     DatabaseReference FileDatabase;
@@ -103,12 +107,16 @@ public class UploadActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        final DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+        final DatabaseReference file_ref = FirebaseDatabase.getInstance().getReference("FileList");
+        final Uri photo_url = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+
         init();
 
         btChoose = (Button) findViewById(R.id.bt_choose);
         btUpload = (Button) findViewById(R.id.bt_upload);
         upload_file_name = (EditText) findViewById(R.id.upload_file);
-        ivPreview = (ImageView) findViewById(R.id.iv_preview);
+        listView = (ListView) findViewById(R.id.video_list);
 
         //버튼 클릭 이벤트
         btChoose.setOnClickListener(new View.OnClickListener() {
@@ -126,19 +134,24 @@ public class UploadActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //업로드
-                DatabaseReference academy_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
-                String academy_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                academy_ref.child(academy_uid).child("academy_name").addValueEventListener(new ValueEventListener() {
+                user_ref.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String academy_name = snapshot.getValue(String.class);
-                        String upload_name = upload_file_name.getText().toString();
-                        if (upload_name.isEmpty()) {
-                            Toast.makeText(getApplicationContext(), "파일 이름을 입력하세요.", Toast.LENGTH_SHORT).show();
-                            return;
-                        } else {
-                            uploadFile(academy_name, upload_name);
+
+                        for (DataSnapshot user_profile_snapshot : snapshot.getChildren()) {
+                            String director_profile = user_profile_snapshot.child("director_photo_url").getValue(String.class);
+
+                            if (String.valueOf(photo_url).equals(director_profile)) {
+                                String academy_name = user_profile_snapshot.child("academy_name").getValue(String.class);
+                                String upload_name = upload_file_name.getText().toString();
+                                if (upload_name.isEmpty()) {
+                                    Toast.makeText(getApplicationContext(), "파일 이름을 입력하세요.", Toast.LENGTH_SHORT).show();
+                                    return;
+                                } else {
+                                    uploadFile(academy_name, upload_name);
+                                }
+                            }
                         }
                     }
 
@@ -149,6 +162,65 @@ public class UploadActivity extends AppCompatActivity {
                 });
             }
         });
+
+        final ArrayList<String> file_list = new ArrayList<String>();
+
+        user_ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot profileSnapshot : snapshot.getChildren()) {
+                    String profile_url = profileSnapshot.child("director_photo_url").getValue(String.class);
+
+                    if (String.valueOf(photo_url).equals(profile_url)) {
+                        final String academy_name = profileSnapshot.child("academy_name").getValue(String.class);
+
+                        file_ref.child(academy_name).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                file_list.clear();
+                                for (DataSnapshot fileSnapshot : snapshot.getChildren()) {
+                                    String file_name = fileSnapshot.child("file_name").getValue(String.class);
+
+                                    Log.d("UploadActivity academy", "academy_name : " + academy_name);
+                                    Log.d("UploadActivity TAG", "file_name : " + file_name);
+
+                                    file_list.add(file_name);
+
+                                }
+
+                                adapter = new DirectorFileListViewAdapter(UploadActivity.this, file_list, academy_name, new DirectorFileListViewAdapter.OnFileDeleteClickListener() {
+                                    @Override
+                                    public void onFileDelete(String fileName, String academy_name) {
+                                        adapter.delete_File(fileName, academy_name);
+                                        file_list.clear();
+                                    }
+                                });
+
+                                adapter.notifyDataSetChanged();
+                                listView.setAdapter(adapter);
+
+
+                                Log.d("list array tag", "list array : " + file_list);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
     }
 
     //결과 처리
@@ -161,9 +233,9 @@ public class UploadActivity extends AppCompatActivity {
             Log.d(TAG, "uri:" + String.valueOf(filePath));
             //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
 //                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-            Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(String.valueOf(filePath), MediaStore.Video.Thumbnails.MICRO_KIND);
-            Bitmap thumbnail = ThumbnailUtils.extractThumbnail(bitmap, 360, 480);
-            ivPreview.setImageBitmap(thumbnail);
+//            Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(String.valueOf(filePath), MediaStore.Video.Thumbnails.MICRO_KIND);
+//            Bitmap thumbnail = ThumbnailUtils.extractThumbnail(bitmap, 360, 480);
+//            ivPreview.setImageBitmap(thumbnail);
         }
 
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
@@ -372,7 +444,7 @@ public class UploadActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                            FileDatabase.child(academy_name).child("file_name").setValue(upload_file_name);
+                            FileDatabase.child(academy_name).child(upload_file_name).child("file_name").setValue(upload_file_name);
 
                             progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();

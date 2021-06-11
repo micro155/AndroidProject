@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="학원 정보 등록"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="20dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_academy_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="학원명" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_academy_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="주소" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_academy_tel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:hint="전화번호" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/academy_image_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:hint="업로드 이미지" />
+
+            <Button
+                android:id="@+id/btn_image_choose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="파일 선택"/>
+
+            <!--<ImageView
+                android:id="@+id/academy_image_sample"
+                android:layout_width="300dp"
+                android:layout_height="200dp" /> -->
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+        <Button
+            android:layout_margin="16dp"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_academy_register"
+            style="@style/Widget.MaterialComponents.Button"
+            android:text="학원 정보 등록"
+            android:textSize="15dp"
+            android:textColor="@android:color/white"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
+</ScrollView>

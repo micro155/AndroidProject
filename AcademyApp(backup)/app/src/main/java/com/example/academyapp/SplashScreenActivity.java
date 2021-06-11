@@ -23,8 +23,10 @@ import com.example.academyapp.Model.MemberInfoModel;
 import com.firebase.ui.auth.AuthMethodPickerLayout;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,6 +35,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 
 import java.util.Arrays;
@@ -51,6 +54,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private List<AuthUI.IdpConfig> providers;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener listener;
+    private String mUid;
 
     FirebaseDatabase database;
     DatabaseReference UserInfoRef;
@@ -59,6 +63,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
         init();
 
     }
@@ -102,28 +107,41 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void checkUserFromFirebase() {
-        UserInfoRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()) {
+
+        mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        UserInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String uid = dataSnapshot.child("uid").getValue(String.class);
+
+                    Log.d("uid", "uid : " + uid);
+                    Log.d("mUid", "mUid : " + mUid);
+
+                    if (uid != null) {
+                        if (uid.equals(mUid)) {
                             MemberInfoModel memberInfoModel = snapshot.getValue(MemberInfoModel.class);
                             goToHomeActivity(memberInfoModel);
-                        } else {
-                            showRegisterLayout();
+                            finish();
                         }
                     }
+                }
+                showRegisterLayout();
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(SplashScreenActivity.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(SplashScreenActivity.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void showRegisterLayout() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View itemView = LayoutInflater.from(this).inflate(R.layout.layout_register, null);
+        final String Uid = firebaseAuth.getCurrentUser().getUid();
 
         final RadioGroup rg = itemView.findViewById(R.id.radioGroup);
         final RadioButton normalmem = itemView.findViewById(R.id.normalmember);
@@ -163,52 +181,95 @@ public class SplashScreenActivity extends AppCompatActivity {
                     model.setName(txt_name.getText().toString());
                     model.setPhoneNumber(txt_phone.getText().toString());
                     model.setNickName(txt_nickname.getText().toString());
+                    model.setUid(Uid);
+
                     if (normalmem.isChecked()) {
                         model.setType(normalmem.getText().toString());
+                        FirebaseMessaging.getInstance().getToken()
+                                .addOnCompleteListener(new OnCompleteListener<String>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<String> task) {
+                                        if (!task.isSuccessful()) {
+                                            Log.d("getToken fail tag", "getToken failed", task.getException());
+                                            return;
+                                        }
+
+                                        // Get new Instance ID token
+                                        String token = task.getResult();
+                                        Log.d("token", "token string : " + token);
+                                        model.setToken(token);
+
+                                        UserInfoRef.child(txt_nickname.getText().toString())
+                                                .setValue(model)
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        dialog.dismiss();
+                                                        Toast.makeText(SplashScreenActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                })
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Toast.makeText(SplashScreenActivity.this, "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                                        dialog.dismiss();
+                                                        goToHomeActivity(model);
+                                                    }
+                                                });
+                                    }
+                                });
+
                     } else if (directormem.isChecked()) {
                         model.setType(directormem.getText().toString());
+                        UserInfoRef.child(txt_nickname.getText().toString())
+                                .setValue(model)
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        dialog.dismiss();
+                                        Toast.makeText(SplashScreenActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(SplashScreenActivity.this, "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                        goToHomeActivity(model);
+                                    }
+                                });
                     }
-
-                    UserInfoRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .setValue(model)
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    dialog.dismiss();
-                                    Toast.makeText(SplashScreenActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            })
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(SplashScreenActivity.this, "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                                    dialog.dismiss();
-                                    goToHomeActivity(model);
-                                }
-                            });
                 }
             }
         });
     }
 
     private void goToHomeActivity(MemberInfoModel memberInfoModel) {
+
+        mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Common.currentMember = memberInfoModel;
 
         DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
-        String mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        mRef.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String mType = snapshot.child("type").getValue(String.class);
-                Log.d("value1", "it's type " + mType);
 
-                if (mType.equals("일반회원")) {
-                    startActivity(new Intent(SplashScreenActivity.this, NormalMemberHomeActivity.class));
-                    Log.d("route", "normalMember route");
-                } else {
-                    startActivity(new Intent(SplashScreenActivity.this, DirectorHomeActivity.class));
-                    Log.d("route", "director route");
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String uid = dataSnapshot.child("uid").getValue(String.class);
+
+                    if (uid != null) {
+                        if (uid.equals(mUid)) {
+                            String type = dataSnapshot.child("type").getValue(String.class);
+                            if (type.equals("일반회원")) {
+                                startActivity(new Intent(SplashScreenActivity.this, NormalMemberHomeActivity.class));
+                                Log.d("route", "normalMember route");
+                            } else {
+                                startActivity(new Intent(SplashScreenActivity.this, DirectorHomeActivity.class));
+                                Log.d("route", "director route");
+                            }
+                        }
+                    }
                 }
                 finish();
             }
@@ -227,11 +288,11 @@ public class SplashScreenActivity extends AppCompatActivity {
                 .build();
 
         startActivityForResult(AuthUI.getInstance()
-        .createSignInIntentBuilder()
-        .setAuthMethodPickerLayout(authMethodPickerLayout)
-        .setIsSmartLockEnabled(false)
-        .setAvailableProviders(providers)
-        .build(), LOGIN_REQUEST_CODE);
+                .createSignInIntentBuilder()
+                .setAuthMethodPickerLayout(authMethodPickerLayout)
+                .setIsSmartLockEnabled(false)
+                .setAvailableProviders(providers)
+                .build(), LOGIN_REQUEST_CODE);
     }
 
     private void delaySplashScreen() {

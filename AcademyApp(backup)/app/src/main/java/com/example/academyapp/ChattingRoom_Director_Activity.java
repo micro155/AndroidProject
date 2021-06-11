@@ -96,19 +96,27 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
 
         init();
 
-//        mAppBarConfiguration = new AppBarConfiguration.Builder(
-//                R.id.nav_normalmember_home, R.id.nav_normalmember_logout, R.id.nav_download, R.id.nav_chatting)
-//                .setDrawerLayout(drawer)
-//                .build();
 
-
-        String director_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference academy_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE).child(director_uid);
-        academy_ref.child("academy_name").addValueEventListener(new ValueEventListener() {
+        final String photo_url = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
+        DatabaseReference academy_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+        academy_ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String academy = snapshot.getValue(String.class);
-                showDirectorChattingRoomList(academy);
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String url = dataSnapshot.child("director_photo_url").getValue(String.class);
+
+                    if (url != null) {
+                        if (url.equals(photo_url)) {
+                            String academy_name = dataSnapshot.child("academy_name").getValue(String.class);
+
+                            Log.d("academy name", "name : " + academy_name);
+
+                            showDirectorChattingRoomList(academy_name);
+                        }
+                    }
+                }
+
             }
 
             @Override
@@ -119,89 +127,48 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
 
     }
 
-//    private void ConfirmMemberType() {
-//        final DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
-//        final String Uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//
-//        mRef.child(Uid).child("type").addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                String mType = snapshot.getValue(String.class);
-//                Log.d("value1", "it's type " + mType);
-//
-//                if (mType.equals("일반회원")) {
-//                    mRef.child(Uid).addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                            String normal_nickName = snapshot.child("nickName").getValue(String.class);
-//                            showNormalChattingRoomList(normal_nickName);
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError error) {
-//
-//                        }
-//                    });
-//                } else {
-//                    DatabaseReference academy_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE).child(Uid);
-//                    academy_ref.child("academy_name").addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                            String academy = snapshot.getValue(String.class);
-//                            showDirectorChattingRoomList(academy);
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError error) {
-//
-//                        }
-//                    });
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//            }
-//        });
-//
-//    }
 
     private void showDirectorChattingRoomList(final String academy_name) {
         name_list = new ArrayList<String>();
         messages_array = new ArrayList<String>();
         profile = new ArrayList<String>();
 
-        DatabaseReference director_chat_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(academy_name);
+        if (academy_name != null) {
 
-        director_chat_ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            DatabaseReference director_chat_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(academy_name);
 
-                for (DataSnapshot list_data : snapshot.getChildren()) {
-                    final String normal_list = list_data.getKey();
-                    final String[] normal_profile = {null};
-                    final String[] chat_text = {null};
-                    final String[] name = {null};
+            director_chat_ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                    Log.d("normal list", "list : " + normal_list);
+                    for (DataSnapshot list_data : snapshot.getChildren()) {
+                        final String normal_list = list_data.getKey();
+                        final String[] normal_profile = {null};
+                        final String[] chat_text = {null};
+                        final String[] name = {null};
+
+                        Log.d("normal list", "list : " + normal_list);
 
                         DatabaseReference token_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(academy_name).child(normal_list).child("chat_messages");
 
                         token_ref.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                name_list.clear();
+                                profile.clear();
+                                messages_array.clear();
                                 for (DataSnapshot chat_list : snapshot.getChildren()) {
 
-                                        chat_text[0] = chat_list.child("text").getValue(String.class);
-                                        name[0] = chat_list.child("name").getValue(String.class);
+                                    chat_text[0] = chat_list.child("text").getValue(String.class);
+                                    name[0] = chat_list.child("name").getValue(String.class);
 
-                                        Log.d("chat list", "list : " + chat_text[0]);
-                                        Log.d("name list", "list : " + name[0]);
+                                    Log.d("chat list", "list : " + chat_text[0]);
+                                    Log.d("name list", "list : " + name[0]);
 
-                                        if (normal_list.equals(name[0])) {
-                                            normal_profile[0] = chat_list.child("photoURL").getValue(String.class);
-                                            Log.d("normal_profile list", "list : " + normal_profile[0]);
-                                        }
+                                    if (normal_list.equals(name[0])) {
+                                        normal_profile[0] = chat_list.child("photoURL").getValue(String.class);
+                                        Log.d("normal_profile list", "list : " + normal_profile[0]);
+                                    }
                                 }
 
                                 name_list.add(normal_list);
@@ -232,11 +199,12 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
                     }
                 }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     private void init() {

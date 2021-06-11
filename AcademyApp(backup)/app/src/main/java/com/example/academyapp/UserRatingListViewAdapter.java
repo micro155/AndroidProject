@@ -97,7 +97,6 @@ public class UserRatingListViewAdapter extends BaseAdapter {
         TextView user_rating_view = (TextView) convertView.findViewById(R.id.user_rating_info);
         TextView user_text_view = (TextView) convertView.findViewById(R.id.user_text_info);
 
-
         user_name = user_name_list.get(position);
         user_rating = user_rating_list.get(position);
         user_text = user_text_list.get(position);
@@ -133,27 +132,44 @@ public class UserRatingListViewAdapter extends BaseAdapter {
                 }
             }).start();
 
+//            delete_user_text.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    rating_deleteClickListener.onRatingDelete(user_name);
+//                }
+//
+//            });
+
             DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
-            String Uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            final String Uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
             final View second_convertView = convertView;
-            user_ref.child(Uid).addValueEventListener(new ValueEventListener() {
+            user_ref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    final String normal_name = snapshot.child("nickName").getValue(String.class);
 
-//                    if (normal_name == user_name) {
-//                        Button delete_user_text = (Button) second_convertView.findViewById(R.id.delete_user_text);
-//
-//                        delete_user_text.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                rating_deleteClickListener.onRatingDelete(normal_name);
-//                            }
-//
-//                        });
-//
-//                    }
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        String uid = dataSnapshot.child("uid").getValue(String.class);
+
+                        if (uid != null) {
+                            if (uid.equals(Uid)) {
+                                final String normal_name = dataSnapshot.child("nickName").getValue(String.class);
+
+                                Button delete_user_text = (Button) second_convertView.findViewById(R.id.btn_delete_user_text);
+
+                                delete_user_text.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        rating_deleteClickListener.onRatingDelete(normal_name);
+                                    }
+
+                                });
+
+                            }
+                        }
+                    }
+
+
                 }
 
                 @Override
@@ -182,6 +198,12 @@ public class UserRatingListViewAdapter extends BaseAdapter {
                         academy_ref.child(academy_name).child("user_rating_info").child(normal_name).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
+                                user_name_list.remove(normal_name);
+                                user_rating_list.remove(user_rating);
+                                user_text_list.remove(user_text);
+                                user_profile_list.remove(user_profile);
+                                setItemList(user_name_list, user_rating_list, user_text_list, user_profile_list);
+
                                 Toast.makeText(context, "댓글 삭제 완료", Toast.LENGTH_SHORT).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -199,6 +221,18 @@ public class UserRatingListViewAdapter extends BaseAdapter {
             }
         });
 
+        AlertDialog alertDialog = alert_builder.create();
+
+        alertDialog.show();
+
+    }
+
+    public void setItemList(ArrayList<String> user_name_list, ArrayList<String> user_rating_list, ArrayList<String> user_text_list, ArrayList<String> user_profile_list) {
+        this.user_name_list = user_name_list;
+        this.user_rating_list = user_rating_list;
+        this.user_text_list = user_text_list;
+        this.user_profile_list = user_profile_list;
+        notifyDataSetChanged();
     }
 
 }

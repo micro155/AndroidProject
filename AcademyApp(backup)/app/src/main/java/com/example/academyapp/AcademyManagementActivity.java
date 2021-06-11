@@ -2,7 +2,6 @@ package com.example.academyapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RestrictTo;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,11 +18,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -55,6 +51,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -81,7 +79,6 @@ import retrofit2.Response;
 public class AcademyManagementActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     DatabaseReference AcademyInfoRef;
-    String mUid;
 
     private DrawerLayout drawer;
     private NavigationView navigationView;
@@ -94,7 +91,6 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
     private Uri imageUri;
     private double ResultAddressX;
     private double ResultAddressY;
-    private String uri_string;
     private Uri uri;
     private TextInputEditText academy_image_name;
 
@@ -106,8 +102,6 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_academy_management);
-
-        confirmAcademyInfo();
 
         Toolbar toolbar = findViewById(R.id.toolbar_management);
         setSupportActionBar(toolbar);
@@ -126,6 +120,9 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        AcademyInfoRef = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+
+        confirmAcademyInfo();
 
         MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.map_management);
         if (mapFragment == null) {
@@ -142,87 +139,132 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
     @Override
     public void onMapReady(@NonNull final NaverMap naverMap) {
 
-        if (ResultAddressX != 0 && ResultAddressY != 0) {
+//        if (ResultAddressX != 0 && ResultAddressY != 0) {
 
-            AcademyInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String location = snapshot.child(mUid).child("academy_address").getValue(String.class);
-                    final String academy_name = snapshot.child(mUid).child("academy_name").getValue(String.class);
+//        final Marker marker = new Marker();
+//        final InfoWindow infoWindow = new InfoWindow();
+//
+//
+//        marker.setMap(null);
+//        infoWindow.setMap(null);
 
-                    RetrofitConnection retrofitConnection = new RetrofitConnection();
-                    Call<GeocodingResponse> geocodingResponse = retrofitConnection.mapAPI.getCoordinate(location);
+        Log.d("logic check", "check confirm");
 
-                    Log.d("location", "location : " + location);
+        AcademyInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                    geocodingResponse.enqueue(new Callback<GeocodingResponse>() {
-                        @Override
-                        public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
-                            if (response.isSuccessful()) {
-                                GeocodingResponse geocodingResponse = response.body();
-                                List<GeocodingResponse.RequestAddress> addressList = geocodingResponse.getAddresses();
+                Uri profile_url = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
 
-                                ResultAddressX = addressList.get(0).getX();
-                                ResultAddressY = addressList.get(0).getY();
+                for (DataSnapshot checkSnapshot : snapshot.getChildren()) {
 
-                                Log.d("marker_x", "marker_x : " + ResultAddressX);
-                                Log.d("marker_y", "marker_y : " + ResultAddressY);
+                    String photo_url_string = checkSnapshot.child("director_photo_url").getValue(String.class);
 
-                                CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(ResultAddressY, ResultAddressX)).animate(CameraAnimation.Fly);
-                                naverMap.moveCamera(cameraUpdate);
+                    if (photo_url_string != null) {
 
-                                Marker marker = new Marker();
-                                marker.setPosition(new LatLng(ResultAddressY, ResultAddressX));
-                                marker.setMap(naverMap);
+                        if (String.valueOf(profile_url).equals(photo_url_string)) {
+                            String location = checkSnapshot.child("academy_address").getValue(String.class);
+                            final String academy_name = checkSnapshot.child("academy_name").getValue(String.class);
 
-                                InfoWindow infoWindow = new InfoWindow();
-                                infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(AcademyManagementActivity.this) {
-                                    @NonNull
-                                    @Override
-                                    public CharSequence getText(@NonNull InfoWindow infoWindow) {
-                                        return academy_name;
+                            RetrofitConnection retrofitConnection = new RetrofitConnection();
+                            Call<GeocodingResponse> geocodingResponse = retrofitConnection.mapAPI.getCoordinate(location);
+
+                            Log.d("location", "location : " + location);
+
+                            Log.d("director_url tag", "director_url : " + photo_url_string + ", current_user_url : " + String.valueOf(profile_url));
+
+                            geocodingResponse.enqueue(new Callback<GeocodingResponse>() {
+                                @Override
+                                public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
+                                    if (response.isSuccessful()) {
+                                        GeocodingResponse geocodingResponse = response.body();
+                                        List<GeocodingResponse.RequestAddress> addressList = geocodingResponse.getAddresses();
+
+                                        ResultAddressX = addressList.get(0).getX();
+                                        ResultAddressY = addressList.get(0).getY();
+
+                                        Log.d("marker_x", "marker_x : " + ResultAddressX);
+                                        Log.d("marker_y", "marker_y : " + ResultAddressY);
+
+                                        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(ResultAddressY, ResultAddressX)).animate(CameraAnimation.Fly);
+                                        naverMap.moveCamera(cameraUpdate);
+
+                                        Marker marker = new Marker();
+                                        marker.setPosition(new LatLng(ResultAddressY, ResultAddressX));
+                                        marker.setMap(naverMap);
+
+                                        final InfoWindow infoWindow = new InfoWindow();
+                                        infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(AcademyManagementActivity.this) {
+                                            @NonNull
+                                            @Override
+                                            public CharSequence getText(@NonNull InfoWindow infoWindow) {
+                                                return academy_name;
+                                            }
+                                        });
+                                        infoWindow.open(marker);
+
+                                        infoWindow.setOnClickListener(new Overlay.OnClickListener() {
+                                            @Override
+                                            public boolean onClick(@NonNull Overlay overlay) {
+                                                Intent intent = new Intent(getApplicationContext(), ModifyAcademyInfoActivity.class);
+                                                intent.putExtra("academy_name", academy_name);
+                                                startActivity(intent);
+                                                return true;
+                                            }
+                                        });
                                     }
-                                });
-                                infoWindow.open(marker);
+                                }
 
-                                infoWindow.setOnClickListener(new Overlay.OnClickListener() {
-                                    @Override
-                                    public boolean onClick(@NonNull Overlay overlay) {
-                                        Toast.makeText(AcademyManagementActivity.this, "마커 클릭 확인", Toast.LENGTH_SHORT).show();
-                                        return true;
-                                    }
-                                });
-                            }
+                                @Override
+                                public void onFailure(Call<GeocodingResponse> call, Throwable t) {
+                                    Log.d("ERROR", "Failure Log :" + t.toString());
+                                }
+                            });
                         }
-
-                        @Override
-                        public void onFailure(Call<GeocodingResponse> call, Throwable t) {
-                            Log.d("ERROR", "Failure Log :" + t.toString());
-                        }
-                    });
+                    }
                 }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+            }
 
-                }
-            });
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-        }
+            }
+        });
 
+//        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     private void confirmAcademyInfo() {
 
-        AcademyInfoRef = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
-        mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final Uri photo_url = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
 
-        AcademyInfoRef.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
+        AcademyInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String location = snapshot.child("academy_address").getValue(String.class);
 
-                if (location == null) {
+                boolean isRegistered = false;
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String academy_photo_url = dataSnapshot.child("director_photo_url").getValue(String.class);
+
+                    Log.d("url comparison", "data url : " + academy_photo_url + ", profile url : " + String.valueOf(photo_url));
+
+                    if (String.valueOf(photo_url).equals(academy_photo_url)) {
+                        isRegistered = true;
+                        break;
+                    }
+
+                }
+                Log.d("isRegistered tag", "isRegistered result: " + isRegistered);
+
+                if (isRegistered == false) {
                     showRegisterAcademy();
                 }
             }
@@ -287,8 +329,6 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                     model.setAcademy_image(academy_image_name.getText().toString());
                     model.setDirector_photo_url(director_photo_url);
 
-//                    String address_academy = academy_address.getText().toString();
-
                     final String[] geocoding_string = new String[1];
 
                     RetrofitConnection retrofit_connection = new RetrofitConnection();
@@ -300,7 +340,7 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                         @Override
                         public void run() {
                             try {
-                               GeocodingResponse geocoding = call.execute().body();
+                                GeocodingResponse geocoding = call.execute().body();
                                 List<GeocodingResponse.RequestAddress> geocodeList = geocoding.getAddresses();
 
                                 ResultAddressX = geocodeList.get(0).getX();
@@ -329,52 +369,41 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                         e.printStackTrace();
                     }
 
-
-//                    call.enqueue(new Callback<GeocodingResponse>() {
-//                        @Override
-//                        public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
-//                            if (response.isSuccessful()) {
-//                                GeocodingResponse geocoding = response.body();
-//                                List<GeocodingResponse.RequestAddress> geocodeList = geocoding.getAddresses();
-//
-//                                ResultAddressX = geocodeList.get(0).getX();
-//                                ResultAddressY = geocodeList.get(0).getY();
-//
-//                                Log.d("address_x", "address_x : " + ResultAddressX);
-//                                Log.d("address_y", "address_y : " + ResultAddressY);
-//
-//                                geocoding_string[0] = ResultAddressX + ", " + ResultAddressY;
-//
-//                                Log.d("geocoding_string1", "geocoding_string1 : " + geocoding_string[0]);
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<GeocodingResponse> call, Throwable t) {
-//                            Log.d("geocoding fail", "reason : " + t);
-//                        }
-//                    });
-
                     Log.d("geocoding_string2", "geocoding_string2 : " + geocoding_string[0]);
 
-                    upload_academy_image(academy_image_name.getText().toString());
+                    FirebaseMessaging.getInstance().getToken()
+                            .addOnCompleteListener(new OnCompleteListener<String>() {
+                                @Override
+                                public void onComplete(@NonNull Task<String> task) {
+                                    if (!task.isSuccessful()) {
+                                        Log.d("getToken fail tag", "getToken failed", task.getException());
+                                        return;
+                                    }
 
-                    AcademyInfoRef.child(academy_name.getText().toString()).setValue(model)
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    dialog.dismiss();
-                                    Toast.makeText(AcademyManagementActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            })
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(AcademyManagementActivity.this, "학원 정보 등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                                    dialog.dismiss();
+                                    // Get new Instance ID token
+                                    String token = task.getResult();
+                                    Log.d("token", "token string : " + token);
+                                    model.setToken(token);
+
+                                    upload_academy_image(academy_image_name.getText().toString());
+
+                                    AcademyInfoRef.child(academy_name.getText().toString()).setValue(model)
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    dialog.dismiss();
+                                                    Toast.makeText(AcademyManagementActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            })
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(AcademyManagementActivity.this, "학원 정보 등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                                    dialog.dismiss();
+                                                }
+                                            });
                                 }
                             });
-
                 }
             }
         });
@@ -436,8 +465,6 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-//        uri_string = String.valueOf(uri);
-
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
             if(data != null && data.getData() != null) {
                 imageUri = data.getData();
@@ -451,12 +478,6 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
             Log.d("file_string", "file_string : " + file_name_confirm);
             Log.d("uri", "uri : " + String.valueOf(uri));
 
-//            try {
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-//                preview_image.setImageBitmap(bitmap);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
             academy_image_name.setText(file_name_confirm);
         }
     }
