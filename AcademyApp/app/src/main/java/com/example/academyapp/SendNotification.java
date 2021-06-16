@@ -20,12 +20,15 @@ public class SendNotification {
                 try {
                     OkHttpClient client = new OkHttpClient();
                     JSONObject json = new JSONObject();
-                    JSONObject dataJson = new JSONObject();
-                    dataJson.put("body", message);
-                    dataJson.put("title", title);
-                    json.put("notification", dataJson);
+                    JSONObject back_Json = new JSONObject();
+                    JSONObject fore_Json = new JSONObject();
+                    back_Json.put("body", message);
+                    back_Json.put("title", title);
+                    json.put("notification", back_Json);
                     json.put("to", regToken);
-                    json.put("data", dataJson);
+                    fore_Json.put("title", title);
+                    fore_Json.put("message", message);
+                    json.put("data", fore_Json);
                     RequestBody body = RequestBody.create(JSON, json.toString());
                     Request request = new Request.Builder()
                             .header("Authorization", "key=" + "AAAAj4TTHAg:APA91bFmGHzBt5Fx0CdKUzQJiNrkvDOQlMQpqzBQm2Uw2jXLFWdlrjW6BnNW3flaDEHdTF_mAu0PcxxSm66OmxZ1pF-WBY7LEc2OdOt0y_ctouLxuddU17Jy2o2n29WH_t_G_cw6Winy")
