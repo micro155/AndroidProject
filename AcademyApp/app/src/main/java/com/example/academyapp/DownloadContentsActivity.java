@@ -457,20 +457,23 @@ public class DownloadContentsActivity extends AppCompatActivity {
 
                     final String file_name = fileData.child("file_name").getValue(String.class);
 
-                    Log.d("file_name", "file_name : " + file_name);
+                    if (file_name != null) {
 
-                            academy_list.add(uploader_name);
-                            file_list.add(file_name);
+                        Log.d("file_name", "file_name : " + file_name);
 
-                            Log.d("dataAdapter", "adapter : " + snapshot.getChildren());
-                            adapter = new FileListViewAdapter(DownloadContentsActivity.this, file_list, academy_list, new FileListViewAdapter.OnDownloadClickListener() {
-                                @Override
-                                public void onDownload(String fileName) {
-                                    adapter.download_File(fileName);
-                                }
-                            });
-                            adapter.notifyDataSetChanged();
-                            listView.setAdapter(adapter);
+                        academy_list.add(uploader_name);
+                        file_list.add(file_name);
+
+                        Log.d("dataAdapter", "adapter : " + snapshot.getChildren());
+                        adapter = new FileListViewAdapter(DownloadContentsActivity.this, file_list, academy_list, new FileListViewAdapter.OnDownloadClickListener() {
+                            @Override
+                            public void onDownload(String fileName) {
+                                adapter.download_File(fileName);
+                            }
+                        });
+                        adapter.notifyDataSetChanged();
+                        listView.setAdapter(adapter);
+                    }
                 }
             }
 

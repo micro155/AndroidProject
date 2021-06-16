@@ -117,14 +117,18 @@ public class ChattingActivity extends AppCompatActivity {
                                     public void onClick(View v) {
                                         final ChatMessage chatMessage = new ChatMessage(mMessageEditText.getText().toString(), normal_username, mPhotoUrl);
 
+                                        final String message_text = mMessageEditText.getText().toString();
+
                                         mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_username).child(MESSAGES_CHILD).push().setValue(chatMessage);
 
-                                        mFirebaseDatabaseReference.child(Common.ACADEMY_INFO_REFERENCE).child(academy_name).child("token").addValueEventListener(new ValueEventListener() {
+                                        mFirebaseDatabaseReference.child(Common.ACADEMY_INFO_REFERENCE).child(academy_name).addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                String token = snapshot.getValue(String.class);
+                                                String token = snapshot.child("token").getValue(String.class);
 
-                                                SendNotification.sendNotification(token, normal_username, mMessageEditText.getText().toString());
+                                                Log.d("send token", "send token : " + token);
+
+                                                SendNotification.sendNotification(token, normal_username, message_text);
                                             }
 
                                             @Override

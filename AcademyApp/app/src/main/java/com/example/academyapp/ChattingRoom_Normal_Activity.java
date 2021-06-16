@@ -230,6 +230,10 @@ public class ChattingRoom_Normal_Activity extends AppCompatActivity {
                     token_ref.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            name_list.clear();
+                            profile.clear();
+                            messages_array.clear();
+
                             for (DataSnapshot chat_list : snapshot.getChildren()) {
 
                                 chat_text[0] = chat_list.child("text").getValue(String.class);
