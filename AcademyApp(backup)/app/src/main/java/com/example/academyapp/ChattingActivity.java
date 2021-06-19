@@ -117,20 +117,25 @@ public class ChattingActivity extends AppCompatActivity {
                                     public void onClick(View v) {
                                         final ChatMessage chatMessage = new ChatMessage(mMessageEditText.getText().toString(), normal_username, mPhotoUrl);
 
+                                        final String normal_message_text = mMessageEditText.getText().toString();
+
                                         mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_username).child(MESSAGES_CHILD).push().setValue(chatMessage);
 
-//                                        mFirebaseDatabaseReference.child(Common.ACADEMY_INFO_REFERENCE).child(academy_name).child("token").addValueEventListener(new ValueEventListener() {
-//                                            @Override
-//                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                                String token = snapshot.getValue(String.class);
-//
-//                                            }
-//
-//                                            @Override
-//                                            public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                            }
-//                                        });
+                                        mFirebaseDatabaseReference.child(Common.ACADEMY_INFO_REFERENCE).child(academy_name).addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                String token = snapshot.child("token").getValue(String.class);
+
+                                                Log.d("send token", "director send token : " + token);
+
+                                                SendNotification.sendNotification(token, normal_username, normal_message_text);
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
 
                                         mFirebaseDatabaseReference.child("ChatRoom").child(normal_username).child(academy_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
                                         mMessageEditText.setText("");
@@ -145,9 +150,27 @@ public class ChattingActivity extends AppCompatActivity {
                                     public void onClick(View v) {
                                         final ChatMessage chatMessage = new ChatMessage(mMessageEditText.getText().toString(), academy_name, mPhotoUrl);
 
+                                        final String director_message_text = mMessageEditText.getText().toString();
+
                                         Log.d("director", "director name: " + academy_name);
 
                                         mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
+
+                                        mFirebaseDatabaseReference.child(Common.MEMBER_INFO_REFERENCE).child(normal_name).addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                String token = snapshot.child("token").getValue(String.class);
+
+                                                Log.d("send token", "normal_member send token : " + token);
+
+                                                SendNotification.sendNotification(token, academy_name, director_message_text);
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
 
                                         mFirebaseDatabaseReference.child("ChatRoom").child(normal_name).child(academy_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
                                         mMessageEditText.setText("");

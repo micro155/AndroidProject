@@ -148,98 +148,98 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
 //        marker.setMap(null);
 //        infoWindow.setMap(null);
 
-        Log.d("logic check", "check confirm");
+            Log.d("logic check", "check confirm");
 
-        AcademyInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            AcademyInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                Uri profile_url = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+                    Uri profile_url = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
 
-                for (DataSnapshot checkSnapshot : snapshot.getChildren()) {
+                    for (DataSnapshot checkSnapshot : snapshot.getChildren()) {
 
-                    String photo_url_string = checkSnapshot.child("director_photo_url").getValue(String.class);
+                        String photo_url_string = checkSnapshot.child("director_photo_url").getValue(String.class);
 
-                    if (photo_url_string != null) {
+                        if (photo_url_string != null) {
 
-                        if (String.valueOf(profile_url).equals(photo_url_string)) {
-                            String location = checkSnapshot.child("academy_address").getValue(String.class);
-                            final String academy_name = checkSnapshot.child("academy_name").getValue(String.class);
+                            if (String.valueOf(profile_url).equals(photo_url_string)) {
+                                String location = checkSnapshot.child("academy_address").getValue(String.class);
+                                final String academy_name = checkSnapshot.child("academy_name").getValue(String.class);
 
-                            RetrofitConnection retrofitConnection = new RetrofitConnection();
-                            Call<GeocodingResponse> geocodingResponse = retrofitConnection.mapAPI.getCoordinate(location);
+                                RetrofitConnection retrofitConnection = new RetrofitConnection();
+                                Call<GeocodingResponse> geocodingResponse = retrofitConnection.mapAPI.getCoordinate(location);
 
-                            Log.d("location", "location : " + location);
+                                Log.d("location", "location : " + location);
 
-                            Log.d("director_url tag", "director_url : " + photo_url_string + ", current_user_url : " + String.valueOf(profile_url));
+                                Log.d("director_url tag", "director_url : " + photo_url_string + ", current_user_url : " + String.valueOf(profile_url));
 
-                            geocodingResponse.enqueue(new Callback<GeocodingResponse>() {
-                                @Override
-                                public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
-                                    if (response.isSuccessful()) {
-                                        GeocodingResponse geocodingResponse = response.body();
-                                        List<GeocodingResponse.RequestAddress> addressList = geocodingResponse.getAddresses();
+                                geocodingResponse.enqueue(new Callback<GeocodingResponse>() {
+                                    @Override
+                                    public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
+                                        if (response.isSuccessful()) {
+                                            GeocodingResponse geocodingResponse = response.body();
+                                            List<GeocodingResponse.RequestAddress> addressList = geocodingResponse.getAddresses();
 
-                                        ResultAddressX = addressList.get(0).getX();
-                                        ResultAddressY = addressList.get(0).getY();
+                                            ResultAddressX = addressList.get(0).getX();
+                                            ResultAddressY = addressList.get(0).getY();
 
-                                        Log.d("marker_x", "marker_x : " + ResultAddressX);
-                                        Log.d("marker_y", "marker_y : " + ResultAddressY);
+                                            Log.d("marker_x", "marker_x : " + ResultAddressX);
+                                            Log.d("marker_y", "marker_y : " + ResultAddressY);
 
-                                        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(ResultAddressY, ResultAddressX)).animate(CameraAnimation.Fly);
-                                        naverMap.moveCamera(cameraUpdate);
+                                            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(ResultAddressY, ResultAddressX)).animate(CameraAnimation.Fly);
+                                            naverMap.moveCamera(cameraUpdate);
 
-                                        Marker marker = new Marker();
-                                        marker.setPosition(new LatLng(ResultAddressY, ResultAddressX));
-                                        marker.setMap(naverMap);
+                                            Marker marker = new Marker();
+                                            marker.setPosition(new LatLng(ResultAddressY, ResultAddressX));
+                                            marker.setMap(naverMap);
 
-                                        final InfoWindow infoWindow = new InfoWindow();
-                                        infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(AcademyManagementActivity.this) {
-                                            @NonNull
-                                            @Override
-                                            public CharSequence getText(@NonNull InfoWindow infoWindow) {
-                                                return academy_name;
-                                            }
-                                        });
-                                        infoWindow.open(marker);
+                                            final InfoWindow infoWindow = new InfoWindow();
+                                            infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(AcademyManagementActivity.this) {
+                                                @NonNull
+                                                @Override
+                                                public CharSequence getText(@NonNull InfoWindow infoWindow) {
+                                                    return academy_name;
+                                                }
+                                            });
+                                            infoWindow.open(marker);
 
-                                        infoWindow.setOnClickListener(new Overlay.OnClickListener() {
-                                            @Override
-                                            public boolean onClick(@NonNull Overlay overlay) {
-                                                Intent intent = new Intent(getApplicationContext(), ModifyAcademyInfoActivity.class);
-                                                intent.putExtra("academy_name", academy_name);
-                                                startActivity(intent);
-                                                return true;
-                                            }
-                                        });
+                                            infoWindow.setOnClickListener(new Overlay.OnClickListener() {
+                                                @Override
+                                                public boolean onClick(@NonNull Overlay overlay) {
+                                                    Intent intent = new Intent(getApplicationContext(), ModifyAcademyInfoActivity.class);
+                                                    intent.putExtra("academy_name", academy_name);
+                                                    startActivity(intent);
+                                                    return true;
+                                                }
+                                            });
+                                        }
                                     }
-                                }
 
-                                @Override
-                                public void onFailure(Call<GeocodingResponse> call, Throwable t) {
-                                    Log.d("ERROR", "Failure Log :" + t.toString());
-                                }
-                            });
+                                    @Override
+                                    public void onFailure(Call<GeocodingResponse> call, Throwable t) {
+                                        Log.d("ERROR", "Failure Log :" + t.toString());
+                                    }
+                                });
+                            }
                         }
                     }
+
                 }
 
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+                }
+            });
 
 //        }
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//    }
 
     private void confirmAcademyInfo() {
 
@@ -340,7 +340,7 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                         @Override
                         public void run() {
                             try {
-                                GeocodingResponse geocoding = call.execute().body();
+                               GeocodingResponse geocoding = call.execute().body();
                                 List<GeocodingResponse.RequestAddress> geocodeList = geocoding.getAddresses();
 
                                 ResultAddressX = geocodeList.get(0).getX();

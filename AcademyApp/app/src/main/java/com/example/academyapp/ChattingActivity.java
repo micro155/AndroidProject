@@ -143,7 +143,6 @@ public class ChattingActivity extends AppCompatActivity {
                                 });
 
                             } else {
-//                                final DatabaseReference academy = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE).child(academy_name);
 
                                 findViewById(R.id.send_button).setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -176,20 +175,6 @@ public class ChattingActivity extends AppCompatActivity {
                                         mMessageEditText.setText("");
                                     }
                                 });
-
-//                                academy.addValueEventListener(new ValueEventListener() {
-//                                    @Override
-//                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                        director_username = snapshot.child("academy_name").getValue(String.class);
-//
-//
-//                                    }
-//
-//                                    @Override
-//                                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                    }
-//                                });
 
                             }
                         }
@@ -273,37 +258,6 @@ public class ChattingActivity extends AppCompatActivity {
             User_type = "일반회원";
         }
     }
-
-//    private void sendGson() {
-//        mRootDatabaseReference.child("UserList").child(mFriendUid).child("PushToken").addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                Map<String,String> map= (Map<String, String>) dataSnapshot.getValue(); //상대유저의 토큰
-//                mPushToken = map.get("pushToken");
-//
-//
-//
-//                Log.d(TAG, "상대방의 토큰 : " + mPushToken);
-//                mRootDatabaseReference.child("UserList").child(mFriendUid).addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        Profile profile = dataSnapshot.getValue(Profile.class);
-//                        SendNotification.sendNotification(mPushToken, profile.getNickName(), mFcmMessage);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
 
     @Override
     protected void onStart() {

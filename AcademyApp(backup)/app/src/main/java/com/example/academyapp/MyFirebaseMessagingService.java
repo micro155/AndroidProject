@@ -12,9 +12,6 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-import com.firebase.jobdispatcher.FirebaseJobDispatcher;
-import com.firebase.jobdispatcher.GooglePlayDriver;
-import com.firebase.jobdispatcher.Job;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -31,11 +28,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
-        if (true) {
-            scheduleJob();
-        } else {
-            handleNow();
-        }
     }
     // [END receive_message]
 
@@ -59,18 +51,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.e(TAG, "here ! sendRegistrationToServer! token is " + token);
     }
 
-    private void scheduleJob() {
-        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
-        Job myJob = dispatcher.newJobBuilder()
-                .setService(MyJobService.class)
-                .setTag("my-job-tag")
-                .build();
-        dispatcher.schedule(myJob);
-    }
-
-    private void handleNow() {
-        Log.d(TAG, "Short lived task is done.");
-    }
 
 
 

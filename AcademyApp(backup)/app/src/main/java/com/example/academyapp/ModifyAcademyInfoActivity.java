@@ -21,8 +21,10 @@ import android.widget.Toast;
 import com.example.academyapp.Model.AcademyInfo;
 import com.example.academyapp.RestAPI.GeocodingResponse;
 import com.example.academyapp.RestAPI.RetrofitConnection;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +32,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -191,59 +194,68 @@ public class ModifyAcademyInfoActivity extends AppCompatActivity {
 
 
                         FirebaseStorage storage = FirebaseStorage.getInstance();
-                        StorageReference storageRef = storage.getReferenceFromUrl("gs://academyapp-d7c41.appspot.com").child("academy_images/" + modify_academy_image_name.getText().toString());
+                        final StorageReference storageRef = storage.getReferenceFromUrl("gs://academyapp-d7c41.appspot.com").child("academy_images/" + modify_academy_image_name.getText().toString());
 
-                        storageRef.putFile(uri)
-                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        FirebaseMessaging.getInstance().getToken()
+                                .addOnCompleteListener(new OnCompleteListener<String>() {
                                     @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    public void onComplete(@NonNull Task<String> task) {
+                                        if (!task.isSuccessful()) {
+                                            Log.d("getToken fail tag", "getToken failed", task.getException());
+                                            return;
+                                        }
 
-                                        progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기
+                                        // Get new Instance ID token
+                                        String token = task.getResult();
+                                        Log.d("token", "token string : " + token);
+                                        model.setToken(token);
 
-                                        academy_ref.child(modify_academy_name.getText().toString()).setValue(model)
-                                                .addOnFailureListener(new OnFailureListener() {
+                                        storageRef.putFile(uri)
+                                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                                     @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Toast.makeText(ModifyAcademyInfoActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                                        progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기
+
+                                                        academy_ref.child(modify_academy_name.getText().toString()).setValue(model)
+                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception e) {
+                                                                        Toast.makeText(ModifyAcademyInfoActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                })
+                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void aVoid) {
+                                                                        academy_image_ref.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                            @Override
+                                                                            public void onSuccess(Void aVoid) {
+                                                                                Toast.makeText(ModifyAcademyInfoActivity.this, "학원 정보가 수정되었습니다.", Toast.LENGTH_SHORT).show();
+                                                                                Intent intent = new Intent(ModifyAcademyInfoActivity.this, AcademyManagementActivity.class);
+                                                                                startActivity(intent);
+                                                                                finish();
+                                                                            }
+                                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                                            @Override
+                                                                            public void onFailure(@NonNull Exception e) {
+                                                                                Toast.makeText(getApplicationContext(), e.getMessage() + "으로 인한 기존 이미지 파일 삭제 실패", Toast.LENGTH_SHORT).show();
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                });
                                                     }
-                                                })
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        academy_image_ref.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                            @Override
-                                                            public void onSuccess(Void aVoid) {
-                                                                Toast.makeText(ModifyAcademyInfoActivity.this, "학원 정보가 수정되었습니다.", Toast.LENGTH_SHORT).show();
-                                                                Intent intent = new Intent(ModifyAcademyInfoActivity.this, AcademyManagementActivity.class);
-                                                                startActivity(intent);
-                                                                finish();
-                                                            }
-                                                        }).addOnFailureListener(new OnFailureListener() {
-                                                            @Override
-                                                            public void onFailure(@NonNull Exception e) {
-                                                                Toast.makeText(getApplicationContext(), e.getMessage() + "으로 인한 기존 이미지 파일 삭제 실패", Toast.LENGTH_SHORT).show();
-                                                            }
-                                                        });
-                                                    }
-                                                });
-                                    }
-                                })
-                                //실패시
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                                //진행중
-                                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-//                            @SuppressWarnings("VisibleForTests") //이걸 넣어 줘야 아랫줄에 에러가 사라진다.
-//                                    double progress = 100 * (taskSnapshot.getBytesTransferred() /  taskSnapshot.getTotalByteCount());
-                                        //dialog에 진행률을 퍼센트로 출력해 준다
-                                        progressDialog.setMessage("잠시만 기다려주세요.");
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                progressDialog.dismiss();
+                                                Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                                progressDialog.setMessage("잠시만 기다려주세요.");
+                                            }
+                                        });
                                     }
                                 });
                     } else if (uri == null){
