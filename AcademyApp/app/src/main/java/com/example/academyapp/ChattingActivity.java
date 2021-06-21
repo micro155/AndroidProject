@@ -44,7 +44,7 @@ public class ChattingActivity extends AppCompatActivity {
     private EditText mMessageEditText;
     private RecyclerView mMessageRecyclerView;
     private String normal_username;
-    private String director_username;
+//    private String director_username;
     private String mPhotoUrl;
     private String chatUser;
     private String User_type;
@@ -189,7 +189,7 @@ public class ChattingActivity extends AppCompatActivity {
         });
 
         if (academy_name != null) {
-
+            Log.d("academy_name course","academy_name not null");
             Query query = mFirebaseDatabaseReference.child("ChatRoom").child(normal_name).child(academy_name).child(MESSAGES_CHILD);
             FirebaseRecyclerOptions<ChatMessage> options = new FirebaseRecyclerOptions.Builder<ChatMessage>().setQuery(query, ChatMessage.class).build();
 
@@ -217,8 +217,15 @@ public class ChattingActivity extends AppCompatActivity {
 
             mMessageRecyclerView.setLayoutManager(new LinearLayoutManager(ChattingActivity.this));
             mMessageRecyclerView.setAdapter(mFirebaseAdapter);
+            mMessageRecyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mMessageRecyclerView.scrollToPosition(mMessageRecyclerView.getAdapter().getItemCount() - 1);
+                }
+            });
 
         } else if (normal_name != null) {
+            Log.d("normal_name course","normal_name not null");
             Query query = mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_name).child(MESSAGES_CHILD);
             FirebaseRecyclerOptions<ChatMessage> options = new FirebaseRecyclerOptions.Builder<ChatMessage>().setQuery(query, ChatMessage.class).build();
 
@@ -246,6 +253,12 @@ public class ChattingActivity extends AppCompatActivity {
 
             mMessageRecyclerView.setLayoutManager(new LinearLayoutManager(ChattingActivity.this));
             mMessageRecyclerView.setAdapter(mFirebaseAdapter);
+            mMessageRecyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mMessageRecyclerView.scrollToPosition(mMessageRecyclerView.getAdapter().getItemCount() - 1);
+                }
+            });
         }
 
 

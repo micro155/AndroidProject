@@ -264,14 +264,18 @@ public class SplashScreenActivity extends AppCompatActivity {
                             if (type.equals("일반회원")) {
                                 startActivity(new Intent(SplashScreenActivity.this, NormalMemberHomeActivity.class));
                                 Log.d("route", "normalMember route");
+//                                finish();
+                                break;
                             } else {
                                 startActivity(new Intent(SplashScreenActivity.this, DirectorHomeActivity.class));
                                 Log.d("route", "director route");
+//                                finish();
+                                break;
                             }
                         }
                     }
                 }
-                finish();
+//                finish();
             }
 
             @Override
