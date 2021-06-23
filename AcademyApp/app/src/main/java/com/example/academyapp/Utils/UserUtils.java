@@ -14,10 +14,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Map;
 
 public class UserUtils {
-    public static void updateUser(final View view, Map<String, Object> updateData) {
+    public static void updateUser(final View view, Map<String, Object> updateData, String user_name) {
         FirebaseDatabase.getInstance()
                 .getReference(Common.MEMBER_INFO_REFERENCE)
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(user_name)
                 .updateChildren(updateData)
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
