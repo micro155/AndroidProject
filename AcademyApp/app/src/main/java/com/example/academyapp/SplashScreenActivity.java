@@ -76,9 +76,9 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        if(firebaseAuth != null && listener != null) {
-            firebaseAuth.removeAuthStateListener(listener);
-        }
+//        if(firebaseAuth != null && listener != null) {
+//            firebaseAuth.removeAuthStateListener(listener);
+//        }
         super.onStop();
     }
 
@@ -111,31 +111,35 @@ public class SplashScreenActivity extends AppCompatActivity {
         mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         UserInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean check = false;
 
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            String uid = dataSnapshot.child("uid").getValue(String.class);
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String uid = dataSnapshot.child("uid").getValue(String.class);
 
-                            Log.d("uid", "uid : " + uid);
-                            Log.d("mUid", "mUid : " + mUid);
+                    Log.d("uid", "uid : " + uid);
+                    Log.d("mUid", "mUid : " + mUid);
 
-                            if (uid != null) {
-                                if (uid.equals(mUid)) {
-                                    MemberInfoModel memberInfoModel = snapshot.getValue(MemberInfoModel.class);
-                                    goToHomeActivity(memberInfoModel);
-                                    finish();
-                                }
-                            }
+                    if (uid != null) {
+                        if (uid.equals(mUid)) {
+                            MemberInfoModel memberInfoModel = dataSnapshot.getValue(MemberInfoModel.class);
+                            goToHomeActivity(memberInfoModel);
+                            check = true;
+//                            finish();
                         }
-                        showRegisterLayout();
                     }
+                }
+                if (!check) {
+                    showRegisterLayout();
+                }
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(SplashScreenActivity.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(SplashScreenActivity.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void showRegisterLayout() {
@@ -262,15 +266,15 @@ public class SplashScreenActivity extends AppCompatActivity {
                         if (uid.equals(mUid)) {
                             String type = dataSnapshot.child("type").getValue(String.class);
                             if (type.equals("일반회원")) {
-                                startActivity(new Intent(SplashScreenActivity.this, NormalMemberHomeActivity.class));
                                 Log.d("route", "normalMember route");
-//                                finish();
-                                break;
+                                startActivity(new Intent(SplashScreenActivity.this, NormalMemberHomeActivity.class));
+                                finish();
+//                                break;
                             } else {
-                                startActivity(new Intent(SplashScreenActivity.this, DirectorHomeActivity.class));
                                 Log.d("route", "director route");
-//                                finish();
-                                break;
+                                startActivity(new Intent(SplashScreenActivity.this, DirectorHomeActivity.class));
+                                finish();
+//                                break;
                             }
                         }
                     }
@@ -292,11 +296,11 @@ public class SplashScreenActivity extends AppCompatActivity {
                 .build();
 
         startActivityForResult(AuthUI.getInstance()
-        .createSignInIntentBuilder()
-        .setAuthMethodPickerLayout(authMethodPickerLayout)
-        .setIsSmartLockEnabled(false)
-        .setAvailableProviders(providers)
-        .build(), LOGIN_REQUEST_CODE);
+                .createSignInIntentBuilder()
+                .setAuthMethodPickerLayout(authMethodPickerLayout)
+                .setIsSmartLockEnabled(false)
+                .setAvailableProviders(providers)
+                .build(), LOGIN_REQUEST_CODE);
     }
 
     private void delaySplashScreen() {
