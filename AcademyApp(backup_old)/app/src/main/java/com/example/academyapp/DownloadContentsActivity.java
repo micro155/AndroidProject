@@ -157,46 +157,58 @@ public class DownloadContentsActivity extends AppCompatActivity {
     private void confirmContractVideo() {
 
         Normal_Ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
-        String normal_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String normal_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         Contracts_Ref = FirebaseDatabase.getInstance().getReference("Contracts");
 
-        Normal_Ref.child(normal_uid).child("nickName").addValueEventListener(new ValueEventListener() {
+        Normal_Ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                final String normal_name = snapshot.getValue(String.class);
 
-                Contracts_Ref.child(normal_name).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                        String normal_user = null;
+                    String uid = dataSnapshot.child("uid").getValue(String.class);
 
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            normal_user = dataSnapshot.child("downloader_nickName").getValue(String.class);
+                    if (uid != null) {
+                        if (uid.equals(normal_uid)) {
+                            final String normal_name = dataSnapshot.child("nickName").getValue(String.class);
 
-                            Log.d("normal_user", "normal_user : " + normal_user);
+                            Contracts_Ref.child(normal_name).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                    String normal_user = null;
+
+                                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                        normal_user = dataSnapshot.child("downloader_nickName").getValue(String.class);
+
+                                        Log.d("normal_user", "normal_user : " + normal_user);
+                                    }
+
+                                    if (normal_user != null && normal_user.equals(normal_name)) {
+                                        for (DataSnapshot uploaderSnapshot : snapshot.getChildren()) {
+                                            String uploader_name = uploaderSnapshot.child("academy_name").getValue(String.class);
+
+                                            Log.d("uploader_name", "uploader_name : " + uploader_name);
+
+                                            showDownloadContentsList(uploader_name);
+                                        }
+                                    } else if (normal_user == null) {
+                                        RegisterContractVideo();
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                         }
-
-                        if (normal_user != null && normal_user.equals(normal_name)) {
-                            for (DataSnapshot uploaderSnapshot : snapshot.getChildren()) {
-                                String uploader_name = uploaderSnapshot.child("academy_name").getValue(String.class);
-
-                                Log.d("uploader_name", "uploader_name : " + uploader_name);
-
-                                showDownloadContentsList(uploader_name);
-                            }
-                        } else if (normal_user == null) {
-                            RegisterContractVideo();
-                        }
-
                     }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                }
 
-                    }
-                });
 
             }
 
@@ -259,42 +271,51 @@ public class DownloadContentsActivity extends AppCompatActivity {
                     model.setDownloader_name(downloader_name.getText().toString());
                     model.setDownloader_phone(downloader_phone.getText().toString());
 
-                    normal_ref.child(normal_uid).addValueEventListener(new ValueEventListener() {
+                    normal_ref.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String normal_nickName = snapshot.child("nickName").getValue(String.class);
 
-                            Contracts_Ref.child(normal_nickName).setValue(model)
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            dialog.dismiss();
-                                            Toast.makeText(DownloadContentsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    })
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                String uid = dataSnapshot.child("uid").getValue(String.class);
+
+                                if (uid != null) {
+                                    if (uid.equals(normal_uid)) {
+                                        String normal_nickName = dataSnapshot.child("nickName").getValue(String.class);
+
+                                        Contracts_Ref.child(normal_nickName).setValue(model)
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        dialog.dismiss();
+                                                        Toast.makeText(DownloadContentsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                })
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
 //                                            Toast.makeText(DownloadContentsActivity.this, "학원 정보 등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
 //                                            dialog.dismiss();
-                                        }
-                                    });
+                                                    }
+                                                });
 
-                            Contracts_Ref.child(academy_name.getText().toString()).setValue(model)
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            dialog.dismiss();
-                                            Toast.makeText(DownloadContentsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    })
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Toast.makeText(DownloadContentsActivity.this, "학원 정보 등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                                            dialog.dismiss();
-                                        }
-                                    });
+                                        Contracts_Ref.child(academy_name.getText().toString()).setValue(model)
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        dialog.dismiss();
+                                                        Toast.makeText(DownloadContentsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                })
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Toast.makeText(DownloadContentsActivity.this, "학원 정보 등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                    }
+                                }
+                            }
                         }
 
                         @Override
@@ -361,44 +382,53 @@ public class DownloadContentsActivity extends AppCompatActivity {
                     model.setDownloader_name(downloader_name.getText().toString());
                     model.setDownloader_phone(downloader_phone.getText().toString());
 
-                    normal_ref.child(normal_uid).addValueEventListener(new ValueEventListener() {
+                    normal_ref.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String normal_nickName = snapshot.child("nickName").getValue(String.class);
 
-                            model.setDownloader_nickName(normal_nickName);
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                String uid = dataSnapshot.child("uid").getValue(String.class);
 
-                            Contracts_Ref.child(normal_nickName).push().setValue(model)
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            dialog.dismiss();
-                                            Toast.makeText(DownloadContentsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    })
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
+                                if (uid != null) {
+                                    if (uid.equals(normal_uid)) {
+                                        String normal_nickName = dataSnapshot.child("nickName").getValue(String.class);
+
+                                        model.setDownloader_nickName(normal_nickName);
+
+                                        Contracts_Ref.child(normal_nickName).push().setValue(model)
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        dialog.dismiss();
+                                                        Toast.makeText(DownloadContentsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                })
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
 //                                            Toast.makeText(DownloadContentsActivity.this, "학원 정보 등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
 //                                            dialog.dismiss();
-                                        }
-                                    });
+                                                    }
+                                                });
 
-                            Contracts_Ref.child(academy_name.getText().toString()).push().setValue(model)
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            dialog.dismiss();
-                                            Toast.makeText(DownloadContentsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    })
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Toast.makeText(DownloadContentsActivity.this, "학원 정보 등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                                            dialog.dismiss();
-                                        }
-                                    });
+                                        Contracts_Ref.child(academy_name.getText().toString()).push().setValue(model)
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        dialog.dismiss();
+                                                        Toast.makeText(DownloadContentsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                })
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Toast.makeText(DownloadContentsActivity.this, "학원 정보 등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                    }
+                                }
+                            }
                         }
 
                         @Override
@@ -427,20 +457,23 @@ public class DownloadContentsActivity extends AppCompatActivity {
 
                     final String file_name = fileData.child("file_name").getValue(String.class);
 
-                    Log.d("file_name", "file_name : " + file_name);
+                    if (file_name != null) {
 
-                            academy_list.add(uploader_name);
-                            file_list.add(file_name);
+                        Log.d("file_name", "file_name : " + file_name);
 
-                            Log.d("dataAdapter", "adapter : " + snapshot.getChildren());
-                            adapter = new FileListViewAdapter(DownloadContentsActivity.this, file_list, academy_list, new FileListViewAdapter.OnDownloadClickListener() {
-                                @Override
-                                public void onDownload(String fileName) {
-                                    adapter.download_File(fileName);
-                                }
-                            });
-                            adapter.notifyDataSetChanged();
-                            listView.setAdapter(adapter);
+                        academy_list.add(uploader_name);
+                        file_list.add(file_name);
+
+                        Log.d("dataAdapter", "adapter : " + snapshot.getChildren());
+                        adapter = new FileListViewAdapter(DownloadContentsActivity.this, file_list, academy_list, new FileListViewAdapter.OnDownloadClickListener() {
+                            @Override
+                            public void onDownload(String fileName) {
+                                adapter.download_File(fileName);
+                            }
+                        });
+                        adapter.notifyDataSetChanged();
+                        listView.setAdapter(adapter);
+                    }
                 }
             }
 

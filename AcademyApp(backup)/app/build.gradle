@@ -84,4 +84,7 @@ dependencies {
     //Needle Library
     implementation 'com.zsoltsafrany:needle:1.0.0'
 
+    //FirebaseJobDispatcher
+    implementation 'com.firebase:firebase-jobdispatcher:0.6.0'
+
 }

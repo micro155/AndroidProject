@@ -83,76 +83,65 @@ public class AcademyDetailActivity extends AppCompatActivity {
         btn_user_rating = (Button) findViewById(R.id.btn_user_rating);
         user_rating_listView = (ListView) findViewById(R.id.user_rating_list);
 
-        user_ref.addValueEventListener(new ValueEventListener() {
+        user_ref.child(user_auth).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String user_type = snapshot.child("type").getValue(String.class);
 
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    String user_uid = dataSnapshot.child("uid").getValue(String.class);
+                if(user_type.equals("일반회원")) {
 
-                    if (user_uid != null) {
-                        if (user_uid.equals(user_auth)) {
-                            String user_type = dataSnapshot.child("type").getValue(String.class);
+                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(AcademyDetailActivity.this, android.R.layout.simple_spinner_dropdown_item, rating_items);
 
-                            if(user_type.equals("일반회원")) {
-
-                                ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(AcademyDetailActivity.this, android.R.layout.simple_spinner_dropdown_item, rating_items);
-
-                                user_rating_input_spinner.setAdapter(spinner_adapter);
-                                user_rating_input_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                    @Override
-                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                        user_rating_input = rating_items[position];
-                                    }
-
-                                    @Override
-                                    public void onNothingSelected(AdapterView<?> parent) {
-
-                                    }
-                                });
-
-                                btn_user_rating.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-
-                                        user_ref.child(user_auth).addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                String user_name = snapshot.child("nickName").getValue(String.class);
-
-                                                Uri user_profile_uri = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
-
-                                                Rating_Info model = new Rating_Info();
-
-                                                model.setUser_profile(String.valueOf(user_profile_uri));
-                                                model.setUser_name(user_name);
-                                                model.setUser_rating(user_rating_input);
-                                                model.setUser_text(edit_user_text.getText().toString());
-
-                                                academy_ref.child(academy).child("user_rating_info").child(user_name).setValue(model);
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                            }
-                                        });
-
-                                    }
-                                });
-
-                                showDetailAcademy(academy);
-                            } else {
-                                user_rating_input_spinner.setVisibility(View.INVISIBLE);
-                                edit_user_text.setVisibility(View.INVISIBLE);
-                                btn_user_rating.setVisibility(View.INVISIBLE);
-                                showDetailAcademy(academy);
-                            }
+                    user_rating_input_spinner.setAdapter(spinner_adapter);
+                    user_rating_input_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            user_rating_input = rating_items[position];
                         }
-                    }
 
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+
+                    btn_user_rating.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            user_ref.child(user_auth).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    String user_name = snapshot.child("nickName").getValue(String.class);
+
+                                    Uri user_profile_uri = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+
+                                    Rating_Info model = new Rating_Info();
+
+                                    model.setUser_profile(String.valueOf(user_profile_uri));
+                                    model.setUser_name(user_name);
+                                    model.setUser_rating(user_rating_input);
+                                    model.setUser_text(edit_user_text.getText().toString());
+
+                                    academy_ref.child(academy).child("user_rating_info").child(user_name).setValue(model);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
+                        }
+                    });
+
+                    showDetailAcademy(academy);
+                } else {
+                    user_rating_input_spinner.setVisibility(View.INVISIBLE);
+                    edit_user_text.setVisibility(View.INVISIBLE);
+                    btn_user_rating.setVisibility(View.INVISIBLE);
+                    showDetailAcademy(academy);
                 }
-
             }
 
             @Override

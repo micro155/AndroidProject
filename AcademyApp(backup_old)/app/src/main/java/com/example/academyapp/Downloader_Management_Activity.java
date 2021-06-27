@@ -121,28 +121,30 @@ public class Downloader_Management_Activity extends AppCompatActivity {
         final ArrayList<String> downloader_nickName_list = new ArrayList<String>();
         final ArrayList<String> downloader_phone_list = new ArrayList<String>();
 
-        downloader_ref.child(academy_name).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+        if (academy_name != null) {
 
-                for (DataSnapshot downloader : snapshot.getChildren()) {
-                    final String downloader_name = downloader.child("downloader_name").getValue(String.class);
-                    final String downloader_phone = downloader.child("downloader_phone").getValue(String.class);
-                    final String academy_code = downloader.child("academy_code").getValue(String.class);
-                    final String downloader_nickName = downloader.child("downloader_nickName").getValue(String.class);
+            downloader_ref.child(academy_name).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                    downloader_nickName_list.add(downloader_nickName);
-                    downloader_phone_list.add(downloader_phone);
+                    for (DataSnapshot downloader : snapshot.getChildren()) {
+                        final String downloader_name = downloader.child("downloader_name").getValue(String.class);
+                        final String downloader_phone = downloader.child("downloader_phone").getValue(String.class);
+                        final String academy_code = downloader.child("academy_code").getValue(String.class);
+                        final String downloader_nickName = downloader.child("downloader_nickName").getValue(String.class);
 
-                    adapter = new DownloaderListViewAdapter(Downloader_Management_Activity.this, downloader_nickName_list, downloader_phone_list, academy_name, downloader_name, academy_code, new DownloaderListViewAdapter.OnDeleteClickListener() {
-                        @Override
-                        public void onDelete(String downloader_nickName, String academy_name) {
-                            adapter.deleteDownloader(downloader_nickName, academy_name);
-                        }
-                    });
+                        downloader_nickName_list.add(downloader_nickName);
+                        downloader_phone_list.add(downloader_phone);
 
-                    adapter.notifyDataSetChanged();
-                    listView.setAdapter(adapter);
+                        adapter = new DownloaderListViewAdapter(Downloader_Management_Activity.this, downloader_nickName_list, downloader_phone_list, academy_name, downloader_name, academy_code, new DownloaderListViewAdapter.OnDeleteClickListener() {
+                            @Override
+                            public void onDelete(String downloader_nickName, String academy_name) {
+                                adapter.deleteDownloader(downloader_nickName, academy_name);
+                            }
+                        });
+
+                        adapter.notifyDataSetChanged();
+                        listView.setAdapter(adapter);
 
 //                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //                        @Override
@@ -180,21 +182,21 @@ public class Downloader_Management_Activity extends AppCompatActivity {
 //                        }
 //                    });
 
-                }
+                    }
 
 //                adapter.notifyDataSetChanged();
 //                listView.setAdapter(adapter);
 
 
-            }
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
 
-
+        }
 
     }
 

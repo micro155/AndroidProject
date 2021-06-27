@@ -79,19 +79,28 @@ public class AddChattingActivity extends AppCompatActivity {
                             final DatabaseReference chatList = FirebaseDatabase.getInstance().getReference("ChatRoom");
 
                             DatabaseReference normal_info = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
-                            String normal_user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            final String normal_user = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                            normal_info.child(normal_user).child("nickName").addValueEventListener(new ValueEventListener() {
+                            normal_info.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    String nickName = snapshot.getValue(String.class);
-                                    intent.putExtra("normal_name", nickName);
 
-                                    chatList.child(name_list.get(position)).child(nickName).child(MESSAGES_CHILD).setValue(getTime);
+                                    for (DataSnapshot uid_snapshot : snapshot.getChildren()) {
+                                        String uid = uid_snapshot.child("uid").getValue(String.class);
 
-                                    chatList.child(nickName).child(name_list.get(position)).child(MESSAGES_CHILD).setValue(getTime);
+                                        if (uid != null) {
+                                            if (uid.equals(normal_user)) {
+                                                String nickName = uid_snapshot.child("nickName").getValue(String.class);
+                                                intent.putExtra("normal_name", nickName);
 
-                                    startActivity(intent);
+                                                chatList.child(name_list.get(position)).child(nickName).child(MESSAGES_CHILD).setValue(getTime);
+
+                                                chatList.child(nickName).child(name_list.get(position)).child(MESSAGES_CHILD).setValue(getTime);
+
+                                                startActivity(intent);
+                                            }
+                                        }
+                                    }
                                 }
 
                                 @Override
@@ -111,19 +120,29 @@ public class AddChattingActivity extends AppCompatActivity {
                             final DatabaseReference chatList = FirebaseDatabase.getInstance().getReference("ChatRoom");
 
                             DatabaseReference normal_info = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
-                            String normal_user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            final String normal_user = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                            normal_info.child(normal_user).child("nickName").addValueEventListener(new ValueEventListener() {
+                            normal_info.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    String nickName = snapshot.getValue(String.class);
-                                    intent.putExtra("normal_name", nickName);
 
-                                    chatList.child(name_list.get(position)).child(nickName).child(MESSAGES_CHILD).setValue(getTime);
+                                    for (DataSnapshot uid_snapshot : snapshot.getChildren()) {
+                                        String uid = uid_snapshot.child("uid").getValue(String.class);
 
-                                    chatList.child(nickName).child(name_list.get(position)).child(MESSAGES_CHILD).setValue(getTime);
+                                        if (uid != null) {
+                                            if (uid.equals(normal_user)) {
+                                                String nickName = uid_snapshot.child("nickName").getValue(String.class);
+                                                intent.putExtra("normal_name", nickName);
 
-                                    startActivity(intent);
+                                                chatList.child(name_list.get(position)).child(nickName).child(MESSAGES_CHILD).setValue(getTime);
+
+                                                chatList.child(nickName).child(name_list.get(position)).child(MESSAGES_CHILD).setValue(getTime);
+
+                                                startActivity(intent);
+
+                                            }
+                                        }
+                                    }
                                 }
 
                                 @Override

@@ -44,7 +44,7 @@ public class ChattingActivity extends AppCompatActivity {
     private EditText mMessageEditText;
     private RecyclerView mMessageRecyclerView;
     private String normal_username;
-    private String director_username;
+//    private String director_username;
     private String mPhotoUrl;
     private String chatUser;
     private String User_type;
@@ -143,7 +143,6 @@ public class ChattingActivity extends AppCompatActivity {
                                 });
 
                             } else {
-//                                final DatabaseReference academy = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE).child(academy_name);
 
                                 findViewById(R.id.send_button).setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -177,20 +176,6 @@ public class ChattingActivity extends AppCompatActivity {
                                     }
                                 });
 
-//                                academy.addValueEventListener(new ValueEventListener() {
-//                                    @Override
-//                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                        director_username = snapshot.child("academy_name").getValue(String.class);
-//
-//
-//                                    }
-//
-//                                    @Override
-//                                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                    }
-//                                });
-
                             }
                         }
                     }
@@ -204,7 +189,7 @@ public class ChattingActivity extends AppCompatActivity {
         });
 
         if (academy_name != null) {
-
+            Log.d("academy_name course","academy_name not null");
             Query query = mFirebaseDatabaseReference.child("ChatRoom").child(normal_name).child(academy_name).child(MESSAGES_CHILD);
             FirebaseRecyclerOptions<ChatMessage> options = new FirebaseRecyclerOptions.Builder<ChatMessage>().setQuery(query, ChatMessage.class).build();
 
@@ -232,8 +217,15 @@ public class ChattingActivity extends AppCompatActivity {
 
             mMessageRecyclerView.setLayoutManager(new LinearLayoutManager(ChattingActivity.this));
             mMessageRecyclerView.setAdapter(mFirebaseAdapter);
+            mMessageRecyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mMessageRecyclerView.scrollToPosition(mMessageRecyclerView.getAdapter().getItemCount() - 1);
+                }
+            });
 
         } else if (normal_name != null) {
+            Log.d("normal_name course","normal_name not null");
             Query query = mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_name).child(MESSAGES_CHILD);
             FirebaseRecyclerOptions<ChatMessage> options = new FirebaseRecyclerOptions.Builder<ChatMessage>().setQuery(query, ChatMessage.class).build();
 
@@ -261,6 +253,12 @@ public class ChattingActivity extends AppCompatActivity {
 
             mMessageRecyclerView.setLayoutManager(new LinearLayoutManager(ChattingActivity.this));
             mMessageRecyclerView.setAdapter(mFirebaseAdapter);
+            mMessageRecyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mMessageRecyclerView.scrollToPosition(mMessageRecyclerView.getAdapter().getItemCount() - 1);
+                }
+            });
         }
 
 
@@ -273,37 +271,6 @@ public class ChattingActivity extends AppCompatActivity {
             User_type = "일반회원";
         }
     }
-
-//    private void sendGson() {
-//        mRootDatabaseReference.child("UserList").child(mFriendUid).child("PushToken").addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                Map<String,String> map= (Map<String, String>) dataSnapshot.getValue(); //상대유저의 토큰
-//                mPushToken = map.get("pushToken");
-//
-//
-//
-//                Log.d(TAG, "상대방의 토큰 : " + mPushToken);
-//                mRootDatabaseReference.child("UserList").child(mFriendUid).addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        Profile profile = dataSnapshot.getValue(Profile.class);
-//                        SendNotification.sendNotification(mPushToken, profile.getNickName(), mFcmMessage);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
 
     @Override
     protected void onStart() {

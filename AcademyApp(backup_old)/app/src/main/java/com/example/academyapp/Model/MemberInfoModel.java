@@ -2,7 +2,7 @@ package com.example.academyapp.Model;
 
 public class MemberInfoModel {
 
-    private String Name, phoneNumber, nickName, profile, email, type, uploadfile;
+    private String Name, phoneNumber, nickName, profile, email, type, uid, token;
 
     public MemberInfoModel() {
 
@@ -56,12 +56,19 @@ public class MemberInfoModel {
         this.type = type;
     }
 
-    public String getUploadfile() {
-        return uploadfile;
+    public String getUid() {
+        return uid;
     }
 
-    public void setUploadfile(String uploadfile) {
-        this.uploadfile = uploadfile;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
-    
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }

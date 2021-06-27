@@ -26,7 +26,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.academyapp.RestAPI.GeocodingResponse;
@@ -50,15 +49,14 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.naver.maps.geometry.LatLng;
-import com.naver.maps.map.CameraAnimation;
-import com.naver.maps.map.CameraUpdate;
+import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
-import com.naver.maps.map.NaverMapSdk;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.Overlay;
+import com.naver.maps.map.util.FusedLocationSource;
 
 import java.util.HashMap;
 import java.util.List;
@@ -84,6 +82,10 @@ public class NormalMemberHomeActivity extends AppCompatActivity implements OnMap
     private double addressX;
     private double addressY;
 
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
+    private FusedLocationSource locationSource;
+    private NaverMap naverMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,14 +94,14 @@ public class NormalMemberHomeActivity extends AppCompatActivity implements OnMap
         Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab2);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = findViewById(R.id.fab2);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
         drawer = findViewById(R.id.drawer_normalmember_layout);
         navigationView = findViewById(R.id.nav_normalmember_view);
         // Passing each menu ID as a set of Ids because each
@@ -112,10 +114,6 @@ public class NormalMemberHomeActivity extends AppCompatActivity implements OnMap
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-
-//        NaverMapSdk.getInstance(this).setClient(
-//                new NaverMapSdk.NaverCloudPlatformClient("z79q0dob9r"));
-
         FragmentManager fm = getSupportFragmentManager();
         MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.map2);
         if (mapFragment == null) {
@@ -125,6 +123,8 @@ public class NormalMemberHomeActivity extends AppCompatActivity implements OnMap
 
         mapFragment.getMapAsync(this);
 
+        locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
+
         init();
 
     }
@@ -132,6 +132,10 @@ public class NormalMemberHomeActivity extends AppCompatActivity implements OnMap
     @UiThread
     @Override
     public void onMapReady(@NonNull final NaverMap naverMap) {
+
+        this.naverMap = naverMap;
+        naverMap.setLocationSource(locationSource);
+        naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
 
         DatabaseReference academy_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
 
@@ -184,7 +188,7 @@ public class NormalMemberHomeActivity extends AppCompatActivity implements OnMap
                                         @Override
                                         public boolean onClick(@NonNull Overlay overlay) {
 //                                            Toast.makeText(getApplicationContext(), "마커 클릭 확인", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(NormalMemberHomeActivity.this, AcademyInfoActivity.class);
+                                            Intent intent = new Intent(NormalMemberHomeActivity.this, AcademyDetailActivity.class);
                                             intent.putExtra("academy_name", name);
                                             startActivity(intent);
                                             infoWindow.close();
@@ -218,6 +222,18 @@ public class NormalMemberHomeActivity extends AppCompatActivity implements OnMap
             }
         });
 
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,  @NonNull int[] grantResults) {
+        if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            if (!locationSource.isActivated()) { // 권한 거부됨
+                naverMap.setLocationTrackingMode(LocationTrackingMode.None);
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 

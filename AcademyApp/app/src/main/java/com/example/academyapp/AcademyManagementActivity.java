@@ -264,7 +264,7 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                 }
                 Log.d("isRegistered tag", "isRegistered result: " + isRegistered);
 
-                if (isRegistered == false) {
+                if (!isRegistered) {
                     showRegisterAcademy();
                 }
             }
@@ -527,9 +527,8 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
                         if (imageUri != null) {
                             waitingDialog.setMessage("업로드중...");
                             waitingDialog.show();
-
-                            String unique_name = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                            final StorageReference profileFolder = storageReference.child("profiles/" + unique_name);
+                            
+                            final StorageReference profileFolder = storageReference.child("profiles/" + uid);
 
                             profileFolder.putFile(imageUri)
                                     .addOnFailureListener(new OnFailureListener() {
