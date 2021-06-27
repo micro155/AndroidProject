@@ -53,6 +53,7 @@ public class AcademyDetailActivity extends AppCompatActivity {
     private String[] rating_items = {"1.0 / 5.0", "2.0 / 5.0", "3.0 / 5.0", "4.0 / 5.0", "5.0 / 5.0"};
     private String user_rating_input;
     private Button btn_user_rating;
+    private TextView empty_review;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +83,13 @@ public class AcademyDetailActivity extends AppCompatActivity {
         edit_user_text = (EditText) findViewById(R.id.edit_user_text);
         btn_user_rating = (Button) findViewById(R.id.btn_user_rating);
         user_rating_listView = (ListView) findViewById(R.id.user_rating_list);
+        empty_review = (TextView) findViewById(R.id.empty_review);
 
         user_ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                for (final DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     String user_uid = dataSnapshot.child("uid").getValue(String.class);
 
                     if (user_uid != null) {
@@ -115,29 +117,18 @@ public class AcademyDetailActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(View v) {
 
-                                        user_ref.child(user_auth).addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                String user_name = snapshot.child("nickName").getValue(String.class);
+                                        String user_name = dataSnapshot.child("nickName").getValue(String.class);
 
-                                                Uri user_profile_uri = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+                                        Uri user_profile_uri = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
 
-                                                Rating_Info model = new Rating_Info();
+                                        Rating_Info model = new Rating_Info();
 
-                                                model.setUser_profile(String.valueOf(user_profile_uri));
-                                                model.setUser_name(user_name);
-                                                model.setUser_rating(user_rating_input);
-                                                model.setUser_text(edit_user_text.getText().toString());
+                                        model.setUser_profile(String.valueOf(user_profile_uri));
+                                        model.setUser_name(user_name);
+                                        model.setUser_rating(user_rating_input);
+                                        model.setUser_text(edit_user_text.getText().toString());
 
-                                                academy_ref.child(academy).child("user_rating_info").child(user_name).setValue(model);
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                            }
-                                        });
-
+                                        academy_ref.child(academy).child("user_rating_info").child(user_name).setValue(model);
                                     }
                                 });
 
@@ -221,7 +212,7 @@ public class AcademyDetailActivity extends AppCompatActivity {
         final ArrayList<String> user_rating_list = new ArrayList<>();
         final ArrayList<String> user_text_list = new ArrayList<>();
 
-        DatabaseReference academy_info = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+        final DatabaseReference academy_info = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
 
         academy_info.child(academy).addValueEventListener(new ValueEventListener() {
             @Override
@@ -262,11 +253,11 @@ public class AcademyDetailActivity extends AppCompatActivity {
                 academy_phone.setText(tel);
                 academy_address.setText(address);
 
-                DatabaseReference rating_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
-
-                rating_ref.child(academy).child("user_rating_info").addValueEventListener(new ValueEventListener() {
+                academy_info.child(academy).child("user_rating_info").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        boolean check = false;
 
                         for (DataSnapshot rating_snapshot : snapshot.getChildren()) {
                             String user_name = rating_snapshot.child("user_name").getValue(String.class);
@@ -277,6 +268,8 @@ public class AcademyDetailActivity extends AppCompatActivity {
 //                            Log.d("user_rating", "user name : " + user_name + ", user profile : " + user_profile + ", " + "user text : " + user_text + ", " + "user rating : " + user_rating);
 
                             if (user_name != null && user_profile != null && user_text != null && user_rating != null) {
+
+                                check = true;
 
                                 Log.d("user_rating", "user name : " + user_name + ", user profile : " + user_profile + ", " + "user text : " + user_text + ", " + "user rating : " + user_rating);
 
@@ -299,6 +292,11 @@ public class AcademyDetailActivity extends AppCompatActivity {
 
                         }
 
+                        if(!check) {
+                            empty_review.setVisibility(View.VISIBLE);
+                        } else {
+                            empty_review.setVisibility(View.INVISIBLE);
+                        }
 
                     }
 

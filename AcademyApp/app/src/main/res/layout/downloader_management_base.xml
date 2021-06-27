@@ -34,6 +34,7 @@
             android:layout_height="wrap_content"
             android:text="등록된 회원이 없습니다."
             android:gravity="center"
+            android:layout_marginTop="20dp"
             android:textSize="15dp"/>
 
     </LinearLayout>
