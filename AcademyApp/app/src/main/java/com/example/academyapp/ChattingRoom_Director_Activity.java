@@ -78,6 +78,7 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_chatting_room_director);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.chatting_management);
 
         drawer = findViewById(R.id.drawer_chatting_room_director_layout);
 

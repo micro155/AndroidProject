@@ -93,15 +93,6 @@ public class DirectorHomeActivity extends AppCompatActivity implements OnMapRead
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
         drawer = findViewById(R.id.drawer_director_layout);
         navigationView = findViewById(R.id.nav_director_view);
         // Passing each menu ID as a set of Ids because each
@@ -453,12 +444,12 @@ public class DirectorHomeActivity extends AppCompatActivity implements OnMapRead
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.customer_home, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.customer_home, menu);
+//        return true;
+//    }
 
     @Override
     public boolean onSupportNavigateUp() {

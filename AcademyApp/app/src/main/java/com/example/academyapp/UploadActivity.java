@@ -95,6 +95,7 @@ public class UploadActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_upload);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.menu_upload);
 
         drawer = findViewById(R.id.drawer_upload_layout);
         navigationView = findViewById(R.id.nav_upload_view);
@@ -529,12 +530,12 @@ public class UploadActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.customer_home, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.customer_home, menu);
+//        return true;
+//    }
 
 
     @Override

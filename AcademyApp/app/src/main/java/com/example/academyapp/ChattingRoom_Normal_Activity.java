@@ -79,6 +79,7 @@ public class ChattingRoom_Normal_Activity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_chatting_room_normal);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.menu_chatting);
 
         drawer = findViewById(R.id.drawer_chatting_room_normal_layout);
 

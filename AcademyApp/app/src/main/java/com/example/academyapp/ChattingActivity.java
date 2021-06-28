@@ -92,10 +92,147 @@ public class ChattingActivity extends AppCompatActivity {
 
         ConfirmUserType(user_type);
 
-        if (user_type.equals("일반회원")) {
+        if (user_type != null) {
 
-            Log.d("academy_name course", "academy_director course");
+            if (user_type.equals("일반회원")) {
 
+                Log.d("normal_name course", "normal_member course");
+
+                Query query = mFirebaseDatabaseReference.child("ChatRoom").child(normal_name).child(academy_name).child(MESSAGES_CHILD);
+                FirebaseRecyclerOptions<ChatMessage> options = new FirebaseRecyclerOptions.Builder<ChatMessage>().setQuery(query, ChatMessage.class).build();
+
+                mFirebaseAdapter = new FirebaseRecyclerAdapter<ChatMessage, MessageViewHolder>(options) {
+                    @NonNull
+                    @Override
+                    public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_view, parent, false);
+                        return new MessageViewHolder(view);
+                    }
+
+                    @Override
+                    protected void onBindViewHolder(MessageViewHolder holder, int position, ChatMessage model) {
+                        if (model.getText() != null && model.getName() != null) {
+                            holder.messageTextView.setText(model.getText());
+                            holder.nameTextView.setText(model.getName());
+                        }
+                        if (model.getPhotoURL() == null) {
+                            holder.photoImageView.setImageDrawable(ContextCompat.getDrawable(ChattingActivity.this, R.drawable.ic_baseline_account_circle_24));
+                        } else {
+                            Glide.with(ChattingActivity.this).load(model.getPhotoURL()).into(holder.photoImageView);
+                        }
+                    }
+                };
+
+                mMessageRecyclerView.setLayoutManager(new LinearLayoutManager(ChattingActivity.this));
+                mMessageRecyclerView.setAdapter(mFirebaseAdapter);
+                mMessageRecyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mMessageRecyclerView.scrollToPosition(mMessageRecyclerView.getAdapter().getItemCount() - 1);
+                    }
+                });
+
+                findViewById(R.id.send_button).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final ChatMessage chatMessage = new ChatMessage(mMessageEditText.getText().toString(), normal_name, mPhotoUrl);
+
+                        final String normal_message_text = mMessageEditText.getText().toString();
+
+                        mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
+
+                        mFirebaseDatabaseReference.child(Common.ACADEMY_INFO_REFERENCE).child(academy_name).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String token = snapshot.child("token").getValue(String.class);
+
+                                Log.d("send token", "director send token : " + token);
+
+                                SendNotification.sendNotification(token, normal_name, normal_message_text);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+                        mFirebaseDatabaseReference.child("ChatRoom").child(normal_name).child(academy_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
+                        mMessageEditText.setText("");
+                    }
+                });
+
+            } else {
+
+                Log.d("academy_name course", "academy_director course");
+
+                Query query = mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_name).child(MESSAGES_CHILD);
+                FirebaseRecyclerOptions<ChatMessage> options = new FirebaseRecyclerOptions.Builder<ChatMessage>().setQuery(query, ChatMessage.class).build();
+
+                mFirebaseAdapter = new FirebaseRecyclerAdapter<ChatMessage, MessageViewHolder>(options) {
+                    @NonNull
+                    @Override
+                    public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_view, parent, false);
+                        return new MessageViewHolder(view);
+                    }
+
+                    @Override
+                    protected void onBindViewHolder(MessageViewHolder holder, int position, ChatMessage model) {
+                        if (model.getText() != null && model.getName() != null) {
+                            holder.messageTextView.setText(model.getText());
+                            holder.nameTextView.setText(model.getName());
+                        }
+                        if (model.getPhotoURL() == null) {
+                            holder.photoImageView.setImageDrawable(ContextCompat.getDrawable(ChattingActivity.this, R.drawable.ic_baseline_account_circle_24));
+                        } else {
+                            Glide.with(ChattingActivity.this).load(model.getPhotoURL()).into(holder.photoImageView);
+                        }
+                    }
+                };
+
+                mMessageRecyclerView.setLayoutManager(new LinearLayoutManager(ChattingActivity.this));
+                mMessageRecyclerView.setAdapter(mFirebaseAdapter);
+                mMessageRecyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mMessageRecyclerView.scrollToPosition(mMessageRecyclerView.getAdapter().getItemCount() - 1);
+                    }
+                });
+
+                findViewById(R.id.send_button).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final ChatMessage chatMessage = new ChatMessage(mMessageEditText.getText().toString(), academy_name, mPhotoUrl);
+
+                        final String director_message_text = mMessageEditText.getText().toString();
+
+                        Log.d("director", "director name: " + academy_name);
+
+                        mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
+
+                        mFirebaseDatabaseReference.child(Common.MEMBER_INFO_REFERENCE).child(normal_name).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String token = snapshot.child("token").getValue(String.class);
+
+                                Log.d("send token", "normal_member send token : " + token);
+
+                                SendNotification.sendNotification(token, academy_name, director_message_text);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+                        mFirebaseDatabaseReference.child("ChatRoom").child(normal_name).child(academy_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
+                        mMessageEditText.setText("");
+                    }
+                });
+            }
+        } else if (academy_name != null && normal_name != null && user_type == null){
             Query query = mFirebaseDatabaseReference.child("ChatRoom").child(normal_name).child(academy_name).child(MESSAGES_CHILD);
             FirebaseRecyclerOptions<ChatMessage> options = new FirebaseRecyclerOptions.Builder<ChatMessage>().setQuery(query, ChatMessage.class).build();
 
@@ -159,84 +296,16 @@ public class ChattingActivity extends AppCompatActivity {
                     mMessageEditText.setText("");
                 }
             });
-
-        } else {
-
-            Log.d("normal_name course", "normal_member course");
-
-            Query query = mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_name).child(MESSAGES_CHILD);
-            FirebaseRecyclerOptions<ChatMessage> options = new FirebaseRecyclerOptions.Builder<ChatMessage>().setQuery(query, ChatMessage.class).build();
-
-            mFirebaseAdapter = new FirebaseRecyclerAdapter<ChatMessage, MessageViewHolder>(options) {
-                @NonNull
-                @Override
-                public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_view, parent, false);
-                    return new MessageViewHolder(view);
-                }
-
-                @Override
-                protected void onBindViewHolder(MessageViewHolder holder, int position, ChatMessage model) {
-                    if (model.getText() != null && model.getName() != null) {
-                        holder.messageTextView.setText(model.getText());
-                        holder.nameTextView.setText(model.getName());
-                    }
-                    if (model.getPhotoURL() == null) {
-                        holder.photoImageView.setImageDrawable(ContextCompat.getDrawable(ChattingActivity.this, R.drawable.ic_baseline_account_circle_24));
-                    } else {
-                        Glide.with(ChattingActivity.this).load(model.getPhotoURL()).into(holder.photoImageView);
-                    }
-                }
-            };
-
-            mMessageRecyclerView.setLayoutManager(new LinearLayoutManager(ChattingActivity.this));
-            mMessageRecyclerView.setAdapter(mFirebaseAdapter);
-            mMessageRecyclerView.post(new Runnable() {
-                @Override
-                public void run() {
-                    mMessageRecyclerView.scrollToPosition(mMessageRecyclerView.getAdapter().getItemCount() - 1);
-                }
-            });
-
-            findViewById(R.id.send_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final ChatMessage chatMessage = new ChatMessage(mMessageEditText.getText().toString(), academy_name, mPhotoUrl);
-
-                    final String director_message_text = mMessageEditText.getText().toString();
-
-                    Log.d("director", "director name: " + academy_name);
-
-                    mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
-
-                    mFirebaseDatabaseReference.child(Common.MEMBER_INFO_REFERENCE).child(normal_name).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String token = snapshot.child("token").getValue(String.class);
-
-                            Log.d("send token", "normal_member send token : " + token);
-
-                            SendNotification.sendNotification(token, academy_name, director_message_text);
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-
-                    mFirebaseDatabaseReference.child("ChatRoom").child(normal_name).child(academy_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
-                    mMessageEditText.setText("");
-                }
-            });
         }
     }
 
     private void ConfirmUserType (String type) {
-        if (type.equals("일반회원")) {
-            User_type = "일반회원";
-        } else {
-            User_type = "원장회원";
+        if (type != null) {
+            if (type.equals("일반회원")) {
+                User_type = "일반회원";
+            } else if (type.equals("원장회원")) {
+                User_type = "원장회원";
+            }
         }
     }
 
@@ -261,17 +330,31 @@ public class ChattingActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
 
-        if (User_type.equals("원장회원")) {
-            switch(item.getItemId())
-            {
-                case R.id.chatting_exit: {
-                    Intent intent = new Intent (this, ChattingRoom_Director_Activity.class);
-                    startActivity(intent);
-                    finish();
-                    return true;
+        if (User_type != null) {
+            if (User_type.equals("원장회원")) {
+                switch(item.getItemId())
+                {
+                    case R.id.chatting_exit: {
+                        Intent intent = new Intent (this, ChattingRoom_Director_Activity.class);
+                        startActivity(intent);
+                        finish();
+                        return true;
+                    }
+                    default:
+                        return super.onOptionsItemSelected(item);
                 }
-                default:
-                    return super.onOptionsItemSelected(item);
+            } else {
+                switch(item.getItemId())
+                {
+                    case R.id.chatting_exit: {
+                        Intent intent = new Intent (this, ChattingRoom_Normal_Activity.class);
+                        startActivity(intent);
+                        finish();
+                        return true;
+                    }
+                    default:
+                        return super.onOptionsItemSelected(item);
+                }
             }
         } else {
             switch(item.getItemId())

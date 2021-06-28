@@ -80,7 +80,7 @@ public class Downloader_Management_Activity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_downloader_management);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("강의 영상 고객 관리");
+        getSupportActionBar().setTitle(R.string.menu_downloader_management);
 
         drawer = findViewById(R.id.drawer_director_downloader_management);
 

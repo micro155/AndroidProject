@@ -88,6 +88,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_download);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.menu_download);
 
         drawer = findViewById(R.id.drawer_download_layout);
 

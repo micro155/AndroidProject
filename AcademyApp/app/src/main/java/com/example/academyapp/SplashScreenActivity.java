@@ -306,7 +306,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     private void delaySplashScreen() {
 
         progressBar = findViewById(R.id.progress_bar);
-
         progressBar.setVisibility(View.VISIBLE);
 
         Completable.timer(3, TimeUnit.SECONDS, AndroidSchedulers.mainThread()).subscribe(new Action() {

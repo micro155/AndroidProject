@@ -104,15 +104,15 @@
         </LinearLayout>
 
         <Button
-            android:layout_margin="16dp"
-            android:layout_alignParentBottom="true"
+            android:id="@+id/btn_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_register"
-            style="@style/Widget.MaterialComponents.Button"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="16dp"
             android:text="회원가입"
-            android:textSize="15dp"
-            android:textColor="@android:color/white"/>
+            android:background="@android:color/black"
+            android:textColor="@android:color/white"
+            android:textSize="15dp" />
 
     </LinearLayout>
 

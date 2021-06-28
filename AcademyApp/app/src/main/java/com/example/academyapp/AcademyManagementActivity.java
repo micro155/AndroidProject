@@ -105,7 +105,7 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
 
         Toolbar toolbar = findViewById(R.id.toolbar_management);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("학원 정보 관리");
+        getSupportActionBar().setTitle(R.string.menu_academy_management);
 
         drawer = findViewById(R.id.drawer_director_academy_management);
 
@@ -713,12 +713,12 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
 
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.customer_home, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.customer_home, menu);
+//        return true;
+//    }
 
 
     @Override
