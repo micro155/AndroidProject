@@ -292,6 +292,7 @@ public class ChattingRoom_Normal_Activity extends AppCompatActivity {
                                         intent.putExtra("academy_name", name_list.get(position));
                                         intent.putExtra("director_profile", profile.get(position));
                                         intent.putExtra("normal_name", normal_nickName);
+                                        intent.putExtra("user_type", "일반회원");
                                         startActivity(intent);
                                     }
                                 });

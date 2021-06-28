@@ -29,11 +29,11 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Large"
                 tools:text="사용자 이름 표시 되는 부분" />
 
-            <ImageView
+            <!--<ImageView
                 android:id="@+id/messageImageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="fitCenter" />
+                android:scaleType="fitCenter" /> -->
 
             <TextView
                 android:id="@+id/messageTextView"

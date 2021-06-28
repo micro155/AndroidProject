@@ -194,6 +194,7 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
                                             intent.putExtra("normal_name", name_list.get(position));
                                             intent.putExtra("normal_profile", profile.get(position));
                                             intent.putExtra("academy_name", academy_name);
+                                            intent.putExtra("user_type", "원장회원");
                                             startActivity(intent);
                                         }
                                     });
