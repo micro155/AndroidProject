@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.academyapp.Utils.UserUtils;
@@ -296,6 +297,52 @@ public class ChattingRoom_Normal_Activity extends AppCompatActivity {
                                         startActivity(intent);
                                     }
                                 });
+
+                                listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                                    @Override
+                                    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                                        final DatabaseReference chat_ref = FirebaseDatabase.getInstance().getReference("ChatRoom");
+
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(ChattingRoom_Normal_Activity.this);
+
+                                        builder.setTitle("대화방 나가기")
+                                                .setMessage("대화방을 나가시겠습니까?")
+                                                .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        Toast.makeText(getApplicationContext(), "대화방 나가기 취소", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                })
+                                                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        chat_ref.child(normal_nickName).child(name_list.get(position)).removeValue().addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Toast.makeText(getApplicationContext(), e.getMessage() + "로 인한 대화방 삭제 실패", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                name_list.remove(name_list.get(position));
+                                                                profile.remove(profile.get(position));
+                                                                messages_array.remove(messages_array.get(position));
+                                                                setChatList(name_list, profile, messages_array);
+                                                                adapter.notifyDataSetChanged();
+                                                                Toast.makeText(getApplicationContext(), "대화방 삭제 완료", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                                    }
+                                                });
+
+                                        AlertDialog alertDialog = builder.create();
+                                        alertDialog.show();
+
+                                        return true;
+                                    }
+                                });
+                                
                             }
 
                             @Override
@@ -318,6 +365,12 @@ public class ChattingRoom_Normal_Activity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void setChatList(ArrayList<String> name_list, ArrayList<String> profile, ArrayList<String> messages) {
+        this.name_list = name_list;
+        this.profile = profile;
+        this.messages_array = messages;
     }
 
 
