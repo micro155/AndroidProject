@@ -83,6 +83,7 @@ public class UploadActivity extends AppCompatActivity {
     private String mUid;
     private ListView listView;
     private DirectorFileListViewAdapter adapter;
+    private TextView empty_upload;
 
     private Uri filePath;
     DatabaseReference FileDatabase;
@@ -94,6 +95,7 @@ public class UploadActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_upload);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.menu_upload);
 
         drawer = findViewById(R.id.drawer_upload_layout);
         navigationView = findViewById(R.id.nav_upload_view);
@@ -117,6 +119,7 @@ public class UploadActivity extends AppCompatActivity {
         btUpload = (Button) findViewById(R.id.bt_upload);
         upload_file_name = (EditText) findViewById(R.id.upload_file);
         listView = (ListView) findViewById(R.id.video_list);
+        empty_upload = (TextView) findViewById(R.id.empty_upload);
 
         //버튼 클릭 이벤트
         btChoose.setOnClickListener(new View.OnClickListener() {
@@ -177,14 +180,19 @@ public class UploadActivity extends AppCompatActivity {
                         file_ref.child(academy_name).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                boolean check = false;
                                 file_list.clear();
                                 for (DataSnapshot fileSnapshot : snapshot.getChildren()) {
                                     String file_name = fileSnapshot.child("file_name").getValue(String.class);
 
-                                    Log.d("UploadActivity academy", "academy_name : " + academy_name);
-                                    Log.d("UploadActivity TAG", "file_name : " + file_name);
+                                    if (file_name != null) {
+                                        check = true;
 
-                                    file_list.add(file_name);
+                                        Log.d("UploadActivity academy", "academy_name : " + academy_name);
+                                        Log.d("UploadActivity TAG", "file_name : " + file_name);
+
+                                        file_list.add(file_name);
+                                    }
 
                                 }
 
@@ -199,6 +207,11 @@ public class UploadActivity extends AppCompatActivity {
                                 adapter.notifyDataSetChanged();
                                 listView.setAdapter(adapter);
 
+                                if (!check) {
+                                    empty_upload.setVisibility(View.VISIBLE);
+                                } else {
+                                    empty_upload.setVisibility(View.INVISIBLE);
+                                }
 
                                 Log.d("list array tag", "list array : " + file_list);
                             }
@@ -517,12 +530,12 @@ public class UploadActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.customer_home, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.customer_home, menu);
+//        return true;
+//    }
 
 
     @Override

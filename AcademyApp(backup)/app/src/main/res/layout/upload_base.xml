@@ -59,7 +59,16 @@
     <ListView
         android:id="@+id/video_list"
         android:layout_width="match_parent"
-        android:layout_height="500dp" />
+        android:layout_height="150dp" />
+
+        <TextView
+            android:id="@+id/empty_upload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="업로드된 강의 영상이 없습니다." />
 
     </LinearLayout>
 

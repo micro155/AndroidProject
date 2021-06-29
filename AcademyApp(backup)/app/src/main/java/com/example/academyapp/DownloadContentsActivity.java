@@ -76,6 +76,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
     private ListView listView;
     private FileListViewAdapter adapter;
     private FirebaseStorage storage;
+    private TextView empty_download;
 
 
     @Override
@@ -87,6 +88,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_download);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.menu_download);
 
         drawer = findViewById(R.id.drawer_download_layout);
 
@@ -102,6 +104,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         listView = (ListView) findViewById(R.id.file_list_view);
+        empty_download = (TextView) findViewById(R.id.empty_download);
 
 
         FileStorage_Ref = FirebaseDatabase.getInstance().getReference("FileList");
@@ -449,15 +452,19 @@ public class DownloadContentsActivity extends AppCompatActivity {
         final ArrayList<String> file_list = new ArrayList<String>();
 
 
-        FileStorage_Ref.addValueEventListener(new ValueEventListener() {
+        FileStorage_Ref.child(uploader_name).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                boolean check = false;
 
                 for (DataSnapshot fileData : snapshot.getChildren()) {
 
                     final String file_name = fileData.child("file_name").getValue(String.class);
 
                     if (file_name != null) {
+
+                        check = true;
 
                         Log.d("file_name", "file_name : " + file_name);
 
@@ -474,6 +481,12 @@ public class DownloadContentsActivity extends AppCompatActivity {
                         adapter.notifyDataSetChanged();
                         listView.setAdapter(adapter);
                     }
+                }
+
+                if (!check) {
+                    empty_download.setVisibility(View.VISIBLE);
+                } else {
+                    empty_download.setVisibility(View.INVISIBLE);
                 }
             }
 

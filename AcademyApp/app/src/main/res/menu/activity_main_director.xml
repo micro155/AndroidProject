@@ -8,6 +8,7 @@
             android:id="@+id/nav_director_home"
             android:icon="@drawable/ic_baseline_home_24"
             android:title="@string/menu_home" />
+
         <item
             android:id="@+id/nav_director_logout"
             android:icon="@drawable/ic_baseline_exit_to_app_24"
@@ -32,6 +33,5 @@
             android:id="@+id/nav_downloader_management_director"
             android:icon="@drawable/ic_baseline_format_list_bulleted_24"
             android:title="@string/menu_downloader_management" />
-
     </group>
 </menu>

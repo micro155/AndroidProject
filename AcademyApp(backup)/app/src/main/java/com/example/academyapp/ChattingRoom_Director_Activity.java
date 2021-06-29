@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.academyapp.Utils.UserUtils;
@@ -68,6 +69,7 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
     private ArrayList<String> messages_array;
     private ArrayList<String> profile;
     private ListView listView;
+    private TextView empty_chatting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +78,7 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_chatting_room_director);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.chatting_management);
 
         drawer = findViewById(R.id.drawer_chatting_room_director_layout);
 
@@ -93,6 +96,7 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(ChattingRoom_Director_Activity.this, navController, mAppBarConfiguration);
 
         listView = (ListView) findViewById(R.id.chatting_room_list_view);
+        empty_chatting = (TextView) findViewById(R.id.empty_chatting);
 
         init();
 
@@ -141,61 +145,121 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                    boolean check = false;
+
                     for (DataSnapshot list_data : snapshot.getChildren()) {
                         final String normal_list = list_data.getKey();
                         final String[] normal_profile = {null};
                         final String[] chat_text = {null};
                         final String[] name = {null};
 
-                        Log.d("normal list", "list : " + normal_list);
+                        if (normal_list != null) {
 
-                        DatabaseReference token_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(academy_name).child(normal_list).child("chat_messages");
+                            check = true;
 
-                        token_ref.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                name_list.clear();
-                                profile.clear();
-                                messages_array.clear();
-                                for (DataSnapshot chat_list : snapshot.getChildren()) {
+                            Log.d("normal list", "list : " + normal_list);
 
-                                    chat_text[0] = chat_list.child("text").getValue(String.class);
-                                    name[0] = chat_list.child("name").getValue(String.class);
+                            DatabaseReference token_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(academy_name).child(normal_list).child("chat_messages");
 
-                                    Log.d("chat list", "list : " + chat_text[0]);
-                                    Log.d("name list", "list : " + name[0]);
+                            token_ref.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    name_list.clear();
+                                    profile.clear();
+                                    messages_array.clear();
+                                    for (DataSnapshot chat_list : snapshot.getChildren()) {
 
-                                    if (normal_list.equals(name[0])) {
-                                        normal_profile[0] = chat_list.child("photoURL").getValue(String.class);
-                                        Log.d("normal_profile list", "list : " + normal_profile[0]);
+                                        chat_text[0] = chat_list.child("text").getValue(String.class);
+                                        name[0] = chat_list.child("name").getValue(String.class);
+
+                                        Log.d("chat list", "list : " + chat_text[0]);
+                                        Log.d("name list", "list : " + name[0]);
+
+                                        if (normal_list.equals(name[0])) {
+                                            normal_profile[0] = chat_list.child("photoURL").getValue(String.class);
+                                            Log.d("normal_profile list", "list : " + normal_profile[0]);
+                                        }
                                     }
+
+                                    name_list.add(normal_list);
+                                    profile.add(normal_profile[0]);
+                                    messages_array.add(chat_text[0]);
+
+                                    adapter = new ChatRoomListViewAdapter(ChattingRoom_Director_Activity.this, name_list, messages_array, profile);
+                                    adapter.notifyDataSetChanged();
+
+                                    listView.setAdapter(adapter);
+                                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                            Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
+                                            intent.putExtra("normal_name", name_list.get(position));
+                                            intent.putExtra("normal_profile", profile.get(position));
+                                            intent.putExtra("academy_name", academy_name);
+                                            intent.putExtra("user_type", "원장회원");
+                                            startActivity(intent);
+                                        }
+                                    });
+
+                                    listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                                        @Override
+                                        public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                                            final DatabaseReference chat_ref = FirebaseDatabase.getInstance().getReference("ChatRoom");
+
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(ChattingRoom_Director_Activity.this);
+
+                                            builder.setTitle("대화방 나가기")
+                                                    .setMessage("대화방을 나가시겠습니까?")
+                                                    .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            Toast.makeText(getApplicationContext(), "대화방 나가기 취소", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    })
+                                                    .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            chat_ref.child(academy_name).child(name_list.get(position)).removeValue().addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Toast.makeText(getApplicationContext(), e.getMessage() + "로 인한 대화방 삭제 실패", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    name_list.remove(name_list.get(position));
+                                                                    profile.remove(profile.get(position));
+                                                                    messages_array.remove(messages_array.get(position));
+                                                                    setChatList(name_list, profile, messages_array);
+                                                                    adapter.notifyDataSetChanged();
+                                                                    Toast.makeText(getApplicationContext(), "대화방 삭제 완료", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+
+                                            AlertDialog alertDialog = builder.create();
+                                            alertDialog.show();
+
+                                            return true;
+                                        }
+                                    });
+
                                 }
 
-                                name_list.add(normal_list);
-                                profile.add(normal_profile[0]);
-                                messages_array.add(chat_text[0]);
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-                                adapter = new ChatRoomListViewAdapter(ChattingRoom_Director_Activity.this, name_list, messages_array, profile);
-                                adapter.notifyDataSetChanged();
+                                }
+                            });
+                        }
+                    }
 
-                                listView.setAdapter(adapter);
-                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
-                                        intent.putExtra("normal_name", name_list.get(position));
-                                        intent.putExtra("normal_profile", profile.get(position));
-                                        intent.putExtra("academy_name", academy_name);
-                                        startActivity(intent);
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
+                    if (!check) {
+                        empty_chatting.setVisibility(View.VISIBLE);
+                    } else {
+                        empty_chatting.setVisibility(View.INVISIBLE);
                     }
                 }
 
@@ -205,6 +269,12 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void setChatList(ArrayList<String> name_list, ArrayList<String> profile, ArrayList<String> messages) {
+        this.name_list = name_list;
+        this.profile = profile;
+        this.messages_array = messages;
     }
 
     private void init() {

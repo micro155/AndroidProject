@@ -55,6 +55,16 @@
         android:layout_width="match_parent"
         android:layout_height="200dp" />
 
+        <TextView
+            android:id="@+id/empty_review"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:gravity="center"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:text="작성된 리뷰가 없습니다." />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

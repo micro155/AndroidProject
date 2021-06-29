@@ -15,6 +15,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -67,8 +68,9 @@ public class Downloader_Management_Activity extends AppCompatActivity {
     private ListView listView;
     private DatabaseReference downloader_ref;
     private DatabaseReference user_ref;
-    private String user_auth;
+    private String academy_url;
     private DownloaderListViewAdapter adapter;
+    private TextView empty_text;
 
 
     @Override
@@ -78,7 +80,7 @@ public class Downloader_Management_Activity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_downloader_management);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("강의 영상 고객 관리");
+        getSupportActionBar().setTitle(R.string.menu_downloader_management);
 
         drawer = findViewById(R.id.drawer_director_downloader_management);
 
@@ -93,19 +95,32 @@ public class Downloader_Management_Activity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        listView = findViewById(R.id.downloader_list_view);
+        empty_text = (TextView) findViewById(R.id.empty_list_tag);
+        listView = (ListView) findViewById(R.id.downloader_list_view);
         downloader_ref = FirebaseDatabase.getInstance().getReference("Contracts");
         user_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
-        user_auth = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        academy_url = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
 
         init();
 
-        user_ref.child(user_auth).addValueEventListener(new ValueEventListener() {
+        user_ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String academy_name = snapshot.child("academy_name").getValue(String.class);
 
-                showDownloaderList(academy_name);
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    String photo_url = dataSnapshot.child("director_photo_url").getValue(String.class);
+                    Log.d("director_url", "director url string : " + photo_url);
+
+                    if (photo_url != null) {
+                        if (photo_url.equals(academy_url)) {
+                            String academy_name = dataSnapshot.child("academy_name").getValue(String.class);
+                            showDownloaderList(academy_name);
+                        }
+                    }
+
+                }
+
             }
 
             @Override
@@ -127,24 +142,30 @@ public class Downloader_Management_Activity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                    boolean check = false;
+
                     for (DataSnapshot downloader : snapshot.getChildren()) {
                         final String downloader_name = downloader.child("downloader_name").getValue(String.class);
                         final String downloader_phone = downloader.child("downloader_phone").getValue(String.class);
                         final String academy_code = downloader.child("academy_code").getValue(String.class);
                         final String downloader_nickName = downloader.child("downloader_nickName").getValue(String.class);
 
-                        downloader_nickName_list.add(downloader_nickName);
-                        downloader_phone_list.add(downloader_phone);
+                        if (downloader_name != null) {
+                            check = true;
 
-                        adapter = new DownloaderListViewAdapter(Downloader_Management_Activity.this, downloader_nickName_list, downloader_phone_list, academy_name, downloader_name, academy_code, new DownloaderListViewAdapter.OnDeleteClickListener() {
-                            @Override
-                            public void onDelete(String downloader_nickName, String academy_name) {
-                                adapter.deleteDownloader(downloader_nickName, academy_name);
-                            }
-                        });
+                            downloader_nickName_list.add(downloader_nickName);
+                            downloader_phone_list.add(downloader_phone);
 
-                        adapter.notifyDataSetChanged();
-                        listView.setAdapter(adapter);
+                            adapter = new DownloaderListViewAdapter(Downloader_Management_Activity.this, downloader_nickName_list, downloader_phone_list, academy_name, downloader_name, academy_code, new DownloaderListViewAdapter.OnDeleteClickListener() {
+                                @Override
+                                public void onDelete(String downloader_nickName, String academy_name) {
+                                    adapter.deleteDownloader(downloader_nickName, academy_name);
+                                }
+                            });
+
+                            adapter.notifyDataSetChanged();
+                            listView.setAdapter(adapter);
+                        }
 
 //                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //                        @Override
@@ -182,6 +203,12 @@ public class Downloader_Management_Activity extends AppCompatActivity {
 //                        }
 //                    });
 
+                    }
+
+                    if (!check) {
+                        empty_text.setVisibility(View.VISIBLE);
+                    } else {
+                        empty_text.setVisibility(View.INVISIBLE);
                     }
 
 //                adapter.notifyDataSetChanged();
