@@ -95,6 +95,8 @@ public class Downloader_Management_Activity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        navigationView.setCheckedItem(R.id.nav_downloader_management_director);
+
         empty_text = (TextView) findViewById(R.id.empty_list_tag);
         listView = (ListView) findViewById(R.id.downloader_list_view);
         downloader_ref = FirebaseDatabase.getInstance().getReference("Contracts");

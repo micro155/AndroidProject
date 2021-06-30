@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.academyapp.Model.ChatMessage;
+import com.firebase.ui.auth.data.model.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,10 +44,7 @@ public class ChattingActivity extends AppCompatActivity {
 
     private EditText mMessageEditText;
     private RecyclerView mMessageRecyclerView;
-    private String normal_username;
-    private String director_username;
     private String mPhotoUrl;
-    private String chatUser;
     private String User_type;
 
     private FirebaseUser mFirebaseUser;
@@ -57,12 +55,10 @@ public class ChattingActivity extends AppCompatActivity {
         TextView nameTextView;
         TextView messageTextView;
         CircleImageView photoImageView;
-        ImageView messageImageView;
 
         public MessageViewHolder(View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.nameTextView);
-            messageImageView = itemView.findViewById(R.id.messageImageView);
             messageTextView = itemView.findViewById(R.id.messageTextView);
             photoImageView = itemView.findViewById(R.id.photoImageView);
         }
@@ -77,11 +73,10 @@ public class ChattingActivity extends AppCompatActivity {
         mMessageEditText = findViewById(R.id.message_edit);
         mMessageRecyclerView = findViewById(R.id.chat_message);
 
-        chatUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
         Intent intent = getIntent();
         final String academy_name = intent.getStringExtra("academy_name");
         final String normal_name = intent.getStringExtra("normal_name");
+        String user_type = intent.getStringExtra("user_type");
 
         Log.d("academy_name", "name : " + academy_name);
 
@@ -95,116 +90,149 @@ public class ChattingActivity extends AppCompatActivity {
 
         user_name = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
 
-        user_name.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+        ConfirmUserType(user_type);
 
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+        if (user_type != null) {
 
-                    String uid = dataSnapshot.child("uid").getValue(String.class);
+            if (user_type.equals("일반회원")) {
 
-                    if (uid != null) {
-                        if (uid.equals(Uid)) {
-                            String type = dataSnapshot.child("type").getValue(String.class);
-                            normal_username = dataSnapshot.child("nickName").getValue(String.class);
+                Log.d("normal_name course", "normal_member course");
 
-                            ConfirmUserType(type);
+                Query query = mFirebaseDatabaseReference.child("ChatRoom").child(normal_name).child(academy_name).child(MESSAGES_CHILD);
+                FirebaseRecyclerOptions<ChatMessage> options = new FirebaseRecyclerOptions.Builder<ChatMessage>().setQuery(query, ChatMessage.class).build();
 
-                            if (type.equals("일반회원")) {
+                mFirebaseAdapter = new FirebaseRecyclerAdapter<ChatMessage, MessageViewHolder>(options) {
+                    @NonNull
+                    @Override
+                    public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_view, parent, false);
+                        return new MessageViewHolder(view);
+                    }
 
-                                findViewById(R.id.send_button).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        final ChatMessage chatMessage = new ChatMessage(mMessageEditText.getText().toString(), normal_username, mPhotoUrl);
-
-                                        final String normal_message_text = mMessageEditText.getText().toString();
-
-                                        mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_username).child(MESSAGES_CHILD).push().setValue(chatMessage);
-
-                                        mFirebaseDatabaseReference.child(Common.ACADEMY_INFO_REFERENCE).child(academy_name).addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                String token = snapshot.child("token").getValue(String.class);
-
-                                                Log.d("send token", "director send token : " + token);
-
-                                                SendNotification.sendNotification(token, normal_username, normal_message_text);
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                            }
-                                        });
-
-                                        mFirebaseDatabaseReference.child("ChatRoom").child(normal_username).child(academy_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
-                                        mMessageEditText.setText("");
-                                    }
-                                });
-
-                            } else {
-//                                final DatabaseReference academy = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE).child(academy_name);
-
-                                findViewById(R.id.send_button).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        final ChatMessage chatMessage = new ChatMessage(mMessageEditText.getText().toString(), academy_name, mPhotoUrl);
-
-                                        final String director_message_text = mMessageEditText.getText().toString();
-
-                                        Log.d("director", "director name: " + academy_name);
-
-                                        mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
-
-                                        mFirebaseDatabaseReference.child(Common.MEMBER_INFO_REFERENCE).child(normal_name).addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                String token = snapshot.child("token").getValue(String.class);
-
-                                                Log.d("send token", "normal_member send token : " + token);
-
-                                                SendNotification.sendNotification(token, academy_name, director_message_text);
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                            }
-                                        });
-
-                                        mFirebaseDatabaseReference.child("ChatRoom").child(normal_name).child(academy_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
-                                        mMessageEditText.setText("");
-                                    }
-                                });
-
-//                                academy.addValueEventListener(new ValueEventListener() {
-//                                    @Override
-//                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                        director_username = snapshot.child("academy_name").getValue(String.class);
-//
-//
-//                                    }
-//
-//                                    @Override
-//                                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                    }
-//                                });
-
-                            }
+                    @Override
+                    protected void onBindViewHolder(MessageViewHolder holder, int position, ChatMessage model) {
+                        if (model.getText() != null && model.getName() != null) {
+                            holder.messageTextView.setText(model.getText());
+                            holder.nameTextView.setText(model.getName());
+                        }
+                        if (model.getPhotoURL() == null) {
+                            holder.photoImageView.setImageDrawable(ContextCompat.getDrawable(ChattingActivity.this, R.drawable.ic_baseline_account_circle_24));
+                        } else {
+                            Glide.with(ChattingActivity.this).load(model.getPhotoURL()).into(holder.photoImageView);
                         }
                     }
-                }
+                };
+
+                mMessageRecyclerView.setLayoutManager(new LinearLayoutManager(ChattingActivity.this));
+                mMessageRecyclerView.setAdapter(mFirebaseAdapter);
+                mMessageRecyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mMessageRecyclerView.scrollToPosition(mMessageRecyclerView.getAdapter().getItemCount() - 1);
+                    }
+                });
+
+                findViewById(R.id.send_button).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final ChatMessage chatMessage = new ChatMessage(mMessageEditText.getText().toString(), normal_name, mPhotoUrl);
+
+                        final String normal_message_text = mMessageEditText.getText().toString();
+
+                        mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
+
+                        mFirebaseDatabaseReference.child(Common.ACADEMY_INFO_REFERENCE).child(academy_name).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String token = snapshot.child("token").getValue(String.class);
+
+                                Log.d("send token", "director send token : " + token);
+
+                                SendNotification.sendNotification(token, normal_name, normal_message_text);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+                        mFirebaseDatabaseReference.child("ChatRoom").child(normal_name).child(academy_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
+                        mMessageEditText.setText("");
+                    }
+                });
+
+            } else {
+
+                Log.d("academy_name course", "academy_director course");
+
+                Query query = mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_name).child(MESSAGES_CHILD);
+                FirebaseRecyclerOptions<ChatMessage> options = new FirebaseRecyclerOptions.Builder<ChatMessage>().setQuery(query, ChatMessage.class).build();
+
+                mFirebaseAdapter = new FirebaseRecyclerAdapter<ChatMessage, MessageViewHolder>(options) {
+                    @NonNull
+                    @Override
+                    public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_view, parent, false);
+                        return new MessageViewHolder(view);
+                    }
+
+                    @Override
+                    protected void onBindViewHolder(MessageViewHolder holder, int position, ChatMessage model) {
+                        if (model.getText() != null && model.getName() != null) {
+                            holder.messageTextView.setText(model.getText());
+                            holder.nameTextView.setText(model.getName());
+                        }
+                        if (model.getPhotoURL() == null) {
+                            holder.photoImageView.setImageDrawable(ContextCompat.getDrawable(ChattingActivity.this, R.drawable.ic_baseline_account_circle_24));
+                        } else {
+                            Glide.with(ChattingActivity.this).load(model.getPhotoURL()).into(holder.photoImageView);
+                        }
+                    }
+                };
+
+                mMessageRecyclerView.setLayoutManager(new LinearLayoutManager(ChattingActivity.this));
+                mMessageRecyclerView.setAdapter(mFirebaseAdapter);
+                mMessageRecyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mMessageRecyclerView.scrollToPosition(mMessageRecyclerView.getAdapter().getItemCount() - 1);
+                    }
+                });
+
+                findViewById(R.id.send_button).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final ChatMessage chatMessage = new ChatMessage(mMessageEditText.getText().toString(), academy_name, mPhotoUrl);
+
+                        final String director_message_text = mMessageEditText.getText().toString();
+
+                        Log.d("director", "director name: " + academy_name);
+
+                        mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
+
+                        mFirebaseDatabaseReference.child(Common.MEMBER_INFO_REFERENCE).child(normal_name).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String token = snapshot.child("token").getValue(String.class);
+
+                                Log.d("send token", "normal_member send token : " + token);
+
+                                SendNotification.sendNotification(token, academy_name, director_message_text);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+                        mFirebaseDatabaseReference.child("ChatRoom").child(normal_name).child(academy_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
+                        mMessageEditText.setText("");
+                    }
+                });
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        if (academy_name != null) {
-
+        } else if (academy_name != null && normal_name != null && user_type == null){
             Query query = mFirebaseDatabaseReference.child("ChatRoom").child(normal_name).child(academy_name).child(MESSAGES_CHILD);
             FirebaseRecyclerOptions<ChatMessage> options = new FirebaseRecyclerOptions.Builder<ChatMessage>().setQuery(query, ChatMessage.class).build();
 
@@ -232,78 +260,54 @@ public class ChattingActivity extends AppCompatActivity {
 
             mMessageRecyclerView.setLayoutManager(new LinearLayoutManager(ChattingActivity.this));
             mMessageRecyclerView.setAdapter(mFirebaseAdapter);
-
-        } else if (normal_name != null) {
-            Query query = mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_name).child(MESSAGES_CHILD);
-            FirebaseRecyclerOptions<ChatMessage> options = new FirebaseRecyclerOptions.Builder<ChatMessage>().setQuery(query, ChatMessage.class).build();
-
-            mFirebaseAdapter = new FirebaseRecyclerAdapter<ChatMessage, MessageViewHolder>(options) {
-                @NonNull
+            mMessageRecyclerView.post(new Runnable() {
                 @Override
-                public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_view, parent, false);
-                    return new MessageViewHolder(view);
+                public void run() {
+                    mMessageRecyclerView.scrollToPosition(mMessageRecyclerView.getAdapter().getItemCount() - 1);
                 }
+            });
 
+            findViewById(R.id.send_button).setOnClickListener(new View.OnClickListener() {
                 @Override
-                protected void onBindViewHolder(MessageViewHolder holder, int position, ChatMessage model) {
-                    if (model.getText() != null && model.getName() != null) {
-                        holder.messageTextView.setText(model.getText());
-                        holder.nameTextView.setText(model.getName());
-                    }
-                    if (model.getPhotoURL() == null) {
-                        holder.photoImageView.setImageDrawable(ContextCompat.getDrawable(ChattingActivity.this, R.drawable.ic_baseline_account_circle_24));
-                    } else {
-                        Glide.with(ChattingActivity.this).load(model.getPhotoURL()).into(holder.photoImageView);
-                    }
+                public void onClick(View v) {
+                    final ChatMessage chatMessage = new ChatMessage(mMessageEditText.getText().toString(), normal_name, mPhotoUrl);
+
+                    final String normal_message_text = mMessageEditText.getText().toString();
+
+                    mFirebaseDatabaseReference.child("ChatRoom").child(academy_name).child(normal_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
+
+                    mFirebaseDatabaseReference.child(Common.ACADEMY_INFO_REFERENCE).child(academy_name).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String token = snapshot.child("token").getValue(String.class);
+
+                            Log.d("send token", "director send token : " + token);
+
+                            SendNotification.sendNotification(token, normal_name, normal_message_text);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                    mFirebaseDatabaseReference.child("ChatRoom").child(normal_name).child(academy_name).child(MESSAGES_CHILD).push().setValue(chatMessage);
+                    mMessageEditText.setText("");
                 }
-            };
-
-            mMessageRecyclerView.setLayoutManager(new LinearLayoutManager(ChattingActivity.this));
-            mMessageRecyclerView.setAdapter(mFirebaseAdapter);
-        }
-
-
-    }
-
-    private void ConfirmUserType(String type) {
-        if (type.equals("원장회원")) {
-            User_type = "원장회원";
-        } else {
-            User_type = "일반회원";
+            });
         }
     }
 
-//    private void sendGson() {
-//        mRootDatabaseReference.child("UserList").child(mFriendUid).child("PushToken").addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                Map<String,String> map= (Map<String, String>) dataSnapshot.getValue(); //상대유저의 토큰
-//                mPushToken = map.get("pushToken");
-//
-//
-//
-//                Log.d(TAG, "상대방의 토큰 : " + mPushToken);
-//                mRootDatabaseReference.child("UserList").child(mFriendUid).addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        Profile profile = dataSnapshot.getValue(Profile.class);
-//                        SendNotification.sendNotification(mPushToken, profile.getNickName(), mFcmMessage);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
+    private void ConfirmUserType (String type) {
+        if (type != null) {
+            if (type.equals("일반회원")) {
+                User_type = "일반회원";
+            } else if (type.equals("원장회원")) {
+                User_type = "원장회원";
+            }
+        }
+    }
 
     @Override
     protected void onStart() {
@@ -326,17 +330,31 @@ public class ChattingActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
 
-        if (User_type.equals("원장회원")) {
-            switch(item.getItemId())
-            {
-                case R.id.chatting_exit: {
-                    Intent intent = new Intent (this, ChattingRoom_Director_Activity.class);
-                    startActivity(intent);
-                    finish();
-                    return true;
+        if (User_type != null) {
+            if (User_type.equals("원장회원")) {
+                switch(item.getItemId())
+                {
+                    case R.id.chatting_exit: {
+                        Intent intent = new Intent (this, ChattingRoom_Director_Activity.class);
+                        startActivity(intent);
+                        finish();
+                        return true;
+                    }
+                    default:
+                        return super.onOptionsItemSelected(item);
                 }
-                default:
-                    return super.onOptionsItemSelected(item);
+            } else {
+                switch(item.getItemId())
+                {
+                    case R.id.chatting_exit: {
+                        Intent intent = new Intent (this, ChattingRoom_Normal_Activity.class);
+                        startActivity(intent);
+                        finish();
+                        return true;
+                    }
+                    default:
+                        return super.onOptionsItemSelected(item);
+                }
             }
         } else {
             switch(item.getItemId())

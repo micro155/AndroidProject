@@ -26,11 +26,15 @@
         <activity
             android:name=".Downloader_Management_Activity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".SearchAcademyActivity" />
+        <activity
+            android:name=".SearchAcademyActivity"
+            android:label="@string/search_academy"/>
         <activity
             android:name=".ChattingRoom_Normal_Activity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AddChattingActivity" />
+        <activity
+            android:name=".AddChattingActivity"
+            android:label="@string/menu_create_chatting_room"/>
         <activity android:name=".ChattingActivity" />
         <activity
             android:name=".AcademyManagementActivity"
@@ -51,7 +55,6 @@
 
         <activity
             android:name=".DirectorHomeActivity"
-            android:label="@string/title_activity_customer_home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".UploadActivity"
@@ -71,6 +74,14 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".MyJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
 

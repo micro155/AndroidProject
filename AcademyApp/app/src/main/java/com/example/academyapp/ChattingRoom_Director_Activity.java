@@ -95,6 +95,8 @@ public class ChattingRoom_Director_Activity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
         NavigationUI.setupActionBarWithNavController(ChattingRoom_Director_Activity.this, navController, mAppBarConfiguration);
 
+        navigationView.setCheckedItem(R.id.nav_chatting_director);
+
         listView = (ListView) findViewById(R.id.chatting_room_list_view);
         empty_chatting = (TextView) findViewById(R.id.empty_chatting);
 

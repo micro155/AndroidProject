@@ -91,6 +91,8 @@
             android:id="@+id/btn_user_rating"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/colorButton"
+            android:textColor="@android:color/white"
             android:text="등록" />
 
 

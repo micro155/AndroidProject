@@ -120,6 +120,8 @@ public class AcademyManagementActivity extends AppCompatActivity implements OnMa
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        navigationView.setCheckedItem(R.id.nav_academy_management);
+
         AcademyInfoRef = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
 
         confirmAcademyInfo();

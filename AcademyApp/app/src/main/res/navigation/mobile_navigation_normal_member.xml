@@ -12,19 +12,16 @@
 
     <fragment
         android:id="@+id/nav_normalmember_logout"
-        android:name="com.example.academyapp.ui.gallery.FunctionFragment"
-        android:label="@string/menu_logout" />
+        android:name="com.example.academyapp.ui.gallery.FunctionFragment" />
 
     <fragment
         android:id="@+id/nav_download"
         android:name="com.example.academyapp.ui.gallery.FunctionFragment"
-        android:label="@string/menu_download"
         tools:layout="@layout/fragment_download" />
 
     <fragment
-        android:id="@+id/nav_chatting"
+        android:id="@+id/nav_chatting_normal"
         android:name="com.example.academyapp.ui.gallery.FunctionFragment"
-        android:label="@string/menu_chatting"
         tools:layout="@layout/fragment_chatting_room" />
 
 </navigation>

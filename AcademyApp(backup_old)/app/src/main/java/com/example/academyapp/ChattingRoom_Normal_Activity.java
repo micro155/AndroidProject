@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.academyapp.Utils.UserUtils;
@@ -68,6 +69,7 @@ public class ChattingRoom_Normal_Activity extends AppCompatActivity {
     private ArrayList<String> messages_array;
     private ArrayList<String> profile;
     private ListView listView;
+    private TextView empty_chatting;
 
 
     @Override
@@ -77,6 +79,7 @@ public class ChattingRoom_Normal_Activity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_chatting_room_normal);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.menu_chatting);
 
         drawer = findViewById(R.id.drawer_chatting_room_normal_layout);
 
@@ -93,6 +96,7 @@ public class ChattingRoom_Normal_Activity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         listView = (ListView) findViewById(R.id.chatting_room_list_view);
+        empty_chatting = (TextView) findViewById(R.id.empty_chatting);
 
         init();
 
@@ -183,12 +187,33 @@ public class ChattingRoom_Normal_Activity extends AppCompatActivity {
         });
 
         View headerView = navigationView.getHeaderView(0);
-        TextView txt_nick_name = (TextView)headerView.findViewById(R.id.txt_nick_name);
-        TextView txt_email = (TextView)headerView.findViewById(R.id.txt_email);
+        final TextView txt_nick_name = (TextView)headerView.findViewById(R.id.txt_nick_name);
+        final TextView txt_email = (TextView)headerView.findViewById(R.id.txt_email);
         img_profile = (ImageView)headerView.findViewById(R.id.img_profile);
 
-        txt_nick_name.setText(Common.buildWelcomeMessage());
-        txt_email.setText(Common.currentMember != null ? Common.currentMember.getEmail() : "");
+        DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        final String user_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String user_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
+        user_ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String uid = dataSnapshot.child("uid").getValue(String.class);
+
+                    if (uid != null && uid.equals(user_uid)) {
+                        String nickName = dataSnapshot.child("nickName").getValue(String.class);
+                        txt_nick_name.setText(nickName);
+                        txt_email.setText(user_email);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         img_profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,60 +244,120 @@ public class ChattingRoom_Normal_Activity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                boolean check = false;
+
                 for (DataSnapshot list_data : snapshot.getChildren()) {
                     final String director_list = list_data.getKey();
                     final String[] director_profile = {null};
                     final String[] chat_text = {null};
                     final String[] name = {null};
 
-                    DatabaseReference token_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(normal_nickName).child(director_list).child("chat_messages");
+                    if (director_list != null) {
 
-                    token_ref.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            name_list.clear();
-                            profile.clear();
-                            messages_array.clear();
+                        check = true;
 
-                            for (DataSnapshot chat_list : snapshot.getChildren()) {
+                        DatabaseReference token_ref = FirebaseDatabase.getInstance().getReference("ChatRoom").child(normal_nickName).child(director_list).child("chat_messages");
 
-                                chat_text[0] = chat_list.child("text").getValue(String.class);
-                                name[0] = chat_list.child("name").getValue(String.class);
+                        token_ref.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                name_list.clear();
+                                profile.clear();
+                                messages_array.clear();
 
-                                Log.d("chat list", "list : " + chat_text[0]);
-                                Log.d("name list", "list : " + name[0]);
+                                for (DataSnapshot chat_list : snapshot.getChildren()) {
 
-                                if (director_list.equals(name[0])) {
-                                    director_profile[0] = chat_list.child("photoURL").getValue(String.class);
-                                    Log.d("director_profile list", "list : " + director_profile[0]);
+                                    chat_text[0] = chat_list.child("text").getValue(String.class);
+                                    name[0] = chat_list.child("name").getValue(String.class);
+
+                                    Log.d("chat list", "list : " + chat_text[0]);
+                                    Log.d("name list", "list : " + name[0]);
+
+                                    if (director_list.equals(name[0])) {
+                                        director_profile[0] = chat_list.child("photoURL").getValue(String.class);
+                                        Log.d("director_profile list", "list : " + director_profile[0]);
+                                    }
                                 }
+
+                                name_list.add(director_list);
+                                profile.add(director_profile[0]);
+                                messages_array.add(chat_text[0]);
+
+                                adapter = new ChatRoomListViewAdapter(ChattingRoom_Normal_Activity.this, name_list, messages_array, profile);
+                                adapter.notifyDataSetChanged();
+
+                                listView.setAdapter(adapter);
+                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
+                                        intent.putExtra("academy_name", name_list.get(position));
+                                        intent.putExtra("director_profile", profile.get(position));
+                                        intent.putExtra("normal_name", normal_nickName);
+                                        intent.putExtra("user_type", "일반회원");
+                                        startActivity(intent);
+                                    }
+                                });
+
+                                listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                                    @Override
+                                    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                                        final DatabaseReference chat_ref = FirebaseDatabase.getInstance().getReference("ChatRoom");
+
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(ChattingRoom_Normal_Activity.this);
+
+                                        builder.setTitle("대화방 나가기")
+                                                .setMessage("대화방을 나가시겠습니까?")
+                                                .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        Toast.makeText(getApplicationContext(), "대화방 나가기 취소", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                })
+                                                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        chat_ref.child(normal_nickName).child(name_list.get(position)).removeValue().addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Toast.makeText(getApplicationContext(), e.getMessage() + "로 인한 대화방 삭제 실패", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                name_list.remove(name_list.get(position));
+                                                                profile.remove(profile.get(position));
+                                                                messages_array.remove(messages_array.get(position));
+                                                                setChatList(name_list, profile, messages_array);
+                                                                adapter.notifyDataSetChanged();
+                                                                Toast.makeText(getApplicationContext(), "대화방 삭제 완료", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                                    }
+                                                });
+
+                                        AlertDialog alertDialog = builder.create();
+                                        alertDialog.show();
+
+                                        return true;
+                                    }
+                                });
+                                
                             }
 
-                            name_list.add(director_list);
-                            profile.add(director_profile[0]);
-                            messages_array.add(chat_text[0]);
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
 
-                            adapter = new ChatRoomListViewAdapter(ChattingRoom_Normal_Activity.this, name_list, messages_array, profile);
-                            adapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+                }
 
-                            listView.setAdapter(adapter);
-                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
-                                    intent.putExtra("academy_name", name_list.get(position));
-                                    intent.putExtra("director_profile", profile.get(position));
-                                    intent.putExtra("normal_name", normal_nickName);
-                                    startActivity(intent);
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
+                if (!check) {
+                    empty_chatting.setVisibility(View.VISIBLE);
+                } else {
+                    empty_chatting.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -283,8 +368,17 @@ public class ChattingRoom_Normal_Activity extends AppCompatActivity {
         });
     }
 
+    private void setChatList(ArrayList<String> name_list, ArrayList<String> profile, ArrayList<String> messages) {
+        this.name_list = name_list;
+        this.profile = profile;
+        this.messages_array = messages;
+    }
+
 
     private void showDialogUpload() {
+        final DatabaseReference normal_ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(ChattingRoom_Normal_Activity.this);
         builder.setTitle("프로필 변경")
                 .setMessage("정말로 프로필을 변경하시겠습니까?")
@@ -319,10 +413,29 @@ public class ChattingRoom_Normal_Activity extends AppCompatActivity {
                                                 profileFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                     @Override
                                                     public void onSuccess(Uri uri) {
-                                                        Map<String, Object> updateData = new HashMap<>();
+                                                        final Map<String, Object> updateData = new HashMap<>();
                                                         updateData.put("profile", uri.toString());
 
-                                                        UserUtils.updateUser(drawer, updateData);
+                                                        normal_ref.addValueEventListener(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                                    String user_id = dataSnapshot.child("uid").getValue(String.class);
+
+                                                                    if (user_id != null) {
+                                                                        if (user_id.equals(uid)) {
+                                                                            String nick_name = dataSnapshot.child("nickName").getValue(String.class);
+                                                                            UserUtils.updateUser(drawer, updateData, nick_name);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                                            }
+                                                        });
                                                     }
                                                 });
                                             }

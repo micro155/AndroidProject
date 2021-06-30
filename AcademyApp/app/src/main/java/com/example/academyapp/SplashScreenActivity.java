@@ -76,9 +76,9 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-//        if(firebaseAuth != null && listener != null) {
-//            firebaseAuth.removeAuthStateListener(listener);
-//        }
+        if(firebaseAuth != null && listener != null) {
+            firebaseAuth.removeAuthStateListener(listener);
+        }
         super.onStop();
     }
 
@@ -126,7 +126,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                             MemberInfoModel memberInfoModel = dataSnapshot.getValue(MemberInfoModel.class);
                             goToHomeActivity(memberInfoModel);
                             check = true;
-//                            finish();
                         }
                     }
                 }
@@ -269,17 +268,14 @@ public class SplashScreenActivity extends AppCompatActivity {
                                 Log.d("route", "normalMember route");
                                 startActivity(new Intent(SplashScreenActivity.this, NormalMemberHomeActivity.class));
                                 finish();
-//                                break;
                             } else {
                                 Log.d("route", "director route");
                                 startActivity(new Intent(SplashScreenActivity.this, DirectorHomeActivity.class));
                                 finish();
-//                                break;
                             }
                         }
                     }
                 }
-//                finish();
             }
 
             @Override

@@ -83,6 +83,7 @@ public class UploadActivity extends AppCompatActivity {
     private String mUid;
     private ListView listView;
     private DirectorFileListViewAdapter adapter;
+    private TextView empty_upload;
 
     private Uri filePath;
     DatabaseReference FileDatabase;
@@ -94,6 +95,7 @@ public class UploadActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_upload);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.menu_upload);
 
         drawer = findViewById(R.id.drawer_upload_layout);
         navigationView = findViewById(R.id.nav_upload_view);
@@ -117,6 +119,7 @@ public class UploadActivity extends AppCompatActivity {
         btUpload = (Button) findViewById(R.id.bt_upload);
         upload_file_name = (EditText) findViewById(R.id.upload_file);
         listView = (ListView) findViewById(R.id.video_list);
+        empty_upload = (TextView) findViewById(R.id.empty_upload);
 
         //버튼 클릭 이벤트
         btChoose.setOnClickListener(new View.OnClickListener() {
@@ -177,14 +180,19 @@ public class UploadActivity extends AppCompatActivity {
                         file_ref.child(academy_name).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                boolean check = false;
                                 file_list.clear();
                                 for (DataSnapshot fileSnapshot : snapshot.getChildren()) {
                                     String file_name = fileSnapshot.child("file_name").getValue(String.class);
 
-                                    Log.d("UploadActivity academy", "academy_name : " + academy_name);
-                                    Log.d("UploadActivity TAG", "file_name : " + file_name);
+                                    if (file_name != null) {
+                                        check = true;
 
-                                    file_list.add(file_name);
+                                        Log.d("UploadActivity academy", "academy_name : " + academy_name);
+                                        Log.d("UploadActivity TAG", "file_name : " + file_name);
+
+                                        file_list.add(file_name);
+                                    }
 
                                 }
 
@@ -199,6 +207,11 @@ public class UploadActivity extends AppCompatActivity {
                                 adapter.notifyDataSetChanged();
                                 listView.setAdapter(adapter);
 
+                                if (!check) {
+                                    empty_upload.setVisibility(View.VISIBLE);
+                                } else {
+                                    empty_upload.setVisibility(View.INVISIBLE);
+                                }
 
                                 Log.d("list array tag", "list array : " + file_list);
                             }
@@ -249,6 +262,9 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     private void showDialogUpload() {
+        final DatabaseReference normal_ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(UploadActivity.this);
         builder.setTitle("프로필 변경")
                 .setMessage("정말로 프로필을 변경하시겠습니까?")
@@ -283,10 +299,29 @@ public class UploadActivity extends AppCompatActivity {
                                                 profileFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                     @Override
                                                     public void onSuccess(Uri uri) {
-                                                        Map<String, Object> updateData = new HashMap<>();
+                                                        final Map<String, Object> updateData = new HashMap<>();
                                                         updateData.put("profile", uri.toString());
 
-                                                        UserUtils.updateUser(drawer, updateData);
+                                                        normal_ref.addValueEventListener(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                                    String user_id = dataSnapshot.child("uid").getValue(String.class);
+
+                                                                    if (user_id != null) {
+                                                                        if (user_id.equals(uid)) {
+                                                                            String nick_name = dataSnapshot.child("nickName").getValue(String.class);
+                                                                            UserUtils.updateUser(drawer, updateData, nick_name);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                                            }
+                                                        });
                                                     }
                                                 });
                                             }
@@ -385,12 +420,33 @@ public class UploadActivity extends AppCompatActivity {
         });
 
         View headerView = navigationView.getHeaderView(0);
-        TextView txt_nick_name = (TextView)headerView.findViewById(R.id.txt_nick_name);
-        TextView txt_email = (TextView)headerView.findViewById(R.id.txt_email);
+        final TextView txt_nick_name = (TextView)headerView.findViewById(R.id.txt_nick_name);
+        final TextView txt_email = (TextView)headerView.findViewById(R.id.txt_email);
         img_profile = (ImageView)headerView.findViewById(R.id.img_profile);
 
-        txt_nick_name.setText(Common.buildWelcomeMessage());
-        txt_email.setText(Common.currentMember != null ? Common.currentMember.getEmail() : "");
+        DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        final String user_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String user_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
+        user_ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String uid = dataSnapshot.child("uid").getValue(String.class);
+
+                    if (uid != null && uid.equals(user_uid)) {
+                        String nickName = dataSnapshot.child("nickName").getValue(String.class);
+                        txt_nick_name.setText(nickName);
+                        txt_email.setText(user_email);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         img_profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -474,12 +530,12 @@ public class UploadActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.customer_home, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.customer_home, menu);
+//        return true;
+//    }
 
 
     @Override

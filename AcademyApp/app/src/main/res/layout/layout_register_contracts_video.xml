@@ -52,7 +52,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
                 android:text="검색"
-                android:textColor="@color/colorBlack" />
+                android:background="@color/colorButton"
+                android:textColor="@android:color/white" />
 
         </LinearLayout>
 
@@ -138,7 +139,8 @@
             android:layout_gravity="center_horizontal"
             android:textSize="18dp"
             android:text="등록"
-            android:textColor="@color/colorBlack" />
+            android:background="@color/colorButton"
+            android:textColor="@android:color/white" />
 
 
     </LinearLayout>

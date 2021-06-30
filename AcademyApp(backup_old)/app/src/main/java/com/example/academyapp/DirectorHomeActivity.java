@@ -93,15 +93,6 @@ public class DirectorHomeActivity extends AppCompatActivity implements OnMapRead
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
         drawer = findViewById(R.id.drawer_director_layout);
         navigationView = findViewById(R.id.nav_director_view);
         // Passing each menu ID as a set of Ids because each
@@ -249,6 +240,9 @@ public class DirectorHomeActivity extends AppCompatActivity implements OnMapRead
     }
 
     private void showDialogUpload() {
+        final DatabaseReference normal_ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(DirectorHomeActivity.this);
         builder.setTitle("프로필 변경")
                 .setMessage("정말로 프로필을 변경하시겠습니까?")
@@ -283,10 +277,29 @@ public class DirectorHomeActivity extends AppCompatActivity implements OnMapRead
                                                 profileFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                     @Override
                                                     public void onSuccess(Uri uri) {
-                                                        Map<String, Object> updateData = new HashMap<>();
+                                                        final Map<String, Object> updateData = new HashMap<>();
                                                         updateData.put("profile", uri.toString());
 
-                                                        UserUtils.updateUser(drawer, updateData);
+                                                        normal_ref.addValueEventListener(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                                    String user_id = dataSnapshot.child("uid").getValue(String.class);
+
+                                                                    if (user_id != null) {
+                                                                        if (user_id.equals(uid)) {
+                                                                            String nick_name = dataSnapshot.child("nickName").getValue(String.class);
+                                                                            UserUtils.updateUser(drawer, updateData, nick_name);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                                            }
+                                                        });
                                                     }
                                                 });
                                             }
@@ -385,12 +398,33 @@ public class DirectorHomeActivity extends AppCompatActivity implements OnMapRead
         });
 
         View headerView = navigationView.getHeaderView(0);
-        TextView txt_nick_name = (TextView)headerView.findViewById(R.id.txt_nick_name);
-        TextView txt_email = (TextView)headerView.findViewById(R.id.txt_email);
+        final TextView txt_nick_name = (TextView)headerView.findViewById(R.id.txt_nick_name);
+        final TextView txt_email = (TextView)headerView.findViewById(R.id.txt_email);
         img_profile = (ImageView)headerView.findViewById(R.id.img_profile);
 
-        txt_nick_name.setText(Common.buildWelcomeMessage());
-        txt_email.setText(Common.currentMember != null ? Common.currentMember.getEmail() : "");
+        DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        final String user_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String user_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
+        user_ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String uid = dataSnapshot.child("uid").getValue(String.class);
+
+                    if (uid != null && uid.equals(user_uid)) {
+                        String nickName = dataSnapshot.child("nickName").getValue(String.class);
+                        txt_nick_name.setText(nickName);
+                        txt_email.setText(user_email);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         img_profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -410,12 +444,12 @@ public class DirectorHomeActivity extends AppCompatActivity implements OnMapRead
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.customer_home, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.customer_home, menu);
+//        return true;
+//    }
 
     @Override
     public boolean onSupportNavigateUp() {

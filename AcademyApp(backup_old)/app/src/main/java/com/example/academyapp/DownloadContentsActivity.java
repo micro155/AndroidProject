@@ -76,6 +76,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
     private ListView listView;
     private FileListViewAdapter adapter;
     private FirebaseStorage storage;
+    private TextView empty_download;
 
 
     @Override
@@ -87,6 +88,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_download);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.menu_download);
 
         drawer = findViewById(R.id.drawer_download_layout);
 
@@ -102,6 +104,7 @@ public class DownloadContentsActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         listView = (ListView) findViewById(R.id.file_list_view);
+        empty_download = (TextView) findViewById(R.id.empty_download);
 
 
         FileStorage_Ref = FirebaseDatabase.getInstance().getReference("FileList");
@@ -449,15 +452,19 @@ public class DownloadContentsActivity extends AppCompatActivity {
         final ArrayList<String> file_list = new ArrayList<String>();
 
 
-        FileStorage_Ref.addValueEventListener(new ValueEventListener() {
+        FileStorage_Ref.child(uploader_name).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                boolean check = false;
 
                 for (DataSnapshot fileData : snapshot.getChildren()) {
 
                     final String file_name = fileData.child("file_name").getValue(String.class);
 
                     if (file_name != null) {
+
+                        check = true;
 
                         Log.d("file_name", "file_name : " + file_name);
 
@@ -474,6 +481,12 @@ public class DownloadContentsActivity extends AppCompatActivity {
                         adapter.notifyDataSetChanged();
                         listView.setAdapter(adapter);
                     }
+                }
+
+                if (!check) {
+                    empty_download.setVisibility(View.VISIBLE);
+                } else {
+                    empty_download.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -548,12 +561,33 @@ public class DownloadContentsActivity extends AppCompatActivity {
         });
 
         View headerView = navigationView.getHeaderView(0);
-        TextView txt_nick_name = (TextView)headerView.findViewById(R.id.txt_nick_name);
-        TextView txt_email = (TextView)headerView.findViewById(R.id.txt_email);
+        final TextView txt_nick_name = (TextView)headerView.findViewById(R.id.txt_nick_name);
+        final TextView txt_email = (TextView)headerView.findViewById(R.id.txt_email);
         img_profile = (ImageView)headerView.findViewById(R.id.img_profile);
 
-        txt_nick_name.setText(Common.buildWelcomeMessage());
-        txt_email.setText(Common.currentMember != null ? Common.currentMember.getEmail() : "");
+        DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        final String user_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String user_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
+        user_ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String uid = dataSnapshot.child("uid").getValue(String.class);
+
+                    if (uid != null && uid.equals(user_uid)) {
+                        String nickName = dataSnapshot.child("nickName").getValue(String.class);
+                        txt_nick_name.setText(nickName);
+                        txt_email.setText(user_email);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         img_profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -573,6 +607,9 @@ public class DownloadContentsActivity extends AppCompatActivity {
     }
 
     private void showDialogUpload() {
+        final DatabaseReference normal_ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(DownloadContentsActivity.this);
         builder.setTitle("프로필 변경")
                 .setMessage("정말로 프로필을 변경하시겠습니까?")
@@ -607,10 +644,29 @@ public class DownloadContentsActivity extends AppCompatActivity {
                                                 profileFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                     @Override
                                                     public void onSuccess(Uri uri) {
-                                                        Map<String, Object> updateData = new HashMap<>();
+                                                        final Map<String, Object> updateData = new HashMap<>();
                                                         updateData.put("profile", uri.toString());
 
-                                                        UserUtils.updateUser(drawer, updateData);
+                                                        normal_ref.addValueEventListener(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                                    String user_id = dataSnapshot.child("uid").getValue(String.class);
+
+                                                                    if (user_id != null) {
+                                                                        if (user_id.equals(uid)) {
+                                                                            String nick_name = dataSnapshot.child("nickName").getValue(String.class);
+                                                                            UserUtils.updateUser(drawer, updateData, nick_name);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                                            }
+                                                        });
                                                     }
                                                 });
                                             }

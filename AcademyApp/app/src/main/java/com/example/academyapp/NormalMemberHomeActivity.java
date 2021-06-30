@@ -106,6 +106,8 @@ public class NormalMemberHomeActivity extends AppCompatActivity implements OnMap
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        navigationView.setCheckedItem(R.id.nav_normalmember_home);
+
         FragmentManager fm = getSupportFragmentManager();
         MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.map2);
         if (mapFragment == null) {

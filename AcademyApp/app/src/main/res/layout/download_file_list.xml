@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:text="다운로드"
-        android:background="@color/colorPrimary"
-        android:textColor="#FFFFFF"/>
+        android:background="@color/colorButton"
+        android:textColor="@android:color/white"/>
 
 </LinearLayout>

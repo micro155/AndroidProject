@@ -103,6 +103,8 @@ public class DownloadContentsActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        navigationView.setCheckedItem(R.id.nav_download);
+
         listView = (ListView) findViewById(R.id.file_list_view);
         empty_download = (TextView) findViewById(R.id.empty_download);
 

@@ -109,6 +109,8 @@ public class UploadActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        navigationView.setCheckedItem(R.id.nav_upload);
+
         final DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
         final DatabaseReference file_ref = FirebaseDatabase.getInstance().getReference("FileList");
         final Uri photo_url = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();

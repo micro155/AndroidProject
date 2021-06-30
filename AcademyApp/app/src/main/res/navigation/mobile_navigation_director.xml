@@ -3,11 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation_director"
-    app:startDestination="@+id/nav_upload">
+    app:startDestination="@+id/nav_director_home">
 
     <fragment
         android:id="@+id/nav_director_home"
-        android:name="com.example.academyapp.ui.home.HomeFragment" />
+        android:name="com.example.academyapp.ui.home.HomeFragment"
+        tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_director_logout"
@@ -15,14 +16,22 @@
 
     <fragment
         android:id="@+id/nav_upload"
-        android:name="com.example.academyapp.ui.gallery.FunctionFragment" />
+        android:name="com.example.academyapp.ui.gallery.FunctionFragment"
+        tools:layout="@layout/fragment_upload" />
 
     <fragment
         android:id="@+id/nav_academy_management"
-        android:name="com.example.academyapp.ui.gallery.FunctionFragment" />
+        android:name="com.example.academyapp.ui.gallery.FunctionFragment"
+        tools:layout="@layout/fragment_management" />
+
+    <fragment
+        android:id="@+id/nav_chatting_director"
+        android:name="com.example.academyapp.ui.gallery.FunctionFragment"
+        tools:layout="@layout/fragment_chatting_room" />
 
     <fragment
         android:id="@+id/nav_downloader_management"
-        android:name="com.example.academyapp.ui.gallery.FunctionFragment" />
+        android:name="com.example.academyapp.ui.gallery.FunctionFragment"
+        tools:layout="@layout/fragment_downloader_management" />
 
 </navigation>

@@ -123,7 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_academy_modify"
-                style="@style/Widget.MaterialComponents.Button"
+                android:background="@color/colorButton"
                 android:text="학원 정보 수정"
                 android:textSize="15dp"
                 android:textColor="@android:color/white"/>

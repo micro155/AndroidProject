@@ -130,7 +130,8 @@
             android:layout_gravity="center_horizontal"
             android:textSize="18dp"
             android:text="확인"
-            android:textColor="@color/colorBlack" />
+            android:background="@color/colorButton"
+            android:textColor="@android:color/white" />
 
 
     </LinearLayout>
