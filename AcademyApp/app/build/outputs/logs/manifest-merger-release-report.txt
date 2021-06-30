@@ -1,0 +1,805 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:2:1-63:12
+INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:2:1-63:12
+INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:2:1-63:12
+INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:2:1-63:12
+MERGED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:2:1-109:12
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.4] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\358c598472857b949950a00c5204478a\constraintlayout-2.0.4\AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.navigation:navigation-ui:2.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\cdb06171b22f908fe1cabb32f62a329d\navigation-ui-2.3.2\AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.android.material:material:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\5b987475490df54cfb0244c0666b7297\material-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:2:1-40:12
+MERGED from [me.zhanghai.android.materialprogressbar:library:1.6.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\d418081253e403bcaa584f3e771c1200\jetified-library-1.6.1\AndroidManifest.xml:6:1-15:12
+MERGED from [androidx.appcompat:appcompat:1.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\15b098c234cd5bd91713da8686bd2d8a\appcompat-1.2.0\AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:17:1-83:12
+MERGED from [com.google.firebase:firebase-storage:19.2.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\72a169f1d941c71a657bc8e9dbc2e15b\jetified-firebase-storage-19.2.2\AndroidManifest.xml:15:1-39:12
+MERGED from [com.firebaseui:firebase-ui-database:3.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\d67dcb4438a9a8fded00b0c7f3bdae05\jetified-firebase-ui-database-3.1.0\AndroidManifest.xml:2:1-13:12
+MERGED from [com.google.firebase:firebase-database:19.6.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\375c3ec2918e8632600de2a5df478792\jetified-firebase-database-19.6.0\AndroidManifest.xml:15:1-38:12
+MERGED from [com.firebaseui:firebase-ui-common:3.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\4bac3f9981a30de13a333b43f535d707\jetified-firebase-ui-common-3.1.0\AndroidManifest.xml:2:1-12:12
+MERGED from [androidx.legacy:legacy-support-v4:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\95673a948217d5771824f29df143ca4f\legacy-support-v4-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.navigation:navigation-fragment:2.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\605430fd7a9d177ede2b7a5557d17780\navigation-fragment-2.3.2\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.lifecycle:lifecycle-extensions:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\32eb52e618905996a4e3f9c3fc505038\lifecycle-extensions-2.2.0\AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.navigation:navigation-runtime:2.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\a5472706d0b9eab54a036ac2a3c63e14\navigation-runtime-2.3.2\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.viewpager2:viewpager2:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c2057b4cde557b9eb14ec3da2abaed97\jetified-viewpager2-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.recyclerview:recyclerview:1.2.0-beta02] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3ba292839829cf45dc7971cc8ef9c5b3\recyclerview-1.2.0-beta02\AndroidManifest.xml:17:1-24:12
+MERGED from [io.reactivex.rxjava2:rxandroid:2.1.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\e7689ef9a9e3bd9d7e65c2c91460ef4e\jetified-rxandroid-2.1.1\AndroidManifest.xml:15:1-20:12
+MERGED from [com.github.bumptech.glide:glide:4.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\99bb43c6e192be18035e4158d4d64ba0\jetified-glide-4.11.0\AndroidManifest.xml:2:1-12:12
+MERGED from [de.hdodenhof:circleimageview:3.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\5df67a50642760dd9da79ee27cf3e32a\jetified-circleimageview-3.1.0\AndroidManifest.xml:2:1-11:12
+MERGED from [com.google.android.gms:play-services-location:16.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\7faf80308c1a3cf2d035a0cb69db294d\jetified-play-services-location-16.0.0\AndroidManifest.xml:2:1-9:12
+MERGED from [androidx.browser:browser:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\87524f33da9f05e216f182f20da20b21\browser-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8a59b5c1b6f352f1aa6c966e35b40243\legacy-support-core-ui-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\0e5eeecdc25ccb19f76fc31afde34ab5\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.appcompat:appcompat-resources:1.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\166c689ae0e70bb64bd4e3afc1921121\jetified-appcompat-resources-1.2.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\a5c3062eba227f5417b64884914b1abb\legacy-support-core-utils-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\b2ea93cc506ef43b5057eba0a688965e\localbroadcastmanager-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [com.google.firebase:firebase-auth-interop:19.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\aa2b30bfe8c0487cb8c4e2140d11b728\jetified-firebase-auth-interop-19.0.0\AndroidManifest.xml:2:1-10:12
+MERGED from [com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:15:1-49:12
+MERGED from [com.google.firebase:firebase-components:16.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\ecafbec60288f762faa5940e95b4aef7\jetified-firebase-components-16.1.0\AndroidManifest.xml:15:1-23:12
+MERGED from [androidx.media:media:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\0aeb8096a0886276c3d49167af79482c\media-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:17:1-39:12
+MERGED from [com.google.android.gms:play-services-auth-api-phone:17.4.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\0d0713b0500290cd2855cb58ed21f192\jetified-play-services-auth-api-phone-17.4.0\AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.android.gms:play-services-safetynet:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\6a4e073d8edd23676f40b2b036bf0338\jetified-play-services-safetynet-17.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.firebase:firebase-database-collection:17.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\1ef7defae7bba67a663c0d7cf8275616\jetified-firebase-database-collection-17.0.1\AndroidManifest.xml:2:1-9:12
+MERGED from [com.google.android.gms:play-services-auth-base:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\2e1704e01184d5fce27ef15a6d15afbf\jetified-play-services-auth-base-17.0.0\AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.android.gms:play-services-base:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\9873dc5fe973cc292ec718d9bd24167b\jetified-play-services-base-17.1.0\AndroidManifest.xml:17:1-29:12
+MERGED from [com.google.android.gms:play-services-tasks:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c1a644fae69d9f58200f77774e134818\jetified-play-services-tasks-17.0.0\AndroidManifest.xml:2:1-9:12
+MERGED from [com.google.android.gms:play-services-places-placereport:16.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\1e6010fa0a4e5621ae76682e9f8e07db\jetified-play-services-places-placereport-16.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.android.gms:play-services-basement:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c00a8204ed0cc3b7c4045c929d33d9fc\jetified-play-services-basement-17.1.0\AndroidManifest.xml:17:1-28:12
+MERGED from [androidx.fragment:fragment:1.2.4] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\cc9e373f34c1d4d338956a232f644d83\fragment-1.2.4\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.1.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\a94019438a756d0d23d93046af35bbf6\drawerlayout-1.1.1\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3df11c0b2435a01339c0a736ed27d062\coordinatorlayout-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c6ce183522545b6732e592864f20f79f\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\df390b2e9af5c8b4a658aec4e06ecb3b\slidingpanelayout-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.customview:customview:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\02f3de7860205565f8758b7816b76e36\customview-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.transition:transition:1.3.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\93fb4ec2892164ec04a6b45875cfd895\transition-1.3.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\10cfb7ad05f020bf348ba2098a780d6c\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:17:1-32:12
+MERGED from [androidx.lifecycle:lifecycle-service:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\d5359934373bca5787044f4e3ee871bb\jetified-lifecycle-service-2.2.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.activity:activity:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\efed137f9aa17a91432190874a7f436e\jetified-activity-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.navigation:navigation-common:2.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\196ace70eec3f177e2f6343d0be6ab64\navigation-common-2.3.2\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\ed79ec9a7bb85fd4b839e4ada531dc59\vectordrawable-animated-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\aa882d61f33ecdd19c237f62d2bc3338\vectordrawable-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c8838b2ae48dff2791d6f02538a7c514\loader-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\ba6a52fdaaf443e7de82fb4ec017d410\swiperefreshlayout-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\2fed8bd1ca81b4eb0b64b45034a109e8\asynclayoutinflater-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.core:core:1.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3fb0e3c06b9fa9e0e443a7c90866726e\core-1.3.2\AndroidManifest.xml:17:1-26:12
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\6d5e90ca02e923530c136655116ce1b2\lifecycle-runtime-2.2.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\cdea5f9fce01acf3b8018836f05c8ced\lifecycle-livedata-2.2.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\284cefe8199aa095f96d531929bb3e68\jetified-lifecycle-viewmodel-savedstate-2.2.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\4130ff5dd490b20fd1cd0a60ec191359\lifecycle-livedata-core-2.2.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.arch.core:core-runtime:2.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3f2d8d73c20ab13eb58f8970f45bdfa2\core-runtime-2.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\6669a3764302646d2fdd484e2d6992cb\jetified-savedstate-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\ba83e364278c6a28e3c16c275a237b1e\lifecycle-viewmodel-2.2.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\ad8ada69fb7009df2ed886590df700c9\cardview-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [com.github.bumptech.glide:gifdecoder:4.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\e89a5a7dac7660f862ae26f5f1328927\jetified-gifdecoder-4.11.0\AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.exifinterface:exifinterface:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3977514529ccba32898d4de65b3d377f\exifinterface-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [com.naver.maps:geometry:1.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\e9de2e98c7fbf9c30c110bf67465a17a\jetified-geometry-1.2.0\AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\520cb49162c5a20c27b77f13764e9b2d\documentfile-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.print:print:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\9d2a04633b2466e476e2d38a7cb1a082\print-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\cf90d0d13ad94b66888349eca933d608\interpolator-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\d08c932a1161d94a4579217c7f9f67bb\versionedparcelable-1.1.0\AndroidManifest.xml:17:1-27:12
+MERGED from [com.getkeepsafe.relinker:relinker:1.4.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\5f30faccef3b1b3fbf95c41f22111943\jetified-relinker-1.4.1\AndroidManifest.xml:2:1-7:12
+INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:2:1-63:12
+INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:2:1-63:12
+INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:2:1-63:12
+	package
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:3:5-37
+		INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:2:1-63:12
+		INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml
+	android:versionCode
+		INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:2:1-63:12
+		INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:2:11-69
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:5:5-80
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:5:22-77
+uses-permission#android.permission.INTERNET
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:6:5-67
+MERGED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:13:5-67
+MERGED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:13:5-67
+MERGED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:18:5-67
+MERGED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:18:5-67
+MERGED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:23:5-67
+MERGED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:23:5-67
+MERGED from [com.google.firebase:firebase-storage:19.2.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\72a169f1d941c71a657bc8e9dbc2e15b\jetified-firebase-storage-19.2.2\AndroidManifest.xml:27:5-67
+MERGED from [com.google.firebase:firebase-storage:19.2.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\72a169f1d941c71a657bc8e9dbc2e15b\jetified-firebase-storage-19.2.2\AndroidManifest.xml:27:5-67
+MERGED from [com.firebaseui:firebase-ui-database:3.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\d67dcb4438a9a8fded00b0c7f3bdae05\jetified-firebase-ui-database-3.1.0\AndroidManifest.xml:11:5-67
+MERGED from [com.firebaseui:firebase-ui-database:3.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\d67dcb4438a9a8fded00b0c7f3bdae05\jetified-firebase-ui-database-3.1.0\AndroidManifest.xml:11:5-67
+MERGED from [com.google.firebase:firebase-database:19.6.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\375c3ec2918e8632600de2a5df478792\jetified-firebase-database-19.6.0\AndroidManifest.xml:26:5-67
+MERGED from [com.google.firebase:firebase-database:19.6.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\375c3ec2918e8632600de2a5df478792\jetified-firebase-database-19.6.0\AndroidManifest.xml:26:5-67
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:6:22-64
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:7:5-79
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:7:22-76
+application
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:9:5-61:19
+MERGED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:15:5-107:19
+MERGED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:15:5-107:19
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.4] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\358c598472857b949950a00c5204478a\constraintlayout-2.0.4\AndroidManifest.xml:9:5-20
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.4] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\358c598472857b949950a00c5204478a\constraintlayout-2.0.4\AndroidManifest.xml:9:5-20
+MERGED from [com.google.android.material:material:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\5b987475490df54cfb0244c0666b7297\material-1.1.0\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.material:material:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\5b987475490df54cfb0244c0666b7297\material-1.1.0\AndroidManifest.xml:22:5-20
+MERGED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:22:5-38:19
+MERGED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:22:5-38:19
+MERGED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:26:5-81:19
+MERGED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:26:5-81:19
+MERGED from [com.google.firebase:firebase-storage:19.2.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\72a169f1d941c71a657bc8e9dbc2e15b\jetified-firebase-storage-19.2.2\AndroidManifest.xml:29:5-37:19
+MERGED from [com.google.firebase:firebase-storage:19.2.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\72a169f1d941c71a657bc8e9dbc2e15b\jetified-firebase-storage-19.2.2\AndroidManifest.xml:29:5-37:19
+MERGED from [com.google.firebase:firebase-database:19.6.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\375c3ec2918e8632600de2a5df478792\jetified-firebase-database-19.6.0\AndroidManifest.xml:28:5-36:19
+MERGED from [com.google.firebase:firebase-database:19.6.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\375c3ec2918e8632600de2a5df478792\jetified-firebase-database-19.6.0\AndroidManifest.xml:28:5-36:19
+MERGED from [androidx.lifecycle:lifecycle-extensions:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\32eb52e618905996a4e3f9c3fc505038\lifecycle-extensions-2.2.0\AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.lifecycle:lifecycle-extensions:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\32eb52e618905996a4e3f9c3fc505038\lifecycle-extensions-2.2.0\AndroidManifest.xml:24:5-25:19
+MERGED from [com.github.bumptech.glide:glide:4.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\99bb43c6e192be18035e4158d4d64ba0\jetified-glide-4.11.0\AndroidManifest.xml:10:5-20
+MERGED from [com.github.bumptech.glide:glide:4.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\99bb43c6e192be18035e4158d4d64ba0\jetified-glide-4.11.0\AndroidManifest.xml:10:5-20
+MERGED from [de.hdodenhof:circleimageview:3.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\5df67a50642760dd9da79ee27cf3e32a\jetified-circleimageview-3.1.0\AndroidManifest.xml:9:5-20
+MERGED from [de.hdodenhof:circleimageview:3.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\5df67a50642760dd9da79ee27cf3e32a\jetified-circleimageview-3.1.0\AndroidManifest.xml:9:5-20
+MERGED from [com.google.android.gms:play-services-location:16.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\7faf80308c1a3cf2d035a0cb69db294d\jetified-play-services-location-16.0.0\AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-location:16.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\7faf80308c1a3cf2d035a0cb69db294d\jetified-play-services-location-16.0.0\AndroidManifest.xml:7:5-20
+MERGED from [com.google.firebase:firebase-auth-interop:19.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\aa2b30bfe8c0487cb8c4e2140d11b728\jetified-firebase-auth-interop-19.0.0\AndroidManifest.xml:7:5-8:19
+MERGED from [com.google.firebase:firebase-auth-interop:19.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\aa2b30bfe8c0487cb8c4e2140d11b728\jetified-firebase-auth-interop-19.0.0\AndroidManifest.xml:7:5-8:19
+MERGED from [com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:25:5-47:19
+MERGED from [com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:25:5-47:19
+MERGED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:22:5-37:19
+MERGED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:22:5-37:19
+MERGED from [com.google.android.gms:play-services-safetynet:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\6a4e073d8edd23676f40b2b036bf0338\jetified-play-services-safetynet-17.0.0\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-safetynet:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\6a4e073d8edd23676f40b2b036bf0338\jetified-play-services-safetynet-17.0.0\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-base:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\9873dc5fe973cc292ec718d9bd24167b\jetified-play-services-base-17.1.0\AndroidManifest.xml:22:5-27:19
+MERGED from [com.google.android.gms:play-services-base:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\9873dc5fe973cc292ec718d9bd24167b\jetified-play-services-base-17.1.0\AndroidManifest.xml:22:5-27:19
+MERGED from [com.google.android.gms:play-services-tasks:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c1a644fae69d9f58200f77774e134818\jetified-play-services-tasks-17.0.0\AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-tasks:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c1a644fae69d9f58200f77774e134818\jetified-play-services-tasks-17.0.0\AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-places-placereport:16.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\1e6010fa0a4e5621ae76682e9f8e07db\jetified-play-services-places-placereport-16.0.0\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-places-placereport:16.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\1e6010fa0a4e5621ae76682e9f8e07db\jetified-play-services-places-placereport-16.0.0\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-basement:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c00a8204ed0cc3b7c4045c929d33d9fc\jetified-play-services-basement-17.1.0\AndroidManifest.xml:22:5-26:19
+MERGED from [com.google.android.gms:play-services-basement:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c00a8204ed0cc3b7c4045c929d33d9fc\jetified-play-services-basement-17.1.0\AndroidManifest.xml:22:5-26:19
+MERGED from [androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\10cfb7ad05f020bf348ba2098a780d6c\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:24:5-30:19
+MERGED from [androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\10cfb7ad05f020bf348ba2098a780d6c\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:24:5-30:19
+MERGED from [androidx.core:core:1.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3fb0e3c06b9fa9e0e443a7c90866726e\core-1.3.2\AndroidManifest.xml:24:5-89
+MERGED from [androidx.core:core:1.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3fb0e3c06b9fa9e0e443a7c90866726e\core-1.3.2\AndroidManifest.xml:24:5-89
+MERGED from [com.github.bumptech.glide:gifdecoder:4.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\e89a5a7dac7660f862ae26f5f1328927\jetified-gifdecoder-4.11.0\AndroidManifest.xml:9:5-20
+MERGED from [com.github.bumptech.glide:gifdecoder:4.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\e89a5a7dac7660f862ae26f5f1328927\jetified-gifdecoder-4.11.0\AndroidManifest.xml:9:5-20
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\d08c932a1161d94a4579217c7f9f67bb\versionedparcelable-1.1.0\AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\d08c932a1161d94a4579217c7f9f67bb\versionedparcelable-1.1.0\AndroidManifest.xml:24:5-25:19
+	android:appComponentFactory
+		ADDED from [androidx.core:core:1.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3fb0e3c06b9fa9e0e443a7c90866726e\core-1.3.2\AndroidManifest.xml:24:18-86
+	android:supportsRtl
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:14:9-35
+	android:label
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:12:9-41
+	android:roundIcon
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:13:9-54
+	android:icon
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:11:9-43
+	android:allowBackup
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:10:9-35
+	android:theme
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:15:9-40
+activity#com.example.academyapp.AcademyInfoActivity
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:16:9-18:69
+	android:parentActivityName
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:18:13-67
+	android:windowSoftInputMode
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:17:13-52
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:16:19-54
+activity#com.example.academyapp.Downloader_Management_Activity
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:19:9-21:59
+	android:theme
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:21:13-56
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:20:13-59
+activity#com.example.academyapp.SearchAcademyActivity
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:22:9-59
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:22:19-56
+activity#com.example.academyapp.ChattingRoom_Normal_Activity
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:23:9-25:59
+	android:theme
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:25:13-56
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:24:13-57
+activity#com.example.academyapp.AddChattingActivity
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:26:9-57
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:26:19-54
+activity#com.example.academyapp.ChattingActivity
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:27:9-54
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:27:19-51
+activity#com.example.academyapp.AcademyManagementActivity
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:28:9-30:59
+	android:theme
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:30:13-56
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:29:13-54
+activity#com.example.academyapp.NormalMemberHomeActivity
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:31:9-33:59
+	android:theme
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:33:13-56
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:32:13-53
+activity#com.example.academyapp.DownloadContentsActivity
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:34:9-36:59
+	android:theme
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:36:13-56
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:35:13-53
+activity#com.example.academyapp.ChattingRoom_Director_Activity
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:37:9-39:59
+	android:theme
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:39:13-56
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:38:13-59
+meta-data#com.naver.maps.map.CLIENT_ID
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:41:9-43:42
+	android:value
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:43:13-39
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:42:13-56
+activity#com.example.academyapp.DirectorHomeActivity
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:45:9-48:59
+	android:label
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:47:13-65
+	android:theme
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:48:13-56
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:46:13-49
+activity#com.example.academyapp.UploadActivity
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:49:9-51:59
+	android:theme
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:51:13-56
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:50:13-43
+activity#com.example.academyapp.SplashScreenActivity
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:52:9-60:20
+	android:theme
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:54:13-47
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:53:13-49
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:55:13-59:29
+action#android.intent.action.MAIN
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:56:17-69
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:56:25-66
+category#android.intent.category.LAUNCHER
+ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:58:17-77
+	android:name
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:58:27-74
+uses-sdk
+INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml
+INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml
+MERGED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:8:5-10:41
+MERGED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:8:5-10:41
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.4] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\358c598472857b949950a00c5204478a\constraintlayout-2.0.4\AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.4] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\358c598472857b949950a00c5204478a\constraintlayout-2.0.4\AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.navigation:navigation-ui:2.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\cdb06171b22f908fe1cabb32f62a329d\navigation-ui-2.3.2\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.navigation:navigation-ui:2.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\cdb06171b22f908fe1cabb32f62a329d\navigation-ui-2.3.2\AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.material:material:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\5b987475490df54cfb0244c0666b7297\material-1.1.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.material:material:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\5b987475490df54cfb0244c0666b7297\material-1.1.0\AndroidManifest.xml:20:5-44
+MERGED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:7:5-9:41
+MERGED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:7:5-9:41
+MERGED from [me.zhanghai.android.materialprogressbar:library:1.6.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\d418081253e403bcaa584f3e771c1200\jetified-library-1.6.1\AndroidManifest.xml:11:5-13:41
+MERGED from [me.zhanghai.android.materialprogressbar:library:1.6.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\d418081253e403bcaa584f3e771c1200\jetified-library-1.6.1\AndroidManifest.xml:11:5-13:41
+MERGED from [androidx.appcompat:appcompat:1.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\15b098c234cd5bd91713da8686bd2d8a\appcompat-1.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat:1.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\15b098c234cd5bd91713da8686bd2d8a\appcompat-1.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:21:5-44
+MERGED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:21:5-44
+MERGED from [com.google.firebase:firebase-storage:19.2.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\72a169f1d941c71a657bc8e9dbc2e15b\jetified-firebase-storage-19.2.2\AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.firebase:firebase-storage:19.2.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\72a169f1d941c71a657bc8e9dbc2e15b\jetified-firebase-storage-19.2.2\AndroidManifest.xml:20:5-22:41
+MERGED from [com.firebaseui:firebase-ui-database:3.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\d67dcb4438a9a8fded00b0c7f3bdae05\jetified-firebase-ui-database-3.1.0\AndroidManifest.xml:7:5-9:41
+MERGED from [com.firebaseui:firebase-ui-database:3.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\d67dcb4438a9a8fded00b0c7f3bdae05\jetified-firebase-ui-database-3.1.0\AndroidManifest.xml:7:5-9:41
+MERGED from [com.google.firebase:firebase-database:19.6.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\375c3ec2918e8632600de2a5df478792\jetified-firebase-database-19.6.0\AndroidManifest.xml:19:5-21:41
+MERGED from [com.google.firebase:firebase-database:19.6.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\375c3ec2918e8632600de2a5df478792\jetified-firebase-database-19.6.0\AndroidManifest.xml:19:5-21:41
+MERGED from [com.firebaseui:firebase-ui-common:3.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\4bac3f9981a30de13a333b43f535d707\jetified-firebase-ui-common-3.1.0\AndroidManifest.xml:8:5-10:41
+MERGED from [com.firebaseui:firebase-ui-common:3.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\4bac3f9981a30de13a333b43f535d707\jetified-firebase-ui-common-3.1.0\AndroidManifest.xml:8:5-10:41
+MERGED from [androidx.legacy:legacy-support-v4:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\95673a948217d5771824f29df143ca4f\legacy-support-v4-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-v4:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\95673a948217d5771824f29df143ca4f\legacy-support-v4-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.navigation:navigation-fragment:2.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\605430fd7a9d177ede2b7a5557d17780\navigation-fragment-2.3.2\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.navigation:navigation-fragment:2.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\605430fd7a9d177ede2b7a5557d17780\navigation-fragment-2.3.2\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-extensions:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\32eb52e618905996a4e3f9c3fc505038\lifecycle-extensions-2.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-extensions:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\32eb52e618905996a4e3f9c3fc505038\lifecycle-extensions-2.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.navigation:navigation-runtime:2.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\a5472706d0b9eab54a036ac2a3c63e14\navigation-runtime-2.3.2\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.navigation:navigation-runtime:2.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\a5472706d0b9eab54a036ac2a3c63e14\navigation-runtime-2.3.2\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.viewpager2:viewpager2:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c2057b4cde557b9eb14ec3da2abaed97\jetified-viewpager2-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.viewpager2:viewpager2:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c2057b4cde557b9eb14ec3da2abaed97\jetified-viewpager2-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.recyclerview:recyclerview:1.2.0-beta02] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3ba292839829cf45dc7971cc8ef9c5b3\recyclerview-1.2.0-beta02\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.recyclerview:recyclerview:1.2.0-beta02] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3ba292839829cf45dc7971cc8ef9c5b3\recyclerview-1.2.0-beta02\AndroidManifest.xml:20:5-22:41
+MERGED from [io.reactivex.rxjava2:rxandroid:2.1.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\e7689ef9a9e3bd9d7e65c2c91460ef4e\jetified-rxandroid-2.1.1\AndroidManifest.xml:18:5-43
+MERGED from [io.reactivex.rxjava2:rxandroid:2.1.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\e7689ef9a9e3bd9d7e65c2c91460ef4e\jetified-rxandroid-2.1.1\AndroidManifest.xml:18:5-43
+MERGED from [com.github.bumptech.glide:glide:4.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\99bb43c6e192be18035e4158d4d64ba0\jetified-glide-4.11.0\AndroidManifest.xml:6:5-8:41
+MERGED from [com.github.bumptech.glide:glide:4.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\99bb43c6e192be18035e4158d4d64ba0\jetified-glide-4.11.0\AndroidManifest.xml:6:5-8:41
+MERGED from [de.hdodenhof:circleimageview:3.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\5df67a50642760dd9da79ee27cf3e32a\jetified-circleimageview-3.1.0\AndroidManifest.xml:5:5-7:41
+MERGED from [de.hdodenhof:circleimageview:3.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\5df67a50642760dd9da79ee27cf3e32a\jetified-circleimageview-3.1.0\AndroidManifest.xml:5:5-7:41
+MERGED from [com.google.android.gms:play-services-location:16.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\7faf80308c1a3cf2d035a0cb69db294d\jetified-play-services-location-16.0.0\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-location:16.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\7faf80308c1a3cf2d035a0cb69db294d\jetified-play-services-location-16.0.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.browser:browser:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\87524f33da9f05e216f182f20da20b21\browser-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.browser:browser:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\87524f33da9f05e216f182f20da20b21\browser-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8a59b5c1b6f352f1aa6c966e35b40243\legacy-support-core-ui-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8a59b5c1b6f352f1aa6c966e35b40243\legacy-support-core-ui-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\0e5eeecdc25ccb19f76fc31afde34ab5\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\0e5eeecdc25ccb19f76fc31afde34ab5\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat-resources:1.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\166c689ae0e70bb64bd4e3afc1921121\jetified-appcompat-resources-1.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\166c689ae0e70bb64bd4e3afc1921121\jetified-appcompat-resources-1.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\a5c3062eba227f5417b64884914b1abb\legacy-support-core-utils-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\a5c3062eba227f5417b64884914b1abb\legacy-support-core-utils-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\b2ea93cc506ef43b5057eba0a688965e\localbroadcastmanager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\b2ea93cc506ef43b5057eba0a688965e\localbroadcastmanager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.firebase:firebase-auth-interop:19.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\aa2b30bfe8c0487cb8c4e2140d11b728\jetified-firebase-auth-interop-19.0.0\AndroidManifest.xml:5:5-44
+MERGED from [com.google.firebase:firebase-auth-interop:19.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\aa2b30bfe8c0487cb8c4e2140d11b728\jetified-firebase-auth-interop-19.0.0\AndroidManifest.xml:5:5-44
+MERGED from [com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.firebase:firebase-components:16.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\ecafbec60288f762faa5940e95b4aef7\jetified-firebase-components-16.1.0\AndroidManifest.xml:19:5-21:41
+MERGED from [com.google.firebase:firebase-components:16.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\ecafbec60288f762faa5940e95b4aef7\jetified-firebase-components-16.1.0\AndroidManifest.xml:19:5-21:41
+MERGED from [androidx.media:media:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\0aeb8096a0886276c3d49167af79482c\media-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media:media:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\0aeb8096a0886276c3d49167af79482c\media-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-auth-api-phone:17.4.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\0d0713b0500290cd2855cb58ed21f192\jetified-play-services-auth-api-phone-17.4.0\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-auth-api-phone:17.4.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\0d0713b0500290cd2855cb58ed21f192\jetified-play-services-auth-api-phone-17.4.0\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-safetynet:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\6a4e073d8edd23676f40b2b036bf0338\jetified-play-services-safetynet-17.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-safetynet:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\6a4e073d8edd23676f40b2b036bf0338\jetified-play-services-safetynet-17.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.firebase:firebase-database-collection:17.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\1ef7defae7bba67a663c0d7cf8275616\jetified-firebase-database-collection-17.0.1\AndroidManifest.xml:5:5-7:41
+MERGED from [com.google.firebase:firebase-database-collection:17.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\1ef7defae7bba67a663c0d7cf8275616\jetified-firebase-database-collection-17.0.1\AndroidManifest.xml:5:5-7:41
+MERGED from [com.google.android.gms:play-services-auth-base:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\2e1704e01184d5fce27ef15a6d15afbf\jetified-play-services-auth-base-17.0.0\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-auth-base:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\2e1704e01184d5fce27ef15a6d15afbf\jetified-play-services-auth-base-17.0.0\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-base:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\9873dc5fe973cc292ec718d9bd24167b\jetified-play-services-base-17.1.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-base:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\9873dc5fe973cc292ec718d9bd24167b\jetified-play-services-base-17.1.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-tasks:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c1a644fae69d9f58200f77774e134818\jetified-play-services-tasks-17.0.0\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-tasks:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c1a644fae69d9f58200f77774e134818\jetified-play-services-tasks-17.0.0\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-places-placereport:16.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\1e6010fa0a4e5621ae76682e9f8e07db\jetified-play-services-places-placereport-16.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-places-placereport:16.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\1e6010fa0a4e5621ae76682e9f8e07db\jetified-play-services-places-placereport-16.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-basement:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c00a8204ed0cc3b7c4045c929d33d9fc\jetified-play-services-basement-17.1.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-basement:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c00a8204ed0cc3b7c4045c929d33d9fc\jetified-play-services-basement-17.1.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.fragment:fragment:1.2.4] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\cc9e373f34c1d4d338956a232f644d83\fragment-1.2.4\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.2.4] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\cc9e373f34c1d4d338956a232f644d83\fragment-1.2.4\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.drawerlayout:drawerlayout:1.1.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\a94019438a756d0d23d93046af35bbf6\drawerlayout-1.1.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.drawerlayout:drawerlayout:1.1.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\a94019438a756d0d23d93046af35bbf6\drawerlayout-1.1.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3df11c0b2435a01339c0a736ed27d062\coordinatorlayout-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3df11c0b2435a01339c0a736ed27d062\coordinatorlayout-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c6ce183522545b6732e592864f20f79f\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c6ce183522545b6732e592864f20f79f\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\df390b2e9af5c8b4a658aec4e06ecb3b\slidingpanelayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\df390b2e9af5c8b4a658aec4e06ecb3b\slidingpanelayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\02f3de7860205565f8758b7816b76e36\customview-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.customview:customview:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\02f3de7860205565f8758b7816b76e36\customview-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.transition:transition:1.3.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\93fb4ec2892164ec04a6b45875cfd895\transition-1.3.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.transition:transition:1.3.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\93fb4ec2892164ec04a6b45875cfd895\transition-1.3.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\10cfb7ad05f020bf348ba2098a780d6c\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\10cfb7ad05f020bf348ba2098a780d6c\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-service:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\d5359934373bca5787044f4e3ee871bb\jetified-lifecycle-service-2.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-service:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\d5359934373bca5787044f4e3ee871bb\jetified-lifecycle-service-2.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.activity:activity:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\efed137f9aa17a91432190874a7f436e\jetified-activity-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.activity:activity:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\efed137f9aa17a91432190874a7f436e\jetified-activity-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.navigation:navigation-common:2.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\196ace70eec3f177e2f6343d0be6ab64\navigation-common-2.3.2\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.navigation:navigation-common:2.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\196ace70eec3f177e2f6343d0be6ab64\navigation-common-2.3.2\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\ed79ec9a7bb85fd4b839e4ada531dc59\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\ed79ec9a7bb85fd4b839e4ada531dc59\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\aa882d61f33ecdd19c237f62d2bc3338\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\aa882d61f33ecdd19c237f62d2bc3338\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c8838b2ae48dff2791d6f02538a7c514\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c8838b2ae48dff2791d6f02538a7c514\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\ba6a52fdaaf443e7de82fb4ec017d410\swiperefreshlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\ba6a52fdaaf443e7de82fb4ec017d410\swiperefreshlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\2fed8bd1ca81b4eb0b64b45034a109e8\asynclayoutinflater-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\2fed8bd1ca81b4eb0b64b45034a109e8\asynclayoutinflater-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3fb0e3c06b9fa9e0e443a7c90866726e\core-1.3.2\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core:1.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3fb0e3c06b9fa9e0e443a7c90866726e\core-1.3.2\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\6d5e90ca02e923530c136655116ce1b2\lifecycle-runtime-2.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\6d5e90ca02e923530c136655116ce1b2\lifecycle-runtime-2.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\cdea5f9fce01acf3b8018836f05c8ced\lifecycle-livedata-2.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\cdea5f9fce01acf3b8018836f05c8ced\lifecycle-livedata-2.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\284cefe8199aa095f96d531929bb3e68\jetified-lifecycle-viewmodel-savedstate-2.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\284cefe8199aa095f96d531929bb3e68\jetified-lifecycle-viewmodel-savedstate-2.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\4130ff5dd490b20fd1cd0a60ec191359\lifecycle-livedata-core-2.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\4130ff5dd490b20fd1cd0a60ec191359\lifecycle-livedata-core-2.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.arch.core:core-runtime:2.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3f2d8d73c20ab13eb58f8970f45bdfa2\core-runtime-2.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.arch.core:core-runtime:2.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3f2d8d73c20ab13eb58f8970f45bdfa2\core-runtime-2.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\6669a3764302646d2fdd484e2d6992cb\jetified-savedstate-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\6669a3764302646d2fdd484e2d6992cb\jetified-savedstate-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\ba83e364278c6a28e3c16c275a237b1e\lifecycle-viewmodel-2.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\ba83e364278c6a28e3c16c275a237b1e\lifecycle-viewmodel-2.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\ad8ada69fb7009df2ed886590df700c9\cardview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\ad8ada69fb7009df2ed886590df700c9\cardview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.github.bumptech.glide:gifdecoder:4.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\e89a5a7dac7660f862ae26f5f1328927\jetified-gifdecoder-4.11.0\AndroidManifest.xml:5:5-7:41
+MERGED from [com.github.bumptech.glide:gifdecoder:4.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\e89a5a7dac7660f862ae26f5f1328927\jetified-gifdecoder-4.11.0\AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.exifinterface:exifinterface:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3977514529ccba32898d4de65b3d377f\exifinterface-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.exifinterface:exifinterface:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3977514529ccba32898d4de65b3d377f\exifinterface-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.naver.maps:geometry:1.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\e9de2e98c7fbf9c30c110bf67465a17a\jetified-geometry-1.2.0\AndroidManifest.xml:7:5-9:41
+MERGED from [com.naver.maps:geometry:1.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\e9de2e98c7fbf9c30c110bf67465a17a\jetified-geometry-1.2.0\AndroidManifest.xml:7:5-9:41
+MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\520cb49162c5a20c27b77f13764e9b2d\documentfile-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\520cb49162c5a20c27b77f13764e9b2d\documentfile-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\9d2a04633b2466e476e2d38a7cb1a082\print-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\9d2a04633b2466e476e2d38a7cb1a082\print-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\cf90d0d13ad94b66888349eca933d608\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\cf90d0d13ad94b66888349eca933d608\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\d08c932a1161d94a4579217c7f9f67bb\versionedparcelable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\d08c932a1161d94a4579217c7f9f67bb\versionedparcelable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [com.getkeepsafe.relinker:relinker:1.4.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\5f30faccef3b1b3fbf95c41f22111943\jetified-relinker-1.4.1\AndroidManifest.xml:5:5-43
+MERGED from [com.getkeepsafe.relinker:relinker:1.4.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\5f30faccef3b1b3fbf95c41f22111943\jetified-relinker-1.4.1\AndroidManifest.xml:5:5-43
+INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml
+INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:12:5-79
+MERGED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:19:5-79
+MERGED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:19:5-79
+MERGED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:24:5-79
+MERGED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:24:5-79
+MERGED from [com.google.firebase:firebase-storage:19.2.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\72a169f1d941c71a657bc8e9dbc2e15b\jetified-firebase-storage-19.2.2\AndroidManifest.xml:26:5-79
+MERGED from [com.google.firebase:firebase-storage:19.2.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\72a169f1d941c71a657bc8e9dbc2e15b\jetified-firebase-storage-19.2.2\AndroidManifest.xml:26:5-79
+MERGED from [com.google.firebase:firebase-database:19.6.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\375c3ec2918e8632600de2a5df478792\jetified-firebase-database-19.6.0\AndroidManifest.xml:25:5-79
+MERGED from [com.google.firebase:firebase-database:19.6.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\375c3ec2918e8632600de2a5df478792\jetified-firebase-database-19.6.0\AndroidManifest.xml:25:5-79
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:12:22-76
+meta-data#com.google.android.gms.version
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:16:9-18:69
+MERGED from [com.google.android.gms:play-services-basement:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c00a8204ed0cc3b7c4045c929d33d9fc\jetified-play-services-basement-17.1.0\AndroidManifest.xml:23:9-25:69
+MERGED from [com.google.android.gms:play-services-basement:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c00a8204ed0cc3b7c4045c929d33d9fc\jetified-play-services-basement-17.1.0\AndroidManifest.xml:23:9-25:69
+	android:value
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:18:13-66
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:17:13-58
+meta-data#com.facebook.sdk.ApplicationId
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:19:9-21:63
+	android:value
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:21:13-60
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:20:13-58
+activity#com.firebase.ui.auth.KickoffActivity
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:23:9-27:61
+	android:label
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:26:13-29
+	android:exported
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:25:13-37
+	android:theme
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:27:13-58
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:24:13-64
+activity#com.firebase.ui.auth.ui.idp.SingleSignInActivity
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:28:9-32:61
+	android:label
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:31:13-29
+	android:exported
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:30:13-37
+	android:theme
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:32:13-58
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:29:13-76
+activity#com.firebase.ui.auth.ui.credentials.CredentialSaveActivity
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:33:9-37:61
+	android:label
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:36:13-29
+	android:exported
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:35:13-37
+	android:theme
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:37:13-58
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:34:13-86
+activity#com.firebase.ui.auth.ui.email.RecoverPasswordActivity
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:38:9-42:58
+	android:label
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:41:13-72
+	android:windowSoftInputMode
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:42:13-55
+	android:exported
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:40:13-37
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:39:13-81
+activity#com.firebase.ui.auth.ui.email.EmailActivity
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:43:9-47:58
+	android:label
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:46:13-56
+	android:windowSoftInputMode
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:47:13-55
+	android:exported
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:45:13-37
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:44:13-71
+activity#com.firebase.ui.auth.ui.phone.PhoneActivity
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:48:9-52:77
+	android:label
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:51:13-66
+	android:windowSoftInputMode
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:52:13-74
+	android:exported
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:50:13-37
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:49:13-71
+activity#com.firebase.ui.auth.ui.idp.WelcomeBackIdpPrompt
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:53:9-57:58
+	android:label
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:56:13-70
+	android:windowSoftInputMode
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:57:13-55
+	android:exported
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:55:13-37
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:54:13-76
+activity#com.firebase.ui.auth.ui.email.WelcomeBackPasswordPrompt
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:58:9-62:58
+	android:label
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:61:13-75
+	android:windowSoftInputMode
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:62:13-55
+	android:exported
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:60:13-37
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:59:13-83
+activity#com.firebase.ui.auth.ui.email.WelcomeBackEmailLinkPrompt
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:63:9-67:58
+	android:label
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:66:13-75
+	android:windowSoftInputMode
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:67:13-55
+	android:exported
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:65:13-37
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:64:13-84
+activity#com.firebase.ui.auth.ui.email.EmailLinkCatcherActivity
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:68:9-73:58
+	android:label
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:71:13-29
+	android:windowSoftInputMode
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:73:13-55
+	android:exported
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:70:13-37
+	android:theme
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:72:13-58
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:69:13-82
+activity#com.firebase.ui.auth.ui.email.EmailLinkErrorRecoveryActivity
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:74:9-78:58
+	android:label
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:77:13-56
+	android:windowSoftInputMode
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:78:13-55
+	android:exported
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:76:13-37
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:75:13-88
+activity#com.firebase.ui.auth.ui.idp.AuthMethodPickerActivity
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:79:9-82:65
+	android:label
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:82:13-62
+	android:exported
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:81:13-37
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:80:13-80
+activity#com.facebook.FacebookActivity
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:83:9-87:48
+	android:label
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:86:13-45
+	tools:ignore
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:87:13-45
+	android:configChanges
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:85:13-96
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:84:13-57
+activity#com.facebook.CustomTabActivity
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:88:9-100:20
+	android:exported
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:90:13-36
+	tools:ignore
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:91:13-45
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:89:13-58
+intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:scheme:@string/facebook_login_protocol_scheme
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:92:13-99:29
+action#android.intent.action.VIEW
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:93:17-69
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:93:25-66
+category#android.intent.category.DEFAULT
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:95:17-76
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:95:27-73
+category#android.intent.category.BROWSABLE
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:96:17-78
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:96:27-75
+data
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:98:17-81
+	android:scheme
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:98:23-78
+provider#com.firebase.ui.auth.data.client.AuthUiInitProvider
+ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:102:9-106:38
+	android:authorities
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:104:13-70
+	android:exported
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:105:13-37
+	android:initOrder
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:106:13-35
+	android:name
+		ADDED from [com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:103:13-79
+uses-feature#0x00020000
+ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:11:5-13:35
+	android:glEsVersion
+		ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:12:9-41
+	android:required
+		ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:13:9-32
+uses-feature#android.hardware.wifi
+ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:14:5-16:36
+	android:required
+		ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:16:9-33
+	android:name
+		ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:15:9-45
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:20:5-76
+	android:name
+		ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:20:22-73
+activity#com.naver.maps.map.app.LegendActivity
+ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:23:9-27:51
+	android:label
+		ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:26:13-52
+	android:configChanges
+		ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:25:13-91
+	android:theme
+		ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:27:13-48
+	android:name
+		ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:24:13-65
+activity#com.naver.maps.map.app.LegalNoticeActivity
+ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:28:9-32:51
+	android:label
+		ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:31:13-58
+	android:configChanges
+		ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:30:13-91
+	android:theme
+		ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:32:13-48
+	android:name
+		ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:29:13-70
+activity#com.naver.maps.map.app.OpenSourceLicenseActivity
+ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:33:9-37:51
+	android:label
+		ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:36:13-65
+	android:configChanges
+		ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:35:13-91
+	android:theme
+		ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:37:13-48
+	android:name
+		ADDED from [com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:34:13-76
+activity#com.google.firebase.auth.internal.GenericIdpActivity
+ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:27:9-44:20
+	android:excludeFromRecents
+		ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:29:13-46
+	android:launchMode
+		ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:31:13-44
+	android:exported
+		ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:30:13-36
+	android:theme
+		ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:32:13-72
+	android:name
+		ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:28:13-80
+intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:host:firebase.auth+data:path:/+data:scheme:genericidp
+ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:33:13-43:29
+activity#com.google.firebase.auth.internal.RecaptchaActivity
+ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:45:9-62:20
+	android:excludeFromRecents
+		ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:47:13-46
+	android:launchMode
+		ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:49:13-44
+	android:exported
+		ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:48:13-36
+	android:theme
+		ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:50:13-72
+	android:name
+		ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:46:13-79
+intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:host:firebase.auth+data:path:/+data:scheme:recaptcha
+ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:51:13-61:29
+service#com.google.firebase.auth.api.fallback.service.FirebaseAuthFallbackService
+ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:64:9-73:19
+	android:enabled
+		ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:66:13-35
+	android:exported
+		ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:67:13-37
+	android:name
+		ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:65:13-101
+intent-filter#action:name:com.google.firebase.auth.api.gms.service.START+category:name:android.intent.category.DEFAULT
+ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:68:13-72:29
+action#com.google.firebase.auth.api.gms.service.START
+ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:69:17-89
+	android:name
+		ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:69:25-86
+service#com.google.firebase.components.ComponentDiscoveryService
+ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:74:9-80:19
+MERGED from [com.google.firebase:firebase-storage:19.2.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\72a169f1d941c71a657bc8e9dbc2e15b\jetified-firebase-storage-19.2.2\AndroidManifest.xml:30:9-36:19
+MERGED from [com.google.firebase:firebase-storage:19.2.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\72a169f1d941c71a657bc8e9dbc2e15b\jetified-firebase-storage-19.2.2\AndroidManifest.xml:30:9-36:19
+MERGED from [com.google.firebase:firebase-database:19.6.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\375c3ec2918e8632600de2a5df478792\jetified-firebase-database-19.6.0\AndroidManifest.xml:29:9-35:19
+MERGED from [com.google.firebase:firebase-database:19.6.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\375c3ec2918e8632600de2a5df478792\jetified-firebase-database-19.6.0\AndroidManifest.xml:29:9-35:19
+MERGED from [com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:33:9-46:19
+MERGED from [com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:33:9-46:19
+	android:exported
+		ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:76:13-37
+	tools:targetApi
+		ADDED from [com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:37:13-32
+	android:directBootAware
+		ADDED from [com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:35:13-43
+	android:name
+		ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:75:13-84
+meta-data#com.google.firebase.components:com.google.firebase.auth.FirebaseAuthRegistrar
+ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:77:13-79:85
+	android:value
+		ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:79:17-82
+	android:name
+		ADDED from [com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:78:17-109
+meta-data#com.google.firebase.components:com.google.firebase.storage.StorageRegistrar
+ADDED from [com.google.firebase:firebase-storage:19.2.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\72a169f1d941c71a657bc8e9dbc2e15b\jetified-firebase-storage-19.2.2\AndroidManifest.xml:33:13-35:85
+	android:value
+		ADDED from [com.google.firebase:firebase-storage:19.2.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\72a169f1d941c71a657bc8e9dbc2e15b\jetified-firebase-storage-19.2.2\AndroidManifest.xml:35:17-82
+	android:name
+		ADDED from [com.google.firebase:firebase-storage:19.2.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\72a169f1d941c71a657bc8e9dbc2e15b\jetified-firebase-storage-19.2.2\AndroidManifest.xml:34:17-107
+meta-data#com.google.firebase.components:com.google.firebase.database.DatabaseRegistrar
+ADDED from [com.google.firebase:firebase-database:19.6.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\375c3ec2918e8632600de2a5df478792\jetified-firebase-database-19.6.0\AndroidManifest.xml:32:13-34:85
+	android:value
+		ADDED from [com.google.firebase:firebase-database:19.6.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\375c3ec2918e8632600de2a5df478792\jetified-firebase-database-19.6.0\AndroidManifest.xml:34:17-82
+	android:name
+		ADDED from [com.google.firebase:firebase-database:19.6.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\375c3ec2918e8632600de2a5df478792\jetified-firebase-database-19.6.0\AndroidManifest.xml:33:17-109
+provider#com.google.firebase.provider.FirebaseInitProvider
+ADDED from [com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:26:9-31:39
+	android:authorities
+		ADDED from [com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:28:13-72
+	android:exported
+		ADDED from [com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:30:13-37
+	android:directBootAware
+		ADDED from [com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:29:13-43
+	android:initOrder
+		ADDED from [com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:31:13-36
+	android:name
+		ADDED from [com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:27:13-77
+meta-data#com.google.firebase.components:com.google.firebase.dynamicloading.DynamicLoadingRegistrar
+ADDED from [com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:43:13-45:85
+	android:value
+		ADDED from [com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:45:17-82
+	android:name
+		ADDED from [com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:44:17-121
+activity#com.google.android.gms.auth.api.signin.internal.SignInHubActivity
+ADDED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:23:9-27:75
+	android:excludeFromRecents
+		ADDED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:25:13-46
+	android:exported
+		ADDED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:26:13-37
+	android:theme
+		ADDED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:27:13-72
+	android:name
+		ADDED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:24:13-93
+service#com.google.android.gms.auth.api.signin.RevocationBoundService
+ADDED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:33:9-36:110
+	android:exported
+		ADDED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:35:13-36
+	android:permission
+		ADDED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:36:13-107
+	android:name
+		ADDED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:34:13-89
+activity#com.google.android.gms.common.api.GoogleApiActivity
+ADDED from [com.google.android.gms:play-services-base:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\9873dc5fe973cc292ec718d9bd24167b\jetified-play-services-base-17.1.0\AndroidManifest.xml:23:9-26:75
+	android:exported
+		ADDED from [com.google.android.gms:play-services-base:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\9873dc5fe973cc292ec718d9bd24167b\jetified-play-services-base-17.1.0\AndroidManifest.xml:25:13-37
+	android:theme
+		ADDED from [com.google.android.gms:play-services-base:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\9873dc5fe973cc292ec718d9bd24167b\jetified-play-services-base-17.1.0\AndroidManifest.xml:26:13-72
+	android:name
+		ADDED from [com.google.android.gms:play-services-base:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\9873dc5fe973cc292ec718d9bd24167b\jetified-play-services-base-17.1.0\AndroidManifest.xml:24:13-79
+provider#androidx.lifecycle.ProcessLifecycleOwnerInitializer
+ADDED from [androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\10cfb7ad05f020bf348ba2098a780d6c\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:25:9-29:43
+	android:authorities
+		ADDED from [androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\10cfb7ad05f020bf348ba2098a780d6c\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:27:13-69
+	android:multiprocess
+		ADDED from [androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\10cfb7ad05f020bf348ba2098a780d6c\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:29:13-40
+	android:exported
+		ADDED from [androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\10cfb7ad05f020bf348ba2098a780d6c\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:28:13-37
+	android:name
+		ADDED from [androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\10cfb7ad05f020bf348ba2098a780d6c\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:26:13-79

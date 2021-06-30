@@ -1,0 +1,540 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.academyapp"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="22"
+8-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="30" />
+9-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+11-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:5:5-80
+11-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:5:22-77
+12    <uses-permission android:name="android.permission.INTERNET" />
+12-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:6:5-67
+12-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:6:22-64
+13    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+13-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:7:5-79
+13-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:7:22-76
+14    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+14-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:12:5-79
+14-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:12:22-76
+15
+16    <uses-feature
+16-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:11:5-13:35
+17        android:glEsVersion="0x00020000"
+17-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:12:9-41
+18        android:required="true" />
+18-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:13:9-32
+19    <uses-feature
+19-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:14:5-16:36
+20        android:name="android.hardware.wifi"
+20-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:15:9-45
+21        android:required="false" />
+21-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:16:9-33
+22
+23    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+23-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:20:5-76
+23-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:20:22-73
+24
+25    <application
+25-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:9:5-61:19
+26        android:allowBackup="true"
+26-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:10:9-35
+27        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+27-->[androidx.core:core:1.3.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3fb0e3c06b9fa9e0e443a7c90866726e\core-1.3.2\AndroidManifest.xml:24:18-86
+28        android:icon="@mipmap/ic_launcher"
+28-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:11:9-43
+29        android:label="@string/app_name"
+29-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:12:9-41
+30        android:roundIcon="@mipmap/ic_launcher_round"
+30-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:13:9-54
+31        android:supportsRtl="true"
+31-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:14:9-35
+32        android:theme="@style/AppTheme" >
+32-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:15:9-40
+33        <activity
+33-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:16:9-18:69
+34            android:name="com.example.academyapp.AcademyInfoActivity"
+34-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:16:19-54
+35            android:parentActivityName="com.example.academyapp.NormalMemberHomeActivity"
+35-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:18:13-67
+36            android:windowSoftInputMode="adjustPan" />
+36-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:17:13-52
+37        <activity
+37-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:19:9-21:59
+38            android:name="com.example.academyapp.Downloader_Management_Activity"
+38-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:20:13-59
+39            android:theme="@style/AppTheme.NoActionBar" />
+39-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:21:13-56
+40        <activity android:name="com.example.academyapp.SearchAcademyActivity" />
+40-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:22:9-59
+40-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:22:19-56
+41        <activity
+41-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:23:9-25:59
+42            android:name="com.example.academyapp.ChattingRoom_Normal_Activity"
+42-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:24:13-57
+43            android:theme="@style/AppTheme.NoActionBar" />
+43-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:25:13-56
+44        <activity android:name="com.example.academyapp.AddChattingActivity" />
+44-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:26:9-57
+44-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:26:19-54
+45        <activity android:name="com.example.academyapp.ChattingActivity" />
+45-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:27:9-54
+45-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:27:19-51
+46        <activity
+46-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:28:9-30:59
+47            android:name="com.example.academyapp.AcademyManagementActivity"
+47-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:29:13-54
+48            android:theme="@style/AppTheme.NoActionBar" />
+48-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:30:13-56
+49        <activity
+49-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:31:9-33:59
+50            android:name="com.example.academyapp.NormalMemberHomeActivity"
+50-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:32:13-53
+51            android:theme="@style/AppTheme.NoActionBar" />
+51-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:33:13-56
+52        <activity
+52-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:34:9-36:59
+53            android:name="com.example.academyapp.DownloadContentsActivity"
+53-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:35:13-53
+54            android:theme="@style/AppTheme.NoActionBar" />
+54-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:36:13-56
+55        <activity
+55-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:37:9-39:59
+56            android:name="com.example.academyapp.ChattingRoom_Director_Activity"
+56-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:38:13-59
+57            android:theme="@style/AppTheme.NoActionBar" />
+57-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:39:13-56
+58
+59        <meta-data
+59-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:41:9-43:42
+60            android:name="com.naver.maps.map.CLIENT_ID"
+60-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:42:13-56
+61            android:value="z79q0dob9r" />
+61-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:43:13-39
+62
+63        <activity
+63-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:45:9-48:59
+64            android:name="com.example.academyapp.DirectorHomeActivity"
+64-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:46:13-49
+65            android:label="@string/title_activity_customer_home"
+65-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:47:13-65
+66            android:theme="@style/AppTheme.NoActionBar" />
+66-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:48:13-56
+67        <activity
+67-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:49:9-51:59
+68            android:name="com.example.academyapp.UploadActivity"
+68-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:50:13-43
+69            android:theme="@style/AppTheme.NoActionBar" />
+69-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:51:13-56
+70        <activity
+70-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:52:9-60:20
+71            android:name="com.example.academyapp.SplashScreenActivity"
+71-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:53:13-49
+72            android:theme="@style/SplashTheme" >
+72-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:54:13-47
+73            <intent-filter>
+73-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:55:13-59:29
+74                <action android:name="android.intent.action.MAIN" />
+74-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:56:17-69
+74-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:56:25-66
+75
+76                <category android:name="android.intent.category.LAUNCHER" />
+76-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:58:17-77
+76-->C:\Users\MAYDAY\AndroidStudioProjects\AcademyApp\app\src\main\AndroidManifest.xml:58:27-74
+77            </intent-filter>
+78        </activity>
+79
+80        <meta-data
+80-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:16:9-18:69
+81            android:name="com.google.android.gms.version"
+81-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:17:13-58
+82            android:value="@integer/google_play_services_version" />
+82-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:18:13-66
+83        <meta-data
+83-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:19:9-21:63
+84            android:name="com.facebook.sdk.ApplicationId"
+84-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:20:13-58
+85            android:value="@string/facebook_application_id" />
+85-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:21:13-60
+86
+87        <activity
+87-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:23:9-27:61
+88            android:name="com.firebase.ui.auth.KickoffActivity"
+88-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:24:13-64
+89            android:exported="false"
+89-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:25:13-37
+90            android:label=""
+90-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:26:13-29
+91            android:theme="@style/FirebaseUI.Transparent" />
+91-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:27:13-58
+92        <activity
+92-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:28:9-32:61
+93            android:name="com.firebase.ui.auth.ui.idp.SingleSignInActivity"
+93-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:29:13-76
+94            android:exported="false"
+94-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:30:13-37
+95            android:label=""
+95-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:31:13-29
+96            android:theme="@style/FirebaseUI.Transparent" />
+96-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:32:13-58
+97        <activity
+97-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:33:9-37:61
+98            android:name="com.firebase.ui.auth.ui.credentials.CredentialSaveActivity"
+98-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:34:13-86
+99            android:exported="false"
+99-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:35:13-37
+100            android:label=""
+100-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:36:13-29
+101            android:theme="@style/FirebaseUI.Transparent" />
+101-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:37:13-58
+102        <activity
+102-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:38:9-42:58
+103            android:name="com.firebase.ui.auth.ui.email.RecoverPasswordActivity"
+103-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:39:13-81
+104            android:exported="false"
+104-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:40:13-37
+105            android:label="@string/fui_title_recover_password_activity"
+105-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:41:13-72
+106            android:windowSoftInputMode="adjustResize" />
+106-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:42:13-55
+107        <activity
+107-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:43:9-47:58
+108            android:name="com.firebase.ui.auth.ui.email.EmailActivity"
+108-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:44:13-71
+109            android:exported="false"
+109-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:45:13-37
+110            android:label="@string/fui_sign_in_default"
+110-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:46:13-56
+111            android:windowSoftInputMode="adjustResize" />
+111-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:47:13-55
+112        <activity
+112-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:48:9-52:77
+113            android:name="com.firebase.ui.auth.ui.phone.PhoneActivity"
+113-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:49:13-71
+114            android:exported="false"
+114-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:50:13-37
+115            android:label="@string/fui_sign_in_with_phone_number"
+115-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:51:13-66
+116            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
+116-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:52:13-74
+117        <activity
+117-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:53:9-57:58
+118            android:name="com.firebase.ui.auth.ui.idp.WelcomeBackIdpPrompt"
+118-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:54:13-76
+119            android:exported="false"
+119-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:55:13-37
+120            android:label="@string/fui_title_welcome_back_idp_prompt"
+120-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:56:13-70
+121            android:windowSoftInputMode="adjustResize" />
+121-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:57:13-55
+122        <activity
+122-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:58:9-62:58
+123            android:name="com.firebase.ui.auth.ui.email.WelcomeBackPasswordPrompt"
+123-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:59:13-83
+124            android:exported="false"
+124-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:60:13-37
+125            android:label="@string/fui_title_welcome_back_password_prompt"
+125-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:61:13-75
+126            android:windowSoftInputMode="adjustResize" />
+126-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:62:13-55
+127        <activity
+127-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:63:9-67:58
+128            android:name="com.firebase.ui.auth.ui.email.WelcomeBackEmailLinkPrompt"
+128-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:64:13-84
+129            android:exported="false"
+129-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:65:13-37
+130            android:label="@string/fui_title_welcome_back_password_prompt"
+130-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:66:13-75
+131            android:windowSoftInputMode="adjustResize" />
+131-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:67:13-55
+132        <activity
+132-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:68:9-73:58
+133            android:name="com.firebase.ui.auth.ui.email.EmailLinkCatcherActivity"
+133-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:69:13-82
+134            android:exported="false"
+134-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:70:13-37
+135            android:label=""
+135-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:71:13-29
+136            android:theme="@style/FirebaseUI.Transparent"
+136-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:72:13-58
+137            android:windowSoftInputMode="adjustResize" />
+137-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:73:13-55
+138        <activity
+138-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:74:9-78:58
+139            android:name="com.firebase.ui.auth.ui.email.EmailLinkErrorRecoveryActivity"
+139-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:75:13-88
+140            android:exported="false"
+140-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:76:13-37
+141            android:label="@string/fui_sign_in_default"
+141-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:77:13-56
+142            android:windowSoftInputMode="adjustResize" />
+142-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:78:13-55
+143        <activity
+143-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:79:9-82:65
+144            android:name="com.firebase.ui.auth.ui.idp.AuthMethodPickerActivity"
+144-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:80:13-80
+145            android:exported="false"
+145-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:81:13-37
+146            android:label="@string/fui_default_toolbar_title" />
+146-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:82:13-62
+147        <activity
+147-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:83:9-87:48
+148            android:name="com.facebook.FacebookActivity"
+148-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:84:13-57
+149            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+149-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:85:13-96
+150            android:label="@string/app_name" />
+150-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:86:13-45
+151        <activity
+151-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:88:9-100:20
+152            android:name="com.facebook.CustomTabActivity"
+152-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:89:13-58
+153            android:exported="true" >
+153-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:90:13-36
+154            <intent-filter>
+154-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:92:13-99:29
+155                <action android:name="android.intent.action.VIEW" />
+155-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:93:17-69
+155-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:93:25-66
+156
+157                <category android:name="android.intent.category.DEFAULT" />
+157-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:95:17-76
+157-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:95:27-73
+158                <category android:name="android.intent.category.BROWSABLE" />
+158-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:96:17-78
+158-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:96:27-75
+159
+160                <data android:scheme="@string/facebook_login_protocol_scheme" />
+160-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:98:17-81
+160-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:98:23-78
+161            </intent-filter>
+162        </activity>
+163
+164        <provider
+164-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:102:9-106:38
+165            android:name="com.firebase.ui.auth.data.client.AuthUiInitProvider"
+165-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:103:13-79
+166            android:authorities="com.example.academyapp.authuiinitprovider"
+166-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:104:13-70
+167            android:exported="false"
+167-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:105:13-37
+168            android:initOrder="90" />
+168-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:106:13-35
+169
+170        <activity
+170-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:23:9-27:51
+171            android:name="com.naver.maps.map.app.LegendActivity"
+171-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:24:13-65
+172            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+172-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:25:13-91
+173            android:label="@string/navermap_legend"
+173-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:26:13-52
+174            android:theme="@style/navermap_app" />
+174-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:27:13-48
+175        <activity
+175-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:28:9-32:51
+176            android:name="com.naver.maps.map.app.LegalNoticeActivity"
+176-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:29:13-70
+177            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+177-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:30:13-91
+178            android:label="@string/navermap_legal_notice"
+178-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:31:13-58
+179            android:theme="@style/navermap_app" />
+179-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:32:13-48
+180        <activity
+180-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:33:9-37:51
+181            android:name="com.naver.maps.map.app.OpenSourceLicenseActivity"
+181-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:34:13-76
+182            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+182-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:35:13-91
+183            android:label="@string/navermap_open_source_license"
+183-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:36:13-65
+184            android:theme="@style/navermap_app" />
+184-->[com.naver.maps:map-sdk:3.11.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\c69f496ab11a365625d6d883fa2b9ad4\jetified-map-sdk-3.11.0\AndroidManifest.xml:37:13-48
+185        <activity
+185-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:27:9-44:20
+186            android:name="com.google.firebase.auth.internal.GenericIdpActivity"
+186-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:28:13-80
+187            android:excludeFromRecents="true"
+187-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:29:13-46
+188            android:exported="true"
+188-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:30:13-36
+189            android:launchMode="singleTask"
+189-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:31:13-44
+190            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+190-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:32:13-72
+191            <intent-filter>
+191-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:33:13-43:29
+192                <action android:name="android.intent.action.VIEW" />
+192-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:93:17-69
+192-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:93:25-66
+193
+194                <category android:name="android.intent.category.DEFAULT" />
+194-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:95:17-76
+194-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:95:27-73
+195                <category android:name="android.intent.category.BROWSABLE" />
+195-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:96:17-78
+195-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:96:27-75
+196
+197                <data
+197-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:98:17-81
+198                    android:host="firebase.auth"
+199                    android:path="/"
+200                    android:scheme="genericidp" />
+200-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:98:23-78
+201            </intent-filter>
+202        </activity>
+203        <activity
+203-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:45:9-62:20
+204            android:name="com.google.firebase.auth.internal.RecaptchaActivity"
+204-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:46:13-79
+205            android:excludeFromRecents="true"
+205-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:47:13-46
+206            android:exported="true"
+206-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:48:13-36
+207            android:launchMode="singleTask"
+207-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:49:13-44
+208            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+208-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:50:13-72
+209            <intent-filter>
+209-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:51:13-61:29
+210                <action android:name="android.intent.action.VIEW" />
+210-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:93:17-69
+210-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:93:25-66
+211
+212                <category android:name="android.intent.category.DEFAULT" />
+212-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:95:17-76
+212-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:95:27-73
+213                <category android:name="android.intent.category.BROWSABLE" />
+213-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:96:17-78
+213-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:96:27-75
+214
+215                <data
+215-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:98:17-81
+216                    android:host="firebase.auth"
+217                    android:path="/"
+218                    android:scheme="recaptcha" />
+218-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:98:23-78
+219            </intent-filter>
+220        </activity>
+221
+222        <service
+222-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:64:9-73:19
+223            android:name="com.google.firebase.auth.api.fallback.service.FirebaseAuthFallbackService"
+223-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:65:13-101
+224            android:enabled="true"
+224-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:66:13-35
+225            android:exported="false" >
+225-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:67:13-37
+226            <intent-filter>
+226-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:68:13-72:29
+227                <action android:name="com.google.firebase.auth.api.gms.service.START" />
+227-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:69:17-89
+227-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:69:25-86
+228
+229                <category android:name="android.intent.category.DEFAULT" />
+229-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:95:17-76
+229-->[com.firebaseui:firebase-ui-auth:6.2.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\de16fabb9339d28e174d3878249f28ae\jetified-firebase-ui-auth-6.2.1\AndroidManifest.xml:95:27-73
+230            </intent-filter>
+231        </service>
+232        <service
+232-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:74:9-80:19
+233            android:name="com.google.firebase.components.ComponentDiscoveryService"
+233-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:75:13-84
+234            android:directBootAware="true"
+234-->[com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:35:13-43
+235            android:exported="false" >
+235-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:76:13-37
+236            <meta-data
+236-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:77:13-79:85
+237                android:name="com.google.firebase.components:com.google.firebase.auth.FirebaseAuthRegistrar"
+237-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:78:17-109
+238                android:value="com.google.firebase.components.ComponentRegistrar" />
+238-->[com.google.firebase:firebase-auth:20.0.1] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\dd0074006f89f9870ae0f61f23ec8ea5\jetified-firebase-auth-20.0.1\AndroidManifest.xml:79:17-82
+239            <meta-data
+239-->[com.google.firebase:firebase-storage:19.2.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\72a169f1d941c71a657bc8e9dbc2e15b\jetified-firebase-storage-19.2.2\AndroidManifest.xml:33:13-35:85
+240                android:name="com.google.firebase.components:com.google.firebase.storage.StorageRegistrar"
+240-->[com.google.firebase:firebase-storage:19.2.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\72a169f1d941c71a657bc8e9dbc2e15b\jetified-firebase-storage-19.2.2\AndroidManifest.xml:34:17-107
+241                android:value="com.google.firebase.components.ComponentRegistrar" />
+241-->[com.google.firebase:firebase-storage:19.2.2] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\72a169f1d941c71a657bc8e9dbc2e15b\jetified-firebase-storage-19.2.2\AndroidManifest.xml:35:17-82
+242            <meta-data
+242-->[com.google.firebase:firebase-database:19.6.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\375c3ec2918e8632600de2a5df478792\jetified-firebase-database-19.6.0\AndroidManifest.xml:32:13-34:85
+243                android:name="com.google.firebase.components:com.google.firebase.database.DatabaseRegistrar"
+243-->[com.google.firebase:firebase-database:19.6.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\375c3ec2918e8632600de2a5df478792\jetified-firebase-database-19.6.0\AndroidManifest.xml:33:17-109
+244                android:value="com.google.firebase.components.ComponentRegistrar" />
+244-->[com.google.firebase:firebase-database:19.6.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\375c3ec2918e8632600de2a5df478792\jetified-firebase-database-19.6.0\AndroidManifest.xml:34:17-82
+245            <!--
+246                This registrar is not defined in the dynamic-module-support sdk itself to allow non-firebase
+247                clients to use it as well, by defining this registrar in their own core/common library.
+248            -->
+249            <meta-data
+249-->[com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:43:13-45:85
+250                android:name="com.google.firebase.components:com.google.firebase.dynamicloading.DynamicLoadingRegistrar"
+250-->[com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:44:17-121
+251                android:value="com.google.firebase.components.ComponentRegistrar" />
+251-->[com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:45:17-82
+252        </service>
+253
+254        <provider
+254-->[com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:26:9-31:39
+255            android:name="com.google.firebase.provider.FirebaseInitProvider"
+255-->[com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:27:13-77
+256            android:authorities="com.example.academyapp.firebaseinitprovider"
+256-->[com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:28:13-72
+257            android:directBootAware="true"
+257-->[com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:29:13-43
+258            android:exported="false"
+258-->[com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:30:13-37
+259            android:initOrder="100" />
+259-->[com.google.firebase:firebase-common:19.5.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\8bd514d2412b3ecb2c29bc046d234f93\jetified-firebase-common-19.5.0\AndroidManifest.xml:31:13-36
+260
+261        <activity
+261-->[com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:23:9-27:75
+262            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+262-->[com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:24:13-93
+263            android:excludeFromRecents="true"
+263-->[com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:25:13-46
+264            android:exported="false"
+264-->[com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:26:13-37
+265            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+265-->[com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:27:13-72
+266        <!--
+267            Service handling Google Sign-In user revocation. For apps that do not integrate with
+268            Google Sign-In, this service will never be started.
+269        -->
+270        <service
+270-->[com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:33:9-36:110
+271            android:name="com.google.android.gms.auth.api.signin.RevocationBoundService"
+271-->[com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:34:13-89
+272            android:exported="true"
+272-->[com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:35:13-36
+273            android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION" />
+273-->[com.google.android.gms:play-services-auth:17.0.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\3e499fec005754076836cd4cfc908494\jetified-play-services-auth-17.0.0\AndroidManifest.xml:36:13-107
+274
+275        <activity
+275-->[com.google.android.gms:play-services-base:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\9873dc5fe973cc292ec718d9bd24167b\jetified-play-services-base-17.1.0\AndroidManifest.xml:23:9-26:75
+276            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+276-->[com.google.android.gms:play-services-base:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\9873dc5fe973cc292ec718d9bd24167b\jetified-play-services-base-17.1.0\AndroidManifest.xml:24:13-79
+277            android:exported="false"
+277-->[com.google.android.gms:play-services-base:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\9873dc5fe973cc292ec718d9bd24167b\jetified-play-services-base-17.1.0\AndroidManifest.xml:25:13-37
+278            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+278-->[com.google.android.gms:play-services-base:17.1.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\9873dc5fe973cc292ec718d9bd24167b\jetified-play-services-base-17.1.0\AndroidManifest.xml:26:13-72
+279
+280        <provider
+280-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\10cfb7ad05f020bf348ba2098a780d6c\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:25:9-29:43
+281            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
+281-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\10cfb7ad05f020bf348ba2098a780d6c\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:26:13-79
+282            android:authorities="com.example.academyapp.lifecycle-process"
+282-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\10cfb7ad05f020bf348ba2098a780d6c\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:27:13-69
+283            android:exported="false"
+283-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\10cfb7ad05f020bf348ba2098a780d6c\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:28:13-37
+284            android:multiprocess="true" />
+284-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\MAYDAY\.gradle\caches\transforms-2\files-2.1\10cfb7ad05f020bf348ba2098a780d6c\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:29:13-40
+285    </application>
+286
+287</manifest>
