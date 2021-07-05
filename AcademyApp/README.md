@@ -113,13 +113,26 @@
 ## 사용된 기술 스택
 
 ### 언어
-
+ - JAVA
+ - XML (앱 레이아웃(화면) 구성)
 
 ### 데이터베이스
+ - Firebase Database
 
+### API & SDK
+ - Google Login API (FirebaseAuth API)
+ - NaverMap SDK
+ - Naver Geocoding API (형식 : REST API)
+ - Firebase Storage API
+ - Firebase Cloud Messaging API
 
-### API
+### 개발 도구
+ - Android Studio 4.0.2
 
-
-### Tool
 ## 프로젝트 후기
+
+### 잘한 점
+ - 초기 기획한 기능 대부분 구현 완료
+     * 개발 전 기획했던 앱의 기능들을 대부분 구현을 완료하여 의도했던 앱의 모습을 거의 완성했다.
+
+### 아쉬운 점
