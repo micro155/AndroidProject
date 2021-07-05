@@ -31,7 +31,7 @@ public class SendNotification {
                     json.put("data", fore_Json);
                     RequestBody body = RequestBody.create(JSON, json.toString());
                     Request request = new Request.Builder()
-                            .header("Authorization", "key=" + "AAAAj4TTHAg:APA91bFmGHzBt5Fx0CdKUzQJiNrkvDOQlMQpqzBQm2Uw2jXLFWdlrjW6BnNW3flaDEHdTF_mAu0PcxxSm66OmxZ1pF-WBY7LEc2OdOt0y_ctouLxuddU17Jy2o2n29WH_t_G_cw6Winy")
+                            .header("Authorization", "key=" + "")
                             .url("https://fcm.googleapis.com/fcm/send")
                             .post(body)
                             .build();
