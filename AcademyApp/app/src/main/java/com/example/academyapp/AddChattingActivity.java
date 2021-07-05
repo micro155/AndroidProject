@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -33,6 +34,7 @@ public class AddChattingActivity extends AppCompatActivity {
     private ListView academy_listView;
     private DatabaseReference mFirebaseDatabase;
     private AcademyListViewAdapter adapter;
+    private TextView empty_academy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class AddChattingActivity extends AppCompatActivity {
         academy_listView = (ListView) findViewById(R.id.academy_list_view);
         mFirebaseDatabase = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
         final AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.autoSearch_academy);
+        empty_academy = (TextView) findViewById(R.id.empty_academy);
 
         final ArrayList<String> name_list = new ArrayList<String>();
         final ArrayList<String> address_list = new ArrayList<String>();
@@ -55,85 +58,117 @@ public class AddChattingActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                boolean check = false;
+
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                    String key = dataSnapshot.getKey();
+
                     String address = dataSnapshot.child("academy_address").getValue(String.class);
                     String academy = dataSnapshot.child("academy_name").getValue(String.class);
 
-                    name_list.add(academy);
-                    address_list.add(address);
+                    if (academy != null) {
 
-                    Log.d("dataAdapter", "adapter : " + snapshot.getChildren());
+                        check = true;
 
-                    adapter = new AcademyListViewAdapter(AddChattingActivity.this, name_list, address_list);
+                        name_list.add(academy);
+                        address_list.add(address);
 
-                    adapter.notifyDataSetChanged();
-                    academy_listView.setAdapter(adapter);
-                    autoCompleteTextView.setAdapter(new ArrayAdapter<String>(AddChattingActivity.this, android.R.layout.simple_dropdown_item_1line, name_list));
+                        Log.d("dataAdapter", "adapter : " + snapshot.getChildren());
 
-                    academy_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                            final Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
-                            intent.putExtra("academy_name", name_list.get(position));
-                            final DatabaseReference chatList = FirebaseDatabase.getInstance().getReference("ChatRoom");
+                        adapter = new AcademyListViewAdapter(AddChattingActivity.this, name_list, address_list);
 
-                            DatabaseReference normal_info = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
-                            String normal_user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        adapter.notifyDataSetChanged();
+                        academy_listView.setAdapter(adapter);
+                        autoCompleteTextView.setAdapter(new ArrayAdapter<String>(AddChattingActivity.this, android.R.layout.simple_dropdown_item_1line, name_list));
 
-                            normal_info.child(normal_user).child("nickName").addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    String nickName = snapshot.getValue(String.class);
-                                    intent.putExtra("normal_name", nickName);
+                        academy_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                                final Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
+                                intent.putExtra("academy_name", name_list.get(position));
+                                final DatabaseReference chatList = FirebaseDatabase.getInstance().getReference("ChatRoom");
 
-                                    chatList.child(name_list.get(position)).child(nickName).child(MESSAGES_CHILD).setValue(getTime);
+                                DatabaseReference normal_info = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+                                final String normal_user = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                                    chatList.child(nickName).child(name_list.get(position)).child(MESSAGES_CHILD).setValue(getTime);
+                                normal_info.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                                    startActivity(intent);
-                                }
+                                        for (DataSnapshot uid_snapshot : snapshot.getChildren()) {
+                                            String uid = uid_snapshot.child("uid").getValue(String.class);
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
+                                            if (uid != null) {
+                                                if (uid.equals(normal_user)) {
+                                                    String nickName = uid_snapshot.child("nickName").getValue(String.class);
+                                                    intent.putExtra("normal_name", nickName);
 
-                                }
-                            });
+                                                    chatList.child(name_list.get(position)).child(nickName).child(MESSAGES_CHILD).setValue(getTime);
 
-                        }
-                    });
+                                                    chatList.child(nickName).child(name_list.get(position)).child(MESSAGES_CHILD).setValue(getTime);
 
-                    autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                            final Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
-                            intent.putExtra("academy_name", name_list.get(position));
-                            final DatabaseReference chatList = FirebaseDatabase.getInstance().getReference("ChatRoom");
+                                                    startActivity(intent);
+                                                }
+                                            }
+                                        }
+                                    }
 
-                            DatabaseReference normal_info = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
-                            String normal_user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
 
-                            normal_info.child(normal_user).child("nickName").addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    String nickName = snapshot.getValue(String.class);
-                                    intent.putExtra("normal_name", nickName);
+                                    }
+                                });
 
-                                    chatList.child(name_list.get(position)).child(nickName).child(MESSAGES_CHILD).setValue(getTime);
+                            }
+                        });
 
-                                    chatList.child(nickName).child(name_list.get(position)).child(MESSAGES_CHILD).setValue(getTime);
+                        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                                final Intent intent = new Intent(getApplicationContext(), ChattingActivity.class);
+                                intent.putExtra("academy_name", name_list.get(position));
+                                final DatabaseReference chatList = FirebaseDatabase.getInstance().getReference("ChatRoom");
 
-                                    startActivity(intent);
-                                }
+                                DatabaseReference normal_info = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+                                final String normal_user = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
+                                normal_info.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                                }
-                            });
+                                        for (DataSnapshot uid_snapshot : snapshot.getChildren()) {
+                                            String uid = uid_snapshot.child("uid").getValue(String.class);
 
-                        }
-                    });
+                                            if (uid != null) {
+                                                if (uid.equals(normal_user)) {
+                                                    String nickName = uid_snapshot.child("nickName").getValue(String.class);
+                                                    intent.putExtra("normal_name", nickName);
+
+                                                    chatList.child(name_list.get(position)).child(nickName).child(MESSAGES_CHILD).setValue(getTime);
+
+                                                    chatList.child(nickName).child(name_list.get(position)).child(MESSAGES_CHILD).setValue(getTime);
+
+                                                    startActivity(intent);
+
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                            }
+                        });
+                    }
+                }
+
+                if (!check) {
+                    empty_academy.setVisibility(View.VISIBLE);
+                } else {
+                    empty_academy.setVisibility(View.INVISIBLE);
                 }
             }
 

@@ -16,7 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20dp"
-            android:hint="동이름 입력"/>
+            android:hint="학원 이름 입력"/>
+
         <AutoCompleteTextView
             android:id="@+id/autoSearch_academy"
             android:layout_width="match_parent"
@@ -25,7 +26,16 @@
         <ListView
             android:id="@+id/academy_list_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/empty_academy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="등록된 학원이 없습니다." />
 
     </LinearLayout>
 

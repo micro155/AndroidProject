@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+
 
     <application
         android:allowBackup="true"
@@ -12,9 +15,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ChattingRoom_Normal_Activity"
+        <activity
+            android:name=".ModifyAcademyInfoActivity"
+            android:parentActivityName=".AcademyDetailActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".AcademyDetailActivity"
+            android:parentActivityName=".NormalMemberHomeActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".Downloader_Management_Activity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AddChattingActivity" />
+        <activity
+            android:name=".SearchAcademyActivity"
+            android:label="@string/search_academy"/>
+        <activity
+            android:name=".ChattingRoom_Normal_Activity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddChattingActivity"
+            android:label="@string/menu_create_chatting_room"/>
         <activity android:name=".ChattingActivity" />
         <activity
             android:name=".AcademyManagementActivity"
@@ -35,7 +55,6 @@
 
         <activity
             android:name=".DirectorHomeActivity"
-            android:label="@string/title_activity_customer_home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".UploadActivity"
@@ -49,6 +68,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".MyJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

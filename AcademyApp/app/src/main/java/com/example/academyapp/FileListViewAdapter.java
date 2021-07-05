@@ -1,12 +1,10 @@
 package com.example.academyapp;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
@@ -22,23 +20,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.academyapp.Model.FileListInfo;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
@@ -51,7 +37,6 @@ public class FileListViewAdapter extends BaseAdapter {
     private OnDownloadClickListener mlistener;
     private String academy_name;
     private String file_name;
-    private AlertDialog progressDialog;
 
     public interface OnDownloadClickListener {
         void onDownload (String fileName);
@@ -84,7 +69,7 @@ public class FileListViewAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.dropdown_file_list, parent, false);
+            convertView = inflater.inflate(R.layout.download_file_list, parent, false);
         }
 
         final TextView academy_view = (TextView) convertView.findViewById(R.id.file_academy);
@@ -117,16 +102,9 @@ public class FileListViewAdapter extends BaseAdapter {
 
 
         Log.d("fileName", "filename : " + fileName);
-
-        File localFile = null;
-        try {
-            localFile = File.createTempFile("videos", "jpg");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        final File finalLocalFile = localFile;
 
         builder.setTitle("강의 다운로드")
                 .setMessage(fileName + "를 다운로드하시겠습니까?")
@@ -205,7 +183,6 @@ public class FileListViewAdapter extends BaseAdapter {
                             }
                         }
                     });
-
                     cursor.close();
                 }
             }

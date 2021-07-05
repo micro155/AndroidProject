@@ -27,6 +27,8 @@
                 android:id="@+id/download_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@color/colorButton"
+                android:textColor="@android:color/white"
                 android:text="다운로드"/>
 
     </LinearLayout>

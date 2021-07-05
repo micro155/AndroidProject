@@ -2,11 +2,13 @@ package com.example.academyapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -18,6 +20,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.academyapp.RestAPI.GeocodingResponse;
+import com.example.academyapp.RestAPI.RetrofitConnection;
 import com.example.academyapp.Utils.UserUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,16 +39,34 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.naver.maps.map.NaverMapSdk;
+import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.LocationTrackingMode;
+import com.naver.maps.map.MapFragment;
+import com.naver.maps.map.NaverMap;
+import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.overlay.InfoWindow;
+import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.overlay.Overlay;
+import com.naver.maps.map.util.FusedLocationSource;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class NormalMemberHomeActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class NormalMemberHomeActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int PICK_IMAGE_REQUEST = 101;
 
@@ -56,6 +79,12 @@ public class NormalMemberHomeActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private ImageView img_profile;
     private Uri imageUri;
+    private double addressX;
+    private double addressY;
+
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
+    private FusedLocationSource locationSource;
+    private NaverMap naverMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,14 +94,6 @@ public class NormalMemberHomeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab2);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         drawer = findViewById(R.id.drawer_normalmember_layout);
         navigationView = findViewById(R.id.nav_normalmember_view);
         // Passing each menu ID as a set of Ids because each
@@ -85,14 +106,135 @@ public class NormalMemberHomeActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        NaverMapSdk.getInstance(this).setClient(
-                new NaverMapSdk.NaverCloudPlatformClient("z79q0dob9r"));
+        navigationView.setCheckedItem(R.id.nav_normalmember_home);
+
+        FragmentManager fm = getSupportFragmentManager();
+        MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.map2);
+        if (mapFragment == null) {
+            mapFragment = MapFragment.newInstance();
+            fm.beginTransaction().add(R.id.map2, mapFragment).commit();
+        }
+
+        mapFragment.getMapAsync(this);
+
+        locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
 
         init();
+
+    }
+
+    @UiThread
+    @Override
+    public void onMapReady(@NonNull final NaverMap naverMap) {
+
+        this.naverMap = naverMap;
+        naverMap.setLocationSource(locationSource);
+        naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
+
+        DatabaseReference academy_ref = FirebaseDatabase.getInstance().getReference(Common.ACADEMY_INFO_REFERENCE);
+
+        academy_ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    String address = dataSnapshot.child("academy_address").getValue(String.class);
+                    final String name = dataSnapshot.child("academy_name").getValue(String.class);
+
+                    RetrofitConnection retrofitConnection = new RetrofitConnection();
+                    Call<GeocodingResponse> geocodingResponse = retrofitConnection.mapAPI.getCoordinate(address);
+
+                    geocodingResponse.enqueue(new Callback<GeocodingResponse>() {
+                        @Override
+                        public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
+                            GeocodingResponse geocodingResponse = response.body();
+                            List<GeocodingResponse.RequestAddress> addressList = geocodingResponse.getAddresses();
+
+                            addressX = addressList.get(0).getX();
+                            addressY = addressList.get(0).getY();
+
+                            Log.d("marker_x", "marker_x : " + addressX);
+                            Log.d("marker_y", "marker_y : " + addressY);
+
+//                            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(addressY, addressX)).animate(CameraAnimation.Fly);
+//                            naverMap.moveCamera(cameraUpdate);
+
+                            final Marker marker = new Marker();
+                            marker.setPosition(new LatLng(addressY, addressX));
+                            marker.setMap(naverMap);
+
+                            marker.setOnClickListener(new Overlay.OnClickListener() {
+                                @Override
+                                public boolean onClick(@NonNull Overlay overlay) {
+
+                                    final InfoWindow infoWindow = new InfoWindow();
+                                    infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(NormalMemberHomeActivity.this) {
+                                        @NonNull
+                                        @Override
+                                        public CharSequence getText(@NonNull InfoWindow infoWindow) {
+                                            return name;
+                                        }
+                                    });
+                                    infoWindow.open(marker);
+
+                                    infoWindow.setOnClickListener(new Overlay.OnClickListener() {
+                                        @Override
+                                        public boolean onClick(@NonNull Overlay overlay) {
+//                                            Toast.makeText(getApplicationContext(), "마커 클릭 확인", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(NormalMemberHomeActivity.this, AcademyDetailActivity.class);
+                                            intent.putExtra("academy_name", name);
+                                            startActivity(intent);
+                                            infoWindow.close();
+                                            return true;
+                                        }
+                                    });
+
+                                    return false;
+                                }
+                            });
+
+
+
+
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<GeocodingResponse> call, Throwable t) {
+
+                        }
+                    });
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,  @NonNull int[] grantResults) {
+        if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            if (!locationSource.isActivated()) { // 권한 거부됨
+                naverMap.setLocationTrackingMode(LocationTrackingMode.None);
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 
     private void showDialogUpload() {
+        final DatabaseReference normal_ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(NormalMemberHomeActivity.this);
         builder.setTitle("프로필 변경")
                 .setMessage("정말로 프로필을 변경하시겠습니까?")
@@ -127,10 +269,29 @@ public class NormalMemberHomeActivity extends AppCompatActivity {
                                                 profileFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                     @Override
                                                     public void onSuccess(Uri uri) {
-                                                        Map<String, Object> updateData = new HashMap<>();
+                                                        final Map<String, Object> updateData = new HashMap<>();
                                                         updateData.put("profile", uri.toString());
 
-                                                        UserUtils.updateUser(drawer, updateData);
+                                                        normal_ref.addValueEventListener(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                                    String user_id = dataSnapshot.child("uid").getValue(String.class);
+
+                                                                    if (user_id != null) {
+                                                                        if (user_id.equals(uid)) {
+                                                                            String nick_name = dataSnapshot.child("nickName").getValue(String.class);
+                                                                            UserUtils.updateUser(drawer, updateData, nick_name);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                                            }
+                                                        });
                                                     }
                                                 });
                                             }
@@ -221,12 +382,33 @@ public class NormalMemberHomeActivity extends AppCompatActivity {
         });
 
         View headerView = navigationView.getHeaderView(0);
-        TextView txt_nick_name = (TextView)headerView.findViewById(R.id.txt_nick_name);
-        TextView txt_email = (TextView)headerView.findViewById(R.id.txt_email);
+        final TextView txt_nick_name = (TextView)headerView.findViewById(R.id.txt_nick_name);
+        final TextView txt_email = (TextView)headerView.findViewById(R.id.txt_email);
         img_profile = (ImageView)headerView.findViewById(R.id.img_profile);
 
-        txt_nick_name.setText(Common.buildWelcomeMessage());
-        txt_email.setText(Common.currentMember != null ? Common.currentMember.getEmail() : "");
+        DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference(Common.MEMBER_INFO_REFERENCE);
+        final String user_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String user_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
+        user_ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String uid = dataSnapshot.child("uid").getValue(String.class);
+
+                    if (uid != null && uid.equals(user_uid)) {
+                        String nickName = dataSnapshot.child("nickName").getValue(String.class);
+                        txt_nick_name.setText(nickName);
+                        txt_email.setText(user_email);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         img_profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -245,6 +427,9 @@ public class NormalMemberHomeActivity extends AppCompatActivity {
         }
     }
 
+
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -258,12 +443,12 @@ public class NormalMemberHomeActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.customer_home, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.customer_home, menu);
+//        return true;
+//    }
 
     @Override
     public boolean onSupportNavigateUp() {

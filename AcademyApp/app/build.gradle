@@ -73,5 +73,18 @@ dependencies {
     //CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    //Naver location
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
+
+    //Firebase Cloud Message
+    implementation platform('com.google.firebase:firebase-bom:27.1.0')
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-analytics'
+
+    //Needle Library
+    implementation 'com.zsoltsafrany:needle:1.0.0'
+
+    //FirebaseJobDispatcher
+    implementation 'com.firebase:firebase-jobdispatcher:0.6.0'
 
 }

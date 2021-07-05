@@ -8,9 +8,9 @@ import retrofit2.http.Query;
 
 public interface MapAPI {
     @Headers({
-            "X-NCP-APIGW-API-KEY-ID:z79q0dob9r",
-            "X-NCP-APIGW-API-KEY:l7JKaTHv8v4CE3wV5xc7G8exQs3HQ61y8n0ajNr3"
+            "X-NCP-APIGW-API-KEY-ID:",
+            "X-NCP-APIGW-API-KEY:"
     })
     @GET("/map-geocode/v2/geocode")
-    Call<RequestAddress> getCoordinate(@Query("query") String location);
+    Call<GeocodingResponse> getCoordinate(@Query("query") String location);
 }
