@@ -23,6 +23,18 @@
     ![채팅 앱 로그아웃](https://user-images.githubusercontent.com/69238456/124533756-e7ef4d80-de4d-11eb-860b-a264295aa0df.gif)
 
 
+## 사용된 기술 스택
+### 언어
+ - JAVA
+ - XML (앱 레이아웃 구성)
+### 데이터베이스
+ - Firebase Database
+### API
+ - Google Login API (FirebaseAuth API)
+### Tool
+ - Android Studio 4.0.0
+
+
 ## 프로젝트 후기
 ### 잘한 점
  - 강의 강사에 따라 무리없는 기능 구현
